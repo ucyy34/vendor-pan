@@ -61,7 +61,7 @@ export default function AvatarBox({
           rx='10'
           fill='#FAFAFA'
         />
-        <g clip-path='url(#clip0_11_175)'>
+        <g clipPath='url(#clip0_11_175)'>
           <path
             d='M8 7V20.7349L19.821 13.8675L8 7Z'
             fill='#4C24DD'

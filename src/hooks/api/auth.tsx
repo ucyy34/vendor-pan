@@ -4,7 +4,7 @@ import {
   UseMutationOptions,
   useMutation,
 } from '@tanstack/react-query';
-import { query, sdk } from '../../lib/client';
+import { fetchQuery, sdk } from '../../lib/client';
 
 export const useSignInWithEmailPass = (
   options?: UseMutationOptions<
@@ -47,7 +47,7 @@ export const useSignUpWithEmailPass = (
           email: variables.email,
         },
       };
-      await query('/vendor/sellers', {
+      await fetchQuery('/vendor/sellers', {
         method: 'POST',
         body: seller,
       });

@@ -110,16 +110,21 @@ export const Register = () => {
     return (
       <div className='bg-ui-bg-subtle flex min-h-dvh w-dvw items-center justify-center'>
         <div className='mb-4 flex flex-col items-center'>
-          <Heading>
-            Your request to join has been sent
-          </Heading>
+          <Heading>Thank You for registering!</Heading>
           <Text
             size='small'
-            className='text-ui-fg-subtle text-center mt-4'
+            className='text-ui-fg-subtle text-center mt-2 max-w-[320px]'
           >
-            Please wait for marketplace administration
-            approval
+            You may need to wait for admin authorization
+            before logging in. A confirmation email will be
+            sent to you shortly.
           </Text>
+
+          <Link to='/login'>
+            <Button className='mt-8'>
+              Back to login page
+            </Button>
+          </Link>
         </div>
       </div>
     );
