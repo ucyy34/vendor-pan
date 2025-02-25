@@ -7,7 +7,7 @@ async function generateTypes() {
   const fs = require("fs")
   const path = require("path")
 
-  const distDir = path.resolve(__dirname, "../build")
+  const distDir = path.resolve(__dirname, "../dist")
   const filePath = path.join(distDir, "index.d.ts")
 
   const fileContent = `
