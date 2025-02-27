@@ -1,18 +1,18 @@
-import { HttpTypes } from "@medusajs/types"
-import { FetchError } from "@medusajs/js-sdk"
+import { HttpTypes } from '@medusajs/types';
+import { FetchError } from '@medusajs/js-sdk';
 import {
   QueryKey,
   useMutation,
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from "@tanstack/react-query"
-import { sdk } from "../../lib/client"
-import { queryClient } from "../../lib/query-client"
-import { queryKeysFactory } from "../../lib/query-key-factory"
-import { campaignsQueryKeys } from "./campaigns"
+} from '@tanstack/react-query';
+import { fetchQuery, sdk } from '../../lib/client';
+import { queryClient } from '../../lib/query-client';
+import { queryKeysFactory } from '../../lib/query-key-factory';
+import { campaignsQueryKeys } from './campaigns';
 
-const PROMOTIONS_QUERY_KEY = "promotions" as const
+const PROMOTIONS_QUERY_KEY = 'promotions' as const;
 export const promotionsQueryKeys = {
   ...queryKeysFactory(PROMOTIONS_QUERY_KEY),
   // TODO: handle invalidations properly
@@ -21,17 +21,16 @@ export const promotionsQueryKeys = {
     ruleType: string,
     query?: HttpTypes.AdminGetPromotionRuleParams
   ) => [PROMOTIONS_QUERY_KEY, id, ruleType, query],
-  listRuleAttributes: (ruleType: string, promotionType?: string) => [
-    PROMOTIONS_QUERY_KEY,
-    ruleType,
-    promotionType,
-  ],
+  listRuleAttributes: (
+    ruleType: string,
+    promotionType?: string
+  ) => [PROMOTIONS_QUERY_KEY, ruleType, promotionType],
   listRuleValues: (
     ruleType: string,
     ruleValue: string,
     query: HttpTypes.AdminGetPromotionsRuleValueParams
   ) => [PROMOTIONS_QUERY_KEY, ruleType, ruleValue, query],
-}
+};
 
 export const usePromotion = (
   id: string,
@@ -42,17 +41,17 @@ export const usePromotion = (
       HttpTypes.AdminPromotionResponse,
       QueryKey
     >,
-    "queryFn" | "queryKey"
+    'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: promotionsQueryKeys.detail(id),
     queryFn: async () => sdk.admin.promotion.retrieve(id),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const usePromotionRules = (
   id: string | null,
@@ -65,17 +64,22 @@ export const usePromotionRules = (
       HttpTypes.AdminPromotionRuleListResponse,
       QueryKey
     >,
-    "queryFn" | "queryKey"
+    'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryKey: promotionsQueryKeys.listRules(id, ruleType, query),
-    queryFn: async () => sdk.admin.promotion.listRules(id, ruleType, query),
+    queryKey: promotionsQueryKeys.listRules(
+      id,
+      ruleType,
+      query
+    ),
+    queryFn: async () =>
+      sdk.admin.promotion.listRules(id, ruleType, query),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const usePromotions = (
   query?: HttpTypes.AdminGetPromotionsParams,
@@ -86,17 +90,21 @@ export const usePromotions = (
       HttpTypes.AdminPromotionListResponse,
       QueryKey
     >,
-    "queryFn" | "queryKey"
+    'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: promotionsQueryKeys.list(query),
-    queryFn: async () => sdk.admin.promotion.list(query),
+    queryFn: async () =>
+      fetchQuery('/vendor/promotions', {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const usePromotionRuleAttributes = (
   ruleType: string,
@@ -108,18 +116,24 @@ export const usePromotionRuleAttributes = (
       HttpTypes.AdminRuleAttributeOptionsListResponse,
       QueryKey
     >,
-    "queryFn" | "queryKey"
+    'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryKey: promotionsQueryKeys.listRuleAttributes(ruleType, promotionType),
+    queryKey: promotionsQueryKeys.listRuleAttributes(
+      ruleType,
+      promotionType
+    ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleAttributes(ruleType, promotionType),
+      sdk.admin.promotion.listRuleAttributes(
+        ruleType,
+        promotionType
+      ),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const usePromotionRuleValues = (
   ruleType: string,
@@ -132,7 +146,7 @@ export const usePromotionRuleValues = (
       HttpTypes.AdminRuleValueOptionsListResponse,
       QueryKey
     >,
-    "queryFn" | "queryKey"
+    'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
@@ -142,17 +156,21 @@ export const usePromotionRuleValues = (
       query || {}
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleValues(ruleType, ruleValue, query),
+      sdk.admin.promotion.listRuleValues(
+        ruleType,
+        ruleValue,
+        query
+      ),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const useDeletePromotion = (
   id: string,
   options?: UseMutationOptions<
-    HttpTypes.DeleteResponse<"promotion">,
+    HttpTypes.DeleteResponse<'promotion'>,
     FetchError,
     void
   >
@@ -160,16 +178,18 @@ export const useDeletePromotion = (
   return useMutation({
     mutationFn: () => sdk.admin.promotion.delete(id),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.lists() })
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.lists(),
+      });
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.detail(id),
-      })
+      });
 
-      options?.onSuccess?.(data, variables, context)
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useCreatePromotion = (
   options?: UseMutationOptions<
@@ -179,15 +199,20 @@ export const useCreatePromotion = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.promotion.create(payload),
+    mutationFn: (payload) =>
+      sdk.admin.promotion.create(payload),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: campaignsQueryKeys.lists() })
-      options?.onSuccess?.(data, variables, context)
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.lists(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: campaignsQueryKeys.lists(),
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useUpdatePromotion = (
   id: string,
@@ -198,15 +223,18 @@ export const useUpdatePromotion = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.promotion.update(id, payload),
+    mutationFn: (payload) =>
+      sdk.admin.promotion.update(id, payload),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.all,
+      });
 
-      options?.onSuccess?.(data, variables, context)
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const usePromotionAddRules = (
   id: string,
@@ -221,13 +249,15 @@ export const usePromotionAddRules = (
     mutationFn: (payload) =>
       sdk.admin.promotion.addRules(id, ruleType, payload),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.all,
+      });
 
-      options?.onSuccess?.(data, variables, context)
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const usePromotionRemoveRules = (
   id: string,
@@ -240,15 +270,21 @@ export const usePromotionRemoveRules = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.removeRules(id, ruleType, payload),
+      sdk.admin.promotion.removeRules(
+        id,
+        ruleType,
+        payload
+      ),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.all,
+      });
 
-      options?.onSuccess?.(data, variables, context)
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const usePromotionUpdateRules = (
   id: string,
@@ -261,12 +297,18 @@ export const usePromotionUpdateRules = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.updateRules(id, ruleType, payload),
+      sdk.admin.promotion.updateRules(
+        id,
+        ruleType,
+        payload
+      ),
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: promotionsQueryKeys.all })
+      queryClient.invalidateQueries({
+        queryKey: promotionsQueryKeys.all,
+      });
 
-      options?.onSuccess?.(data, variables, context)
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};

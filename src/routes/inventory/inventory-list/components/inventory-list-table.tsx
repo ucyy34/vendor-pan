@@ -1,29 +1,35 @@
-import { InventoryTypes } from "@medusajs/types"
-import { Button, Container, Heading, Text } from "@medusajs/ui"
+import { InventoryTypes } from '@medusajs/types';
+import {
+  Button,
+  Container,
+  Heading,
+  Text,
+} from '@medusajs/ui';
 
-import { RowSelectionState } from "@tanstack/react-table"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router-dom"
-import { _DataTable } from "../../../../components/table/data-table"
-import { useInventoryItems } from "../../../../hooks/api/inventory"
-import { useDataTable } from "../../../../hooks/use-data-table"
-import { INVENTORY_ITEM_IDS_KEY } from "../../common/constants"
-import { useInventoryTableColumns } from "./use-inventory-table-columns"
-import { useInventoryTableFilters } from "./use-inventory-table-filters"
-import { useInventoryTableQuery } from "./use-inventory-table-query"
+import { RowSelectionState } from '@tanstack/react-table';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
+import { _DataTable } from '../../../../components/table/data-table';
+import { useInventoryItems } from '../../../../hooks/api/inventory';
+import { useDataTable } from '../../../../hooks/use-data-table';
+import { INVENTORY_ITEM_IDS_KEY } from '../../common/constants';
+import { useInventoryTableColumns } from './use-inventory-table-columns';
+import { useInventoryTableFilters } from './use-inventory-table-filters';
+import { useInventoryTableQuery } from './use-inventory-table-query';
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
 export const InventoryListTable = () => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const [selection, setSelection] = useState<RowSelectionState>({})
+  const [selection, setSelection] =
+    useState<RowSelectionState>({});
 
-  const { searchParams, raw } = useInventoryTableQuery({
+  const { raw } = useInventoryTableQuery({
     pageSize: PAGE_SIZE,
-  })
+  });
 
   const {
     inventory_items,
@@ -32,14 +38,15 @@ export const InventoryListTable = () => {
     isError,
     error,
   } = useInventoryItems({
-    ...searchParams,
-  })
+    limit: PAGE_SIZE,
+  });
 
-  const filters = useInventoryTableFilters()
-  const columns = useInventoryTableColumns()
+  const filters = useInventoryTableFilters();
+  const columns = useInventoryTableColumns();
 
   const { table } = useDataTable({
-    data: (inventory_items ?? []) as InventoryTypes.InventoryItemDTO[],
+    data: (inventory_items ??
+      []) as InventoryTypes.InventoryItemDTO[],
     columns,
     count,
     enablePagination: true,
@@ -50,23 +57,23 @@ export const InventoryListTable = () => {
       state: selection,
       updater: setSelection,
     },
-  })
+  });
 
   if (isError) {
-    throw error
+    throw error;
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className='divide-y p-0'>
+      <div className='flex items-center justify-between px-6 py-4'>
         <div>
-          <Heading>{t("inventory.domain")}</Heading>
-          <Text className="text-ui-fg-subtle" size="small">
-            {t("inventory.subtitle")}
+          <Heading>{t('inventory.domain')}</Heading>
+          <Text className='text-ui-fg-subtle' size='small'>
+            {t('inventory.subtitle')}
           </Text>
         </div>
-        <Button size="small" variant="secondary" asChild>
-          <Link to="create">{t("actions.create")}</Link>
+        <Button size='small' variant='secondary' asChild>
+          <Link to='create'>{t('actions.create')}</Link>
         </Button>
       </div>
       <_DataTable
@@ -80,26 +87,32 @@ export const InventoryListTable = () => {
         filters={filters}
         queryObject={raw}
         orderBy={[
-          { key: "title", label: t("fields.title") },
-          { key: "sku", label: t("fields.sku") },
-          { key: "stocked_quantity", label: t("fields.inStock") },
-          { key: "reserved_quantity", label: t("inventory.reserved") },
+          { key: 'title', label: t('fields.title') },
+          { key: 'sku', label: t('fields.sku') },
+          {
+            key: 'stocked_quantity',
+            label: t('fields.inStock'),
+          },
+          {
+            key: 'reserved_quantity',
+            label: t('inventory.reserved'),
+          },
         ]}
         navigateTo={(row) => `${row.id}`}
         commands={[
           {
             action: async (selection) => {
               navigate(
-                `stock?${INVENTORY_ITEM_IDS_KEY}=${Object.keys(selection).join(
-                  ","
-                )}`
-              )
+                `stock?${INVENTORY_ITEM_IDS_KEY}=${Object.keys(
+                  selection
+                ).join(',')}`
+              );
             },
-            label: t("inventory.stock.action"),
-            shortcut: "i",
+            label: t('inventory.stock.action'),
+            shortcut: 'i',
           },
         ]}
       />
     </Container>
-  )
-}
+  );
+};

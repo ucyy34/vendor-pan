@@ -13,6 +13,10 @@ import {
   SquaresPlus,
   Tag,
   Users,
+  Component,
+  Star,
+  ListCheckbox,
+  ChatBubbleLeftRight,
 } from '@medusajs/icons';
 import {
   Avatar,
@@ -193,6 +197,11 @@ const useCoreRoutes = (): Omit<INavItem, 'pathname'>[] => {
 
   return [
     {
+      icon: <Component />,
+      label: 'Dashboard',
+      to: '/dashboard',
+    },
+    {
       icon: <ShoppingCart />,
       label: t('orders.domain'),
       to: '/orders',
@@ -261,6 +270,21 @@ const useCoreRoutes = (): Omit<INavItem, 'pathname'>[] => {
       icon: <CurrencyDollar />,
       label: t('priceLists.domain'),
       to: '/price-lists',
+    },
+    {
+      icon: <Star />,
+      label: 'Reviews',
+      to: '/reviews',
+    },
+    {
+      icon: <ChatBubbleLeftRight />,
+      label: 'Messages',
+      to: '/messages',
+    },
+    {
+      icon: <ListCheckbox />,
+      label: 'Requests',
+      to: '/requests',
     },
   ];
 };

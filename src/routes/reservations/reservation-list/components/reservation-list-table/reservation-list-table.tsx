@@ -1,29 +1,35 @@
-import { Button, Container, Heading, Text } from "@medusajs/ui"
+import {
+  Button,
+  Container,
+  Heading,
+  Text,
+} from '@medusajs/ui';
 
-import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
-import { _DataTable } from "../../../../../components/table/data-table"
-import { useReservationItems } from "../../../../../hooks/api/reservations"
-import { useDataTable } from "../../../../../hooks/use-data-table"
-import { useReservationTableColumns } from "./use-reservation-table-columns"
-import { useReservationTableFilters } from "./use-reservation-table-filters"
-import { useReservationTableQuery } from "./use-reservation-table-query"
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { _DataTable } from '../../../../../components/table/data-table';
+import { useReservationItems } from '../../../../../hooks/api/reservations';
+import { useDataTable } from '../../../../../hooks/use-data-table';
+import { useReservationTableColumns } from './use-reservation-table-columns';
+import { useReservationTableFilters } from './use-reservation-table-filters';
+import { useReservationTableQuery } from './use-reservation-table-query';
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
 export const ReservationListTable = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const { searchParams } = useReservationTableQuery({
     pageSize: PAGE_SIZE,
-  })
+  });
+
   const { reservations, count, isPending, isError, error } =
     useReservationItems({
       ...searchParams,
-    })
+    });
 
-  const filters = useReservationTableFilters()
-  const columns = useReservationTableColumns()
+  const filters = useReservationTableFilters();
+  const columns = useReservationTableColumns();
 
   const { table } = useDataTable({
     data: reservations || [],
@@ -32,23 +38,23 @@ export const ReservationListTable = () => {
     enablePagination: true,
     getRowId: (row) => row.id,
     pageSize: PAGE_SIZE,
-  })
+  });
 
   if (isError) {
-    throw error
+    throw error;
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className='divide-y p-0'>
+      <div className='flex items-center justify-between px-6 py-4'>
         <div>
-          <Heading>{t("reservations.domain")}</Heading>
-          <Text className="text-ui-fg-subtle" size="small">
-            {t("reservations.subtitle")}
+          <Heading>{t('reservations.domain')}</Heading>
+          <Text className='text-ui-fg-subtle' size='small'>
+            {t('reservations.subtitle')}
           </Text>
         </div>
-        <Button variant="secondary" size="small" asChild>
-          <Link to="create">{t("actions.create")}</Link>
+        <Button variant='secondary' size='small' asChild>
+          <Link to='create'>{t('actions.create')}</Link>
         </Button>
       </div>
       <_DataTable
@@ -63,5 +69,5 @@ export const ReservationListTable = () => {
         search={false}
       />
     </Container>
-  )
-}
+  );
+};

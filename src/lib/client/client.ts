@@ -26,14 +26,17 @@ export const fetchQuery = async (
   }: {
     method: 'GET' | 'POST';
     body?: object;
-    query?: { [key: string]: string };
+    query?: { [key: string]: string | number };
   }
 ) => {
-  const queryLength = Object.keys(query || {}).length;
   const params = Object.entries(query || {}).reduce(
     (acc, [key, value], index) => {
-      if (value && value !== undefined)
-        acc += `${key}=${value}${index + 1 <= queryLength ? '&' : ''}`;
+      if (value && value !== undefined) {
+        const queryLength = Object.values(
+          query || {}
+        ).filter((i) => i && i !== undefined).length;
+        acc += `${key}=${value}${index + 1 < queryLength ? '&' : ''}`;
+      }
       return acc;
     },
     ''

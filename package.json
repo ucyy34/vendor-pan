@@ -6,7 +6,6 @@
     "dev": "vite",
     "build": "tsup && node ./scripts/generate-types.js",
     "build:preview": "vite build",
-    "build:admin": "medusa build",
     "preview": "vite preview",
     "test": "vitest --run",
     "i18n:validate": "node ./scripts/i18n/validate-translation.js",
