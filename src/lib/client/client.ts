@@ -17,17 +17,39 @@ if (typeof window !== 'undefined') {
   (window as any).__sdk = sdk;
 }
 
-export const query = (
+export const fetchQuery = async (
   url: string,
-  params: { method: 'GET' | 'POST'; body?: any }
+  {
+    method,
+    body,
+    query,
+  }: {
+    method: 'GET' | 'POST';
+    body?: object;
+    query?: { [key: string]: string };
+  }
 ) => {
-  return fetch(`${backendUrl}${url}`, {
-    method: params.method,
-    headers: {
-      authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'x-publishable-api-key': publishableApiKey,
+  const queryLength = Object.keys(query || {}).length;
+  const params = Object.entries(query || {}).reduce(
+    (acc, [key, value], index) => {
+      if (value && value !== undefined)
+        acc += `${key}=${value}${index + 1 <= queryLength ? '&' : ''}`;
+      return acc;
     },
-    body: params.body ? JSON.stringify(params.body) : null,
-  });
+    ''
+  );
+  return await fetch(
+    `${backendUrl}${url}${params && `?${params}`}`,
+    {
+      method: method,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'x-publishable-api-key': publishableApiKey,
+      },
+      body: body ? JSON.stringify(body) : null,
+    }
+  )
+    .then((res) => res.json())
+    .catch(() => null);
 };

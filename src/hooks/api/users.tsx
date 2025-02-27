@@ -7,7 +7,7 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import { sdk } from '../../lib/client';
+import { fetchQuery, sdk } from '../../lib/client';
 import { queryClient } from '../../lib/query-client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
 import { StoreVendor } from '../../types/user';
@@ -18,26 +18,27 @@ const usersQueryKeys = {
   me: () => [USERS_QUERY_KEY, 'me'],
 };
 
-export const useMe = () => {
+export const useMe = (
+  query?: HttpTypes.AdminUserParams,
+  options?: UseQueryOptions<
+    HttpTypes.AdminUserResponse,
+    FetchError,
+    HttpTypes.AdminUserResponse & { seller: StoreVendor },
+    QueryKey
+  >
+) => {
   const { data, ...rest } = useQuery({
-    queryFn: async (): Promise<StoreVendor | null> =>
-      sdk.client
-        .fetch<{ seller: StoreVendor }>(
-          '/vendor/sellers/me',
-          {
-            query: {
-              fields:
-                '+product, +created_at,*product,*product.variants,*product.variants.prices,*review',
-            },
-          }
-        )
-        .then(({ seller }) => seller)
-        .catch(() => null),
+    queryFn: async () =>
+      fetchQuery('/vendor/sellers/me', {
+        method: 'GET',
+        query: query as { [key: string]: string },
+      }),
     queryKey: usersQueryKeys.me(),
+    ...options,
   });
 
   return {
-    seller: data,
+    seller: data?.seller,
     ...rest,
   };
 };
