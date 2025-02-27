@@ -7,8 +7,8 @@ async function generateTypes() {
   const fs = require('fs');
   const path = require('path');
 
-  const distDir = path.resolve(__dirname, '../dist');
-  const filePath = path.join(distDir, 'index.d.ts');
+  const distDir = path.resolve(__dirname, "../dist")
+  const filePath = path.join(distDir, "index.d.ts")
 
   const fileContent = `
 import * as react_jsx_runtime from "react/jsx-runtime"
