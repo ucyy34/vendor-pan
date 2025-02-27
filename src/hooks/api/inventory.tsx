@@ -1,27 +1,28 @@
-import { FetchError } from "@medusajs/js-sdk"
-import { HttpTypes } from "@medusajs/types"
+import { FetchError } from '@medusajs/js-sdk';
+import { HttpTypes } from '@medusajs/types';
 import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
-} from "@tanstack/react-query"
+} from '@tanstack/react-query';
 
-import { sdk } from "../../lib/client"
-import { queryClient } from "../../lib/query-client"
-import { queryKeysFactory } from "../../lib/query-key-factory"
-import { variantsQueryKeys } from "./products"
+import { fetchQuery, sdk } from '../../lib/client';
+import { queryClient } from '../../lib/query-client';
+import { queryKeysFactory } from '../../lib/query-key-factory';
+import { variantsQueryKeys } from './products';
 
-const INVENTORY_ITEMS_QUERY_KEY = "inventory_items" as const
+const INVENTORY_ITEMS_QUERY_KEY =
+  'inventory_items' as const;
 export const inventoryItemsQueryKeys = queryKeysFactory(
   INVENTORY_ITEMS_QUERY_KEY
-)
+);
 
-const INVENTORY_ITEM_LEVELS_QUERY_KEY = "inventory_item_levels" as const
-export const inventoryItemLevelsQueryKeys = queryKeysFactory(
-  INVENTORY_ITEM_LEVELS_QUERY_KEY
-)
+const INVENTORY_ITEM_LEVELS_QUERY_KEY =
+  'inventory_item_levels' as const;
+export const inventoryItemLevelsQueryKeys =
+  queryKeysFactory(INVENTORY_ITEM_LEVELS_QUERY_KEY);
 
 export const useInventoryItems = (
   query?: HttpTypes.AdminInventoryItemParams,
@@ -32,17 +33,21 @@ export const useInventoryItems = (
       HttpTypes.AdminInventoryItemListResponse,
       QueryKey
     >,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.inventoryItem.list(query),
+    queryFn: () =>
+      fetchQuery('/vendor/inventory-items', {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     queryKey: inventoryItemsQueryKeys.list(query),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const useInventoryItem = (
   id: string,
@@ -54,17 +59,18 @@ export const useInventoryItem = (
       HttpTypes.AdminInventoryItemResponse,
       QueryKey
     >,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.inventoryItem.retrieve(id, query),
+    queryFn: () =>
+      sdk.admin.inventoryItem.retrieve(id, query),
     queryKey: inventoryItemsQueryKeys.detail(id),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const useCreateInventoryItem = (
   options?: UseMutationOptions<
@@ -74,17 +80,18 @@ export const useCreateInventoryItem = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload: HttpTypes.AdminCreateInventoryItem) =>
-      sdk.admin.inventoryItem.create(payload),
+    mutationFn: (
+      payload: HttpTypes.AdminCreateInventoryItem
+    ) => sdk.admin.inventoryItem.create(payload),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
-      options?.onSuccess?.(data, variables, context)
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useUpdateInventoryItem = (
   id: string,
@@ -95,20 +102,21 @@ export const useUpdateInventoryItem = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload: HttpTypes.AdminUpdateInventoryItem) =>
-      sdk.admin.inventoryItem.update(id, payload),
+    mutationFn: (
+      payload: HttpTypes.AdminUpdateInventoryItem
+    ) => sdk.admin.inventoryItem.update(id, payload),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
+      });
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.detail(id),
-      })
-      options?.onSuccess?.(data, variables, context)
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useDeleteInventoryItem = (
   id: string,
@@ -123,15 +131,15 @@ export const useDeleteInventoryItem = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
+      });
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.detail(id),
-      })
-      options?.onSuccess?.(data, variables, context)
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useDeleteInventoryItemLevel = (
   inventoryItemId: string,
@@ -144,22 +152,29 @@ export const useDeleteInventoryItemLevel = (
 ) => {
   return useMutation({
     mutationFn: () =>
-      sdk.admin.inventoryItem.deleteLevel(inventoryItemId, locationId),
+      sdk.admin.inventoryItem.deleteLevel(
+        inventoryItemId,
+        locationId
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemsQueryKeys.detail(inventoryItemId),
-      })
+        queryKey:
+          inventoryItemsQueryKeys.detail(inventoryItemId),
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemLevelsQueryKeys.detail(inventoryItemId),
-      })
-      options?.onSuccess?.(data, variables, context)
+        queryKey:
+          inventoryItemLevelsQueryKeys.detail(
+            inventoryItemId
+          ),
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useInventoryItemLevels = (
   inventoryItemId: string,
@@ -171,17 +186,22 @@ export const useInventoryItemLevels = (
       HttpTypes.AdminInventoryLevelListResponse,
       QueryKey
     >,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.inventoryItem.listLevels(inventoryItemId, query),
-    queryKey: inventoryItemLevelsQueryKeys.detail(inventoryItemId),
+    queryFn: () =>
+      sdk.admin.inventoryItem.listLevels(
+        inventoryItemId,
+        query
+      ),
+    queryKey:
+      inventoryItemLevelsQueryKeys.detail(inventoryItemId),
     ...options,
-  })
+  });
 
-  return { ...data, ...rest }
-}
+  return { ...data, ...rest };
+};
 
 export const useUpdateInventoryLevel = (
   inventoryItemId: string,
@@ -193,23 +213,33 @@ export const useUpdateInventoryLevel = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload: HttpTypes.AdminUpdateInventoryLevel) =>
-      sdk.admin.inventoryItem.updateLevel(inventoryItemId, locationId, payload),
+    mutationFn: (
+      payload: HttpTypes.AdminUpdateInventoryLevel
+    ) =>
+      sdk.admin.inventoryItem.updateLevel(
+        inventoryItemId,
+        locationId,
+        payload
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemsQueryKeys.detail(inventoryItemId),
-      })
+        queryKey:
+          inventoryItemsQueryKeys.detail(inventoryItemId),
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemLevelsQueryKeys.detail(inventoryItemId),
-      })
-      options?.onSuccess?.(data, variables, context)
+        queryKey:
+          inventoryItemLevelsQueryKeys.detail(
+            inventoryItemId
+          ),
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useBatchInventoryItemLocationLevels = (
   inventoryItemId: string,
@@ -228,18 +258,22 @@ export const useBatchInventoryItemLocationLevels = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
-      })
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemsQueryKeys.detail(inventoryItemId),
-      })
+        queryKey:
+          inventoryItemsQueryKeys.detail(inventoryItemId),
+      });
       queryClient.invalidateQueries({
-        queryKey: inventoryItemLevelsQueryKeys.detail(inventoryItemId),
-      })
-      options?.onSuccess?.(data, variables, context)
+        queryKey:
+          inventoryItemLevelsQueryKeys.detail(
+            inventoryItemId
+          ),
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};
 
 export const useBatchInventoryItemsLocationLevels = (
   options?: UseMutationOptions<
@@ -250,16 +284,18 @@ export const useBatchInventoryItemsLocationLevels = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.inventoryItem.batchInventoryItemsLocationLevels(payload),
+      sdk.admin.inventoryItem.batchInventoryItemsLocationLevels(
+        payload
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.all,
-      })
+      });
       queryClient.invalidateQueries({
         queryKey: variantsQueryKeys.lists(),
-      })
-      options?.onSuccess?.(data, variables, context)
+      });
+      options?.onSuccess?.(data, variables, context);
     },
     ...options,
-  })
-}
+  });
+};

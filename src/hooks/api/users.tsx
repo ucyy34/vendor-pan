@@ -19,7 +19,6 @@ const usersQueryKeys = {
 };
 
 export const useMe = (
-  query?: HttpTypes.AdminUserParams,
   options?: UseQueryOptions<
     HttpTypes.AdminUserResponse,
     FetchError,
@@ -31,7 +30,6 @@ export const useMe = (
     queryFn: async () =>
       fetchQuery('/vendor/sellers/me', {
         method: 'GET',
-        query: query as { [key: string]: string },
       }),
     queryKey: usersQueryKeys.me(),
     ...options,

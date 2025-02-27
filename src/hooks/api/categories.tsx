@@ -57,7 +57,11 @@ export const useProductCategories = (
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: categoriesQueryKeys.list(query),
-    queryFn: () => sdk.admin.productCategory.list(query),
+    queryFn: () =>
+      fetchQuery('/store/product-categories', {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     ...options,
   });
 

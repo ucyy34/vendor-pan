@@ -35,6 +35,170 @@ export const RouteMap: RouteObject[] = [
             lazy: () => import('../../routes/dashboard'),
           },
           {
+            path: '/requests',
+            errorElement: <ErrorBoundary />,
+            handle: {
+              breadcrumb: () => 'Requests',
+            },
+            children: [
+              {
+                path: '',
+                lazy: async () => {
+                  const { Requests } = await import(
+                    '../../routes/requests/requests-list'
+                  );
+
+                  return {
+                    Component: Requests,
+                  };
+                },
+              },
+              {
+                path: 'categories',
+                handle: {
+                  breadcrumb: () => 'Categories requests',
+                },
+                lazy: async () => {
+                  const { RequestsCategoriesList } =
+                    await import(
+                      '../../routes/requests/requests-list'
+                    );
+
+                  return {
+                    Component: RequestsCategoriesList,
+                  };
+                },
+                children: [
+                  {
+                    path: 'create',
+                    lazy: () =>
+                      import(
+                        '../../routes/categories/category-create'
+                      ),
+                  },
+                  {
+                    path: ':id/edit',
+                    lazy: () =>
+                      import(
+                        '../../routes/categories/category-edit'
+                      ),
+                  },
+                ],
+              },
+              {
+                path: 'collections',
+                handle: {
+                  breadcrumb: () => 'Collection requests',
+                },
+                lazy: async () => {
+                  const { RequestsCollectionsList } =
+                    await import(
+                      '../../routes/requests/requests-list'
+                    );
+
+                  return {
+                    Component: RequestsCollectionsList,
+                  };
+                },
+              },
+              {
+                path: 'reviews',
+                handle: {
+                  breadcrumb: () => 'Reviews requests',
+                },
+                lazy: async () => {
+                  const { RequestReviewsList } =
+                    await import(
+                      '../../routes/requests/requests-list'
+                    );
+
+                  return {
+                    Component: RequestReviewsList,
+                  };
+                },
+              },
+              {
+                path: 'orders',
+                handle: {
+                  breadcrumb: () => 'Orders requests',
+                },
+                lazy: async () => {
+                  const { RequestOrdersList } =
+                    await import(
+                      '../../routes/requests/requests-list'
+                    );
+
+                  return {
+                    Component: RequestOrdersList,
+                  };
+                },
+              },
+              {
+                path: ':id',
+                lazy: async () => {
+                  const { Component, Breadcrumb, loader } =
+                    await import(
+                      '../../routes/requests/request-detail'
+                    );
+
+                  return {
+                    Component,
+                    loader,
+                    handle: {
+                      breadcrumb: (match: UIMatch<any>) => (
+                        <Breadcrumb {...match} />
+                      ),
+                    },
+                  };
+                },
+              },
+            ],
+          },
+          {
+            path: '/reviews',
+            errorElement: <ErrorBoundary />,
+            handle: {
+              breadcrumb: () => 'Reviews',
+            },
+            children: [
+              {
+                path: '',
+                lazy: () =>
+                  import(
+                    '../../routes/reviews/reviews-list'
+                  ),
+              },
+              {
+                path: ':id',
+                lazy: async () => {
+                  const { Component, Breadcrumb, loader } =
+                    await import(
+                      '../../routes/reviews/review-detail'
+                    );
+
+                  return {
+                    Component,
+                    loader,
+                    handle: {
+                      breadcrumb: (match: UIMatch<any>) => (
+                        <Breadcrumb {...match} />
+                      ),
+                    },
+                  };
+                },
+                children: [
+                  {
+                    path: 'reply',
+                    lazy: () =>
+                      import(
+                        '../../routes/reviews/review-reply'
+                      ),
+                  },
+                ],
+              },
+            ],
+          },
+          {
             path: '/products',
             errorElement: <ErrorBoundary />,
             handle: {
