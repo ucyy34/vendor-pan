@@ -5,6 +5,8 @@ import { useReview } from '../../../hooks/api/review';
 import { ReviewGeneralSection } from './components/review-general-section';
 import { reviewLoader } from './loader';
 import { TwoColumnPageSkeleton } from '../../../components/common/skeleton';
+import { ReviewCustomerSection } from './components/review-customer-section';
+import { ReviewProductSection } from './components/review-product-section';
 
 export const ReviewDetail = () => {
   const initialData = useLoaderData() as Awaited<
@@ -14,7 +16,7 @@ export const ReviewDetail = () => {
   const { id } = useParams();
   const { review, isLoading, isError, error } = useReview(
     id!,
-    { fields: '*' },
+    {},
     { initialData }
   );
 
@@ -51,7 +53,12 @@ export const ReviewDetail = () => {
       <TwoColumnPage.Main>
         <ReviewGeneralSection review={review} />
       </TwoColumnPage.Main>
-      <TwoColumnPage.Sidebar>Sidebar</TwoColumnPage.Sidebar>
+      <TwoColumnPage.Sidebar>
+        <ReviewCustomerSection customer={review.customer} />
+        {review.reference !== 'seller' && (
+          <ReviewProductSection />
+        )}
+      </TwoColumnPage.Sidebar>
     </TwoColumnPage>
   );
 };

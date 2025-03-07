@@ -7,25 +7,29 @@ const PAGE_SIZE = 20;
 
 export const RequestListTable = ({
   request_type,
+  customColumns,
 }: {
   request_type: string;
+  customColumns?: any;
 }) => {
-  const { requests, count, isPending, isError, error } =
-    useRequests();
+  const { requests, isPending, isError, error } =
+    useRequests({ fields: '+review' });
 
-  const requestList =
+  const data =
     requests?.filter(
       ({ type }: { type: string }) => type === request_type
     ) || [];
 
+  const count = data?.length || 0;
+
   const columns = useRequestsTableColumns();
 
   const { table } = useDataTable({
-    data: requestList || [],
-    columns,
+    data,
+    columns: customColumns || columns,
     count,
     enablePagination: true,
-    getRowId: (row) => row.id,
+    getRowId: (row: any) => row.id,
     pageSize: PAGE_SIZE,
   });
 
@@ -37,12 +41,18 @@ export const RequestListTable = ({
     <div>
       <_DataTable
         table={table}
-        columns={columns}
+        columns={customColumns || columns}
         pageSize={PAGE_SIZE}
         count={count}
         isLoading={isPending}
         pagination
-        // navigateTo={(row) => `/requests/${row.id}`}
+        navigateTo={({ original }: any) => {
+          const isAccepted = original.status === 'accepted';
+          return request_type === 'review_remove' &&
+            !isAccepted
+            ? `/reviews/${original.data.review_id}`
+            : '';
+        }}
         search={false}
       />
     </div>

@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
     'http://localhost:8000';
   const PUBLISHABLE_API_KEY =
     env.VITE_PUBLISHABLE_API_KEY || '';
+  const TALK_JS_APP_ID = env.VITE_TALK_JS_APP_ID || '';
 
   /**
    * Add this to your .env file to specify the project to load admin extensions from.
@@ -37,6 +38,7 @@ export default defineConfig(({ mode }) => {
       __PUBLISHABLE_API_KEY__: JSON.stringify(
         PUBLISHABLE_API_KEY
       ),
+      __TALK_JS_APP_ID__: JSON.stringify(TALK_JS_APP_ID),
     },
     server: {
       open: true,

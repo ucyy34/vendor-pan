@@ -10,7 +10,10 @@ import {
 import { fetchQuery, sdk } from '../../lib/client';
 import { queryClient } from '../../lib/query-client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
-import { StoreVendor } from '../../types/user';
+import {
+  StoreVendor,
+  TeamMemberProps,
+} from '../../types/user';
 
 const USERS_QUERY_KEY = 'users' as const;
 const usersQueryKeys = {
@@ -22,7 +25,9 @@ export const useMe = (
   options?: UseQueryOptions<
     HttpTypes.AdminUserResponse,
     FetchError,
-    HttpTypes.AdminUserResponse & { seller: StoreVendor },
+    HttpTypes.AdminUserResponse & {
+      seller: StoreVendor;
+    },
     QueryKey
   >
 ) => {
@@ -41,6 +46,35 @@ export const useMe = (
   };
 };
 
+export const useUpdateMe = (
+  options?: UseMutationOptions<
+    HttpTypes.AdminUserResponse,
+    FetchError,
+    StoreVendor,
+    QueryKey
+  >
+) => {
+  return useMutation({
+    mutationFn: (body) =>
+      fetchQuery('/vendor/sellers/me', {
+        method: 'POST',
+        body,
+      }),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.lists(),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: usersQueryKeys.me(),
+      });
+
+      options?.onSuccess?.(data, variables, context);
+    },
+    ...options,
+  });
+};
+
 export const useUser = (
   id: string,
   query?: HttpTypes.AdminUserParams,
@@ -48,14 +82,20 @@ export const useUser = (
     UseQueryOptions<
       HttpTypes.AdminUserResponse,
       FetchError,
-      HttpTypes.AdminUserResponse,
+      HttpTypes.AdminUserResponse & {
+        member: TeamMemberProps;
+      },
       QueryKey
     >,
     'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.user.retrieve(id, query),
+    queryFn: () =>
+      fetchQuery(`/vendor/members/${id}`, {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     queryKey: usersQueryKeys.detail(id),
     ...options,
   });
@@ -69,14 +109,18 @@ export const useUsers = (
     UseQueryOptions<
       HttpTypes.AdminUserListResponse,
       FetchError,
-      HttpTypes.AdminUserListResponse,
+      HttpTypes.AdminUserListResponse & { members: any[] },
       QueryKey
     >,
     'queryFn' | 'queryKey'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.user.list(query),
+    queryFn: () =>
+      fetchQuery('/vendor/members', {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     queryKey: usersQueryKeys.list(query),
     ...options,
   });
@@ -109,17 +153,19 @@ export const useCreateUser = (
 
 export const useUpdateUser = (
   id: string,
-  query?: HttpTypes.AdminUserParams,
   options?: UseMutationOptions<
     HttpTypes.AdminUserResponse,
     FetchError,
-    HttpTypes.AdminUpdateUser,
+    { name: string },
     QueryKey
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.user.update(id, payload, query),
+    mutationFn: (body) =>
+      fetchQuery(`/vendor/members/${id}`, {
+        method: 'POST',
+        body,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: usersQueryKeys.detail(id),
@@ -148,7 +194,10 @@ export const useDeleteUser = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.user.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/members/${id}`, {
+        method: 'DELETE',
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: usersQueryKeys.detail(id),

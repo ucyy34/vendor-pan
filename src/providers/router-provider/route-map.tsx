@@ -155,6 +155,14 @@ export const RouteMap: RouteObject[] = [
             ],
           },
           {
+            path: '/messages',
+            errorElement: <ErrorBoundary />,
+            handle: {
+              breadcrumb: () => 'Messages',
+            },
+            lazy: () => import('../../routes/messages'),
+          },
+          {
             path: '/reviews',
             errorElement: <ErrorBoundary />,
             handle: {
@@ -192,6 +200,13 @@ export const RouteMap: RouteObject[] = [
                     lazy: () =>
                       import(
                         '../../routes/reviews/review-reply'
+                      ),
+                  },
+                  {
+                    path: 'report',
+                    lazy: () =>
+                      import(
+                        '../../routes/reviews/review-report'
                       ),
                   },
                 ],
@@ -1314,6 +1329,13 @@ export const RouteMap: RouteObject[] = [
                 path: 'edit',
                 lazy: () =>
                   import('../../routes/store/store-edit'),
+              },
+              {
+                path: 'edit-company',
+                lazy: () =>
+                  import(
+                    '../../routes/store/store-edit-company'
+                  ),
               },
               {
                 path: 'currencies',

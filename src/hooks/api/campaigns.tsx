@@ -57,7 +57,7 @@ export const useCampaigns = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      fetchQuery('/vendor/campigns', {
+      fetchQuery('/vendor/campaigns', {
         method: 'GET',
         query: query as { [key: string]: string | number },
       }),

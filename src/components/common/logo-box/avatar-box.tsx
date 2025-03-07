@@ -4,13 +4,15 @@ import { IconAvatar } from '../icon-avatar';
 
 export default function AvatarBox({
   checked,
+  size = 44,
 }: {
   checked?: boolean;
+  size?: number;
 }) {
   return (
     <IconAvatar
-      size='xlarge'
-      className="bg-ui-button-neutral shadow-buttons-neutral after:button-neutral-gradient relative mb-4 flex h-[44px] w-[44px] items-center justify-center rounded-xl after:inset-0 after:content-['']"
+      size={size === 44 ? 'xlarge' : 'small'}
+      className="bg-ui-button-neutral shadow-buttons-neutral after:button-neutral-gradient relative mb-4 flex items-center justify-center rounded-xl after:inset-0 after:content-['']"
     >
       {checked && (
         <motion.div

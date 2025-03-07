@@ -64,7 +64,10 @@ export const useInventoryItem = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      sdk.admin.inventoryItem.retrieve(id, query),
+      fetchQuery(`/vendor/inventory-items/${id}`, {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     queryKey: inventoryItemsQueryKeys.detail(id),
     ...options,
   });
@@ -104,7 +107,11 @@ export const useUpdateInventoryItem = (
   return useMutation({
     mutationFn: (
       payload: HttpTypes.AdminUpdateInventoryItem
-    ) => sdk.admin.inventoryItem.update(id, payload),
+    ) =>
+      fetchQuery(`/vendor/inventory-items/${id}`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
@@ -183,7 +190,9 @@ export const useInventoryItemLevels = (
     UseQueryOptions<
       HttpTypes.AdminInventoryLevelListResponse,
       FetchError,
-      HttpTypes.AdminInventoryLevelListResponse,
+      HttpTypes.AdminInventoryLevelListResponse & {
+        location_levels: any[];
+      },
       QueryKey
     >,
     'queryKey' | 'queryFn'
@@ -191,9 +200,14 @@ export const useInventoryItemLevels = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      sdk.admin.inventoryItem.listLevels(
-        inventoryItemId,
-        query
+      fetchQuery(
+        `/vendor/inventory-items/${inventoryItemId}/location-levels`,
+        {
+          method: 'GET',
+          query: query as {
+            [key: string]: string | number;
+          },
+        }
       ),
     queryKey:
       inventoryItemLevelsQueryKeys.detail(inventoryItemId),

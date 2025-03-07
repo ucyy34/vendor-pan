@@ -34,7 +34,10 @@ export const Login = () => {
   const { getWidgets } = useDashboardExtension();
 
   const from =
-    location.state?.from?.pathname || '/dashboard';
+    location.state?.from?.pathname &&
+    location.state.from.pathname !== '/'
+      ? location.state?.from?.pathname
+      : '/dashboard';
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -73,6 +76,7 @@ export const Login = () => {
             });
           },
           onSuccess: () => {
+            console.log('success', from);
             navigate(from, { replace: true });
           },
         }

@@ -8,7 +8,7 @@ import {
 
 import { FetchError } from '@medusajs/js-sdk';
 import { HttpTypes } from '@medusajs/types';
-import { sdk } from '../../lib/client';
+import { fetchQuery, sdk } from '../../lib/client';
 import { queryClient } from '../../lib/query-client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
 import { pricePreferencesQueryKeys } from './price-preferences';
@@ -23,7 +23,10 @@ export const storeQueryKeys =
 export async function retrieveActiveStore(
   query?: HttpTypes.AdminStoreParams
 ): Promise<HttpTypes.AdminStoreResponse> {
-  const response = await sdk.admin.store.list(query);
+  const response = await fetchQuery('/vendor/stores', {
+    method: 'GET',
+    query: query as { [key: string]: string | number },
+  });
 
   const activeStore = response.stores?.[0];
 

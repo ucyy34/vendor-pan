@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { RouteFocusModal } from '../../../components/modals';
-import { useRegions } from '../../../hooks/api';
+import { useSalesChannels } from '../../../hooks/api';
 import { usePricePreferences } from '../../../hooks/api/price-preferences';
-import { useSalesChannel } from '../../../hooks/api/sales-channels';
 import { useStore } from '../../../hooks/api/store';
 import { ProductCreateForm } from './components/product-create-form/product-create-form';
 
@@ -18,21 +17,10 @@ export const ProductCreate = () => {
   //   fields: "+default_sales_channel",
   // })
 
-  // const {
-  //   sales_channel,
-  //   isPending: isSalesChannelPending,
-  //   isError: isSalesChannelError,
-  //   error: salesChannelError,
-  // } = useSalesChannel(store?.default_sales_channel_id!, {
-  //   enabled: !!store?.default_sales_channel_id,
-  // })
-
   const {
-    regions,
-    isPending: isRegionsPending,
-    isError: isRegionsError,
-    error: regionsError,
-  } = useRegions({ limit: 9999 });
+    sales_channels,
+    isPending: isSalesChannelPending,
+  } = useSalesChannels();
 
   // const {
   //   price_preferences,
@@ -46,26 +34,12 @@ export const ProductCreate = () => {
   const ready =
     // !!store &&
     // !isStorePending &&
-    !!regions && !isRegionsPending;
-  // !!sales_channel &&
-  // !isSalesChannelPending &&
+    !!sales_channels && !isSalesChannelPending;
   // !!price_preferences &&
   // !isPricePreferencesPending;
 
   // if (isStoreError) {
   //   throw storeError
-  // }
-
-  if (isRegionsError) {
-    throw regionsError;
-  }
-
-  // if (isSalesChannelError) {
-  //   throw salesChannelError
-  // }
-
-  // if (isPricePreferencesError) {
-  //   throw pricePreferencesError;
   // }
 
   return (
@@ -82,10 +56,9 @@ export const ProductCreate = () => {
       </RouteFocusModal.Description>
       {ready && (
         <ProductCreateForm
-          // defaultChannel={sales_channel}
+          defaultChannel={sales_channels[0]}
           // store={store}
           // pricePreferences={price_preferences}
-          regions={regions}
         />
       )}
     </RouteFocusModal>

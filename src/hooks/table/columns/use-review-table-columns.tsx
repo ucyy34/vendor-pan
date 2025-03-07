@@ -25,14 +25,14 @@ export const useReviewTableColumns = () => {
       columnHelper.display({
         id: 'customer',
         header: () => <CustomerHeader />,
-        cell: ({
-          row: {
-            original: { first_name, last_name },
-          },
-        }) => (
+        cell: ({ row }) => (
           <NameCell
-            firstName={first_name}
-            lastName={last_name}
+            firstName={
+              row.original?.customer?.first_name || ''
+            }
+            lastName={
+              row.original?.customer?.last_name || ''
+            }
           />
         ),
       }),

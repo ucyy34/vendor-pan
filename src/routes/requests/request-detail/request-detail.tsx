@@ -18,8 +18,6 @@ export const RequestDetail = () => {
     { initialData }
   ) as any;
 
-  console.log({ request, isLoading, isError, error });
-
   const { getWidgets } = useDashboardExtension();
   if (isLoading || !request) {
     return (

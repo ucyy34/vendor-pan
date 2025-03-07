@@ -34,7 +34,11 @@ export const useCreateProductOption = (
   return useMutation({
     mutationFn: (
       payload: HttpTypes.AdminCreateProductOption
-    ) => sdk.admin.product.createOption(productId, payload),
+    ) =>
+      fetchQuery(`/vendor/products/${productId}/options`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (
       data: any,
       variables: any,
@@ -61,10 +65,9 @@ export const useUpdateProductOption = (
     mutationFn: (
       payload: HttpTypes.AdminUpdateProductOption
     ) =>
-      sdk.admin.product.updateOption(
-        productId,
-        optionId,
-        payload
+      fetchQuery(
+        `/vendor/products/${productId}/options/${optionId}`,
+        { method: 'POST', body: payload }
       ),
     onSuccess: (
       data: any,
@@ -94,7 +97,10 @@ export const useDeleteProductOption = (
 ) => {
   return useMutation({
     mutationFn: () =>
-      sdk.admin.product.deleteOption(productId, optionId),
+      fetchQuery(
+        `/vendor/products/${productId}/options/${optionId}`,
+        { method: 'DELETE' }
+      ),
     onSuccess: (
       data: any,
       variables: any,
@@ -178,7 +184,10 @@ export const useCreateProductVariant = (
     mutationFn: (
       payload: HttpTypes.AdminCreateProductVariant
     ) =>
-      sdk.admin.product.createVariant(productId, payload),
+      fetchQuery(`/vendor/products/${productId}/variants`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (
       data: any,
       variables: any,
@@ -203,12 +212,11 @@ export const useUpdateProductVariant = (
 ) => {
   return useMutation({
     mutationFn: (
-      payload: HttpTypes.AdminUpdateProductVariant
+      body: HttpTypes.AdminUpdateProductVariant
     ) =>
-      sdk.admin.product.updateVariant(
-        productId,
-        variantId,
-        payload
+      fetchQuery(
+        `/vendor/products/${productId}/variants/${variantId}`,
+        { method: 'POST', body }
       ),
     onSuccess: (
       data: any,
@@ -305,7 +313,10 @@ export const useDeleteVariant = (
 ) => {
   return useMutation({
     mutationFn: () =>
-      sdk.admin.product.deleteVariant(productId, variantId),
+      fetchQuery(
+        `/vendor/products/${productId}/variants/${variantId}`,
+        { method: 'DELETE' }
+      ),
     onSuccess: (
       data: any,
       variables: any,
@@ -337,7 +348,10 @@ export const useDeleteVariantLazy = (
 ) => {
   return useMutation({
     mutationFn: ({ variantId }) =>
-      sdk.admin.product.deleteVariant(productId, variantId),
+      fetchQuery(
+        `/vendor/products/${productId}/variants/${variantId}`,
+        { method: 'DELETE' }
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: variantsQueryKeys.lists(),
@@ -371,7 +385,11 @@ export const useProduct = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.product.retrieve(id, query),
+    queryFn: () =>
+      fetchQuery(`/vendor/products/${id}`, {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
     queryKey: productsQueryKeys.detail(id, query),
     ...options,
   });
@@ -408,12 +426,15 @@ export const useCreateProduct = (
   options?: UseMutationOptions<
     HttpTypes.AdminProductResponse,
     FetchError,
-    HttpTypes.AdminCreateProduct
+    any
   >
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.product.create(payload),
+      fetchQuery('/vendor/products', {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),
@@ -437,8 +458,31 @@ export const useUpdateProduct = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.product.update(id, payload),
+    mutationFn: async (payload) => {
+      const { product } = await fetchQuery(
+        `/vendor/products/${id}`,
+        {
+          method: 'GET',
+          query: {
+            fields: '-options,-variants,-type,-collection',
+          },
+        }
+      );
+
+      await delete product.id;
+      await delete product.rating;
+      await delete payload.additional_data;
+
+      return fetchQuery(`/vendor/products/${id}`, {
+        method: 'POST',
+        body: {
+          ...product,
+          height: parseInt(product.height),
+          width: parseInt(product.width),
+          ...payload,
+        },
+      });
+    },
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),

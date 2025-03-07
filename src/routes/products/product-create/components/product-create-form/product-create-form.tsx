@@ -18,12 +18,11 @@ import {
   useExtendableForm,
 } from '../../../../../extensions';
 import { useCreateProduct } from '../../../../../hooks/api/products';
-import { sdk } from '../../../../../lib/client';
+import { uploadFilesQuery } from '../../../../../lib/client';
 import {
   PRODUCT_CREATE_FORM_DEFAULTS,
   ProductCreateSchema,
 } from '../../constants';
-import { normalizeProductFormValues } from '../../utils';
 import { ProductCreateDetailsForm } from '../product-create-details-form';
 import { ProductCreateInventoryKitForm } from '../product-create-inventory-kit-form';
 import { ProductCreateOrganizeForm } from '../product-create-organize-form';
@@ -42,14 +41,12 @@ const SAVE_DRAFT_BUTTON = 'save-draft-button';
 
 type ProductCreateFormProps = {
   defaultChannel?: HttpTypes.AdminSalesChannel;
-  regions?: HttpTypes.AdminRegion[];
   store?: HttpTypes.AdminStore;
   pricePreferences?: HttpTypes.AdminPricePreference[];
 };
 
 export const ProductCreateForm = ({
   defaultChannel,
-  regions,
   store,
   pricePreferences,
 }: ProductCreateFormProps) => {
@@ -83,20 +80,6 @@ export const ProductCreateForm = ({
   });
 
   const { mutateAsync, isPending } = useCreateProduct();
-
-  const regionsCurrencyMap = useMemo(() => {
-    if (!regions?.length) {
-      return {};
-    }
-
-    return regions.reduce(
-      (acc, reg) => {
-        acc[reg.id] = reg.currency_code;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-  }, [regions]);
 
   /**
    * TODO: Important to revisit this - use variants watch so high in the tree can cause needless rerenders of the entire page
@@ -144,28 +127,24 @@ export const ProductCreateForm = ({
           const fileReqs = [];
           if (thumbnailReq) {
             fileReqs.push(
-              sdk.admin.upload
-                .create({ files: [thumbnailReq.file] })
-                .then((r) =>
-                  r.files.map((f) => ({
+              uploadFilesQuery(thumbnailReq.file).then(
+                (r: any) =>
+                  r.files.map((f: any) => ({
                     ...f,
                     isThumbnail: true,
                   }))
-                )
+              )
             );
           }
           if (otherMediaReq?.length) {
             fileReqs.push(
-              sdk.admin.upload
-                .create({
-                  files: otherMediaReq.map((m) => m.file),
-                })
-                .then((r) =>
-                  r.files.map((f) => ({
+              uploadFilesQuery(otherMediaReq).then(
+                (r: any) =>
+                  r.files.map((f: any) => ({
                     ...f,
                     isThumbnail: false,
                   }))
-                )
+              )
             );
           }
 
@@ -180,14 +159,36 @@ export const ProductCreateForm = ({
       }
 
       await mutateAsync(
-        normalizeProductFormValues({
+        {
           ...payload,
-          media: uploadedMedia,
-          status: (isDraftSubmission
-            ? 'draft'
-            : 'published') as any,
-          regionsCurrencyMap,
-        }),
+          status: isDraftSubmission ? 'draft' : 'published',
+          images: uploadedMedia,
+          weight:
+            parseInt(payload.weight || '') || undefined,
+          length:
+            parseInt(payload.length || '') || undefined,
+          height:
+            parseInt(payload.height || '') || undefined,
+          width: parseInt(payload.width || '') || undefined,
+          type_id: null,
+          collection_id: null,
+          shipping_profile_id: undefined,
+          enable_variants: undefined,
+          additional_data: undefined,
+          categories: payload.categories.map((cat) => ({
+            id: cat,
+          })),
+          variants: payload.variants.map((variant) => ({
+            ...variant,
+            manage_inventory: true,
+            allow_backorder: false,
+            should_create: undefined,
+            is_default: undefined,
+            inventory_kit: undefined,
+            inventory: undefined,
+            prices: [],
+          })),
+        },
         {
           onSuccess: (data) => {
             toast.success(
@@ -348,12 +349,12 @@ export const ProductCreateForm = ({
               className='size-full overflow-y-auto'
               value={Tab.VARIANTS}
             >
-              {/* <ProductCreateVariantsForm
+              <ProductCreateVariantsForm
                 form={form}
-                store={store}
-                regions={regions}
-                pricePreferences={pricePreferences}
-              /> */}
+                // store={store}
+                // regions={regions}
+                // pricePreferences={pricePreferences}
+              />
             </ProgressTabs.Content>
             {showInventoryTab && (
               <ProgressTabs.Content

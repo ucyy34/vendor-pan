@@ -138,17 +138,17 @@ const useDynamicSearchResults = (
     }
   );
 
-  const productVariantResponse = useVariants(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: 'id,title,sku',
-    },
-    {
-      enabled: isAreaEnabled(currentArea, 'productVariant'),
-      placeholderData: keepPreviousData,
-    }
-  );
+  // const productVariantResponse = useVariants(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: 'id,title,sku',
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(currentArea, 'productVariant'),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // );
 
   const categoryResponse = useProductCategories(
     {
@@ -271,29 +271,29 @@ const useDynamicSearchResults = (
     }
   );
 
-  const taxRegionResponse = useTaxRegions(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: 'id,country_code,province_code',
-    },
-    {
-      enabled: isAreaEnabled(currentArea, 'taxRegion'),
-      placeholderData: keepPreviousData,
-    }
-  );
+  // const taxRegionResponse = useTaxRegions(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: 'id,country_code,province_code',
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(currentArea, 'taxRegion'),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // );
 
-  const returnReasonResponse = useReturnReasons(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: 'id,label,value',
-    },
-    {
-      enabled: isAreaEnabled(currentArea, 'returnReason'),
-      placeholderData: keepPreviousData,
-    }
-  );
+  // const returnReasonResponse = useReturnReasons(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: 'id,label,value',
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(currentArea, 'returnReason'),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // );
 
   const salesChannelResponse = useSalesChannels(
     {
@@ -310,7 +310,6 @@ const useDynamicSearchResults = (
   const productTypeResponse = useProductTypes(
     {
       q: debouncedSearch,
-      limit,
       fields: 'id,value',
     },
     {
@@ -346,7 +345,6 @@ const useDynamicSearchResults = (
   const shippingProfileResponse = useShippingProfiles(
     {
       q: debouncedSearch,
-      limit,
       fields: 'id,name',
     },
     {
@@ -358,40 +356,40 @@ const useDynamicSearchResults = (
     }
   );
 
-  const publishableApiKeyResponse = useApiKeys(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: 'id,title,redacted',
-      type: 'publishable',
-    },
-    {
-      enabled: isAreaEnabled(
-        currentArea,
-        'publishableApiKey'
-      ),
-      placeholderData: keepPreviousData,
-    }
-  );
+  // const publishableApiKeyResponse = useApiKeys(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: 'id,title,redacted',
+  //     type: 'publishable',
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(
+  //       currentArea,
+  //       'publishableApiKey'
+  //     ),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // );
 
-  const secretApiKeyResponse = useApiKeys(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: 'id,title,redacted',
-      type: 'secret',
-    },
-    {
-      enabled: isAreaEnabled(currentArea, 'secretApiKey'),
-      placeholderData: keepPreviousData,
-    }
-  );
+  // const secretApiKeyResponse = useApiKeys(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: 'id,title,redacted',
+  //     type: 'secret',
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(currentArea, 'secretApiKey'),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // );
 
   const responseMap = useMemo(
     () => ({
       order: orderResponse,
       product: productResponse,
-      productVariant: productVariantResponse,
+      // productVariant: productVariantResponse,
       collection: collectionResponse,
       category: categoryResponse,
       inventory: inventoryResponse,
@@ -402,20 +400,20 @@ const useDynamicSearchResults = (
       priceList: priceListResponse,
       user: userResponse,
       region: regionResponse,
-      taxRegion: taxRegionResponse,
-      returnReason: returnReasonResponse,
+      // taxRegion: taxRegionResponse,
+      // returnReason: returnReasonResponse,
       salesChannel: salesChannelResponse,
       productType: productTypeResponse,
       productTag: productTagResponse,
       location: locationResponse,
       shippingProfile: shippingProfileResponse,
-      publishableApiKey: publishableApiKeyResponse,
-      secretApiKey: secretApiKeyResponse,
+      // publishableApiKey: publishableApiKeyResponse,
+      // secretApiKey: secretApiKeyResponse,
     }),
     [
       orderResponse,
       productResponse,
-      productVariantResponse,
+      // productVariantResponse,
       inventoryResponse,
       categoryResponse,
       collectionResponse,
@@ -426,15 +424,15 @@ const useDynamicSearchResults = (
       priceListResponse,
       userResponse,
       regionResponse,
-      taxRegionResponse,
-      returnReasonResponse,
+      // taxRegionResponse,
+      // returnReasonResponse,
       salesChannelResponse,
       productTypeResponse,
       productTagResponse,
       locationResponse,
       shippingProfileResponse,
-      publishableApiKeyResponse,
-      secretApiKeyResponse,
+      // publishableApiKeyResponse,
+      // secretApiKeyResponse,
     ]
   );
 

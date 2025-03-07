@@ -1,5 +1,4 @@
 import { Container, Heading } from '@medusajs/ui';
-import { keepPreviousData } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { _DataTable } from '../../../../../components/table/data-table/data-table';
@@ -9,18 +8,16 @@ import { useOrderTableFilters } from '../../../../../hooks/table/filters/use-ord
 import { useOrderTableQuery } from '../../../../../hooks/table/query/use-order-table-query';
 import { useDataTable } from '../../../../../hooks/use-data-table';
 
-import { DEFAULT_FIELDS } from '../../const';
-
 const PAGE_SIZE = 20;
 
 export const OrderListTable = () => {
   const { t } = useTranslation();
-  const { searchParams, raw } = useOrderTableQuery({
+  const { raw } = useOrderTableQuery({
     pageSize: PAGE_SIZE,
   });
 
   const { orders, count, isError, error, isLoading } =
-    useOrders('limit=100&offset=0');
+    useOrders({ limit: 1000, offset: 0 });
 
   const filters = useOrderTableFilters();
   const columns = useOrderTableColumns({});

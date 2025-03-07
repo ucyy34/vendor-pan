@@ -10,12 +10,26 @@ export interface Review {
 }
 
 export interface StoreVendor {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
   description?: string;
-  handle: string;
+  handle?: string;
   photo?: string;
-  created_at: string;
+  created_at?: string;
   product?: HttpTypes.StoreProduct[];
   review?: Review | Review[];
+  address_line?: string;
+  postal_code?: string;
+  city?: string;
+  country_code?: string;
+  tax_id?: string;
+}
+
+export interface TeamMemberProps {
+  id: string;
+  seller_id: string;
+  name: string;
+  email?: string;
 }

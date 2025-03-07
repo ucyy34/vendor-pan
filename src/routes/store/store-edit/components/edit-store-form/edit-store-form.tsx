@@ -1,224 +1,287 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { HttpTypes } from "@medusajs/types"
-import { Button, Input, Select, toast } from "@medusajs/ui"
-import { useForm } from "react-hook-form"
-import { useTranslation } from "react-i18next"
-import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Button,
+  Input,
+  Textarea,
+  toast,
+} from '@medusajs/ui';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
-import { Form } from "../../../../../components/common/form"
-import { Combobox } from "../../../../../components/inputs/combobox"
-import { RouteDrawer, useRouteModal } from "../../../../../components/modals"
-import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
-import { useUpdateStore } from "../../../../../hooks/api/store"
-import { useComboboxData } from "../../../../../hooks/use-combobox-data"
-import { sdk } from "../../../../../lib/client"
+import { Form } from '../../../../../components/common/form';
 
-type EditStoreFormProps = {
-  store: HttpTypes.AdminStore
-}
+import {
+  RouteDrawer,
+  useRouteModal,
+} from '../../../../../components/modals';
+import { KeyboundForm } from '../../../../../components/utilities/keybound-form';
+import { StoreVendor } from '../../../../../types/user';
+import { useUpdateMe } from '../../../../../hooks/api';
+import { MediaSchema } from '../../../../products/product-create/constants';
+import {
+  FileType,
+  FileUpload,
+} from '../../../../../components/common/file-upload';
+import { useCallback } from 'react';
+import { uploadFilesQuery } from '../../../../../lib/client';
+import { HttpTypes } from '@medusajs/types';
 
-const EditStoreSchema = z.object({
+export const EditStoreSchema = z.object({
   name: z.string().min(1),
-  default_currency_code: z.string().optional(),
-  default_region_id: z.string().optional(),
-  default_sales_channel_id: z.string().optional(),
-  default_location_id: z.string().optional(),
-})
+  description: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
+  media: z.array(MediaSchema).optional(),
+});
 
-export const EditStoreForm = ({ store }: EditStoreFormProps) => {
-  const { t } = useTranslation()
-  const { handleSuccess } = useRouteModal()
+const SUPPORTED_FORMATS = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/heic',
+  'image/svg+xml',
+];
+
+const SUPPORTED_FORMATS_FILE_EXTENSIONS = [
+  '.jpeg',
+  '.png',
+  '.gif',
+  '.webp',
+  '.heic',
+  '.svg',
+];
+
+export const EditStoreForm = ({
+  seller,
+}: {
+  seller: StoreVendor;
+}) => {
+  const { t } = useTranslation();
+  const { handleSuccess } = useRouteModal();
 
   const form = useForm<z.infer<typeof EditStoreSchema>>({
     defaultValues: {
-      name: store.name,
-      default_region_id: store.default_region_id || undefined,
-      default_currency_code:
-        store.supported_currencies?.find((c) => c.is_default)?.currency_code ||
-        undefined,
-      default_sales_channel_id: store.default_sales_channel_id || undefined,
-      default_location_id: store.default_location_id || undefined,
+      name: seller.name,
+      description: seller.description,
+      phone: seller.phone,
+      email: seller.email,
+      media: [],
     },
     resolver: zodResolver(EditStoreSchema),
-  })
+  });
 
-  const { mutateAsync, isPending } = useUpdateStore(store.id)
+  const { fields } = useFieldArray({
+    name: 'media',
+    control: form.control,
+    keyName: 'field_id',
+  });
 
-  const regionsCombobox = useComboboxData({
-    queryKey: ["regions", "default_region_id"],
-    queryFn: (params) =>
-      sdk.admin.region.list({ ...params, fields: "id,name" }),
-    defaultValue: store.default_region_id || undefined,
-    getOptions: (data) =>
-      data.regions.map((r) => ({ label: r.name, value: r.id })),
-  })
+  const { mutateAsync, isPending } = useUpdateMe();
 
-  const salesChannelsCombobox = useComboboxData({
-    queryFn: (params) =>
-      sdk.admin.salesChannel.list({ ...params, fields: "id,name" }),
-    getOptions: (data) =>
-      data.sales_channels.map((sc) => ({ label: sc.name, value: sc.id })),
-    queryKey: ["sales_channels", "default_sales_channel_id"],
-    defaultValue: store.default_sales_channel_id || undefined,
-  })
+  const hasInvalidFiles = useCallback(
+    (fileList: FileType[]) => {
+      const invalidFile = fileList.find(
+        (f) => !SUPPORTED_FORMATS.includes(f.file.type)
+      );
 
-  const locationsCombobox = useComboboxData({
-    queryFn: (params) =>
-      sdk.admin.stockLocation.list({ ...params, fields: "id,name" }),
-    getOptions: (data) =>
-      data.stock_locations.map((l) => ({ label: l.name, value: l.id })),
-    queryKey: ["stock_locations", "default_location_id"],
-    defaultValue: store.default_location_id || undefined,
-  })
+      if (invalidFile) {
+        form.setError('media', {
+          type: 'invalid_file',
+          message: t('products.media.invalidFileType', {
+            name: invalidFile.file.name,
+            types:
+              SUPPORTED_FORMATS_FILE_EXTENSIONS.join(', '),
+          }),
+        });
+
+        return true;
+      }
+
+      return false;
+    },
+    [form, t]
+  );
+
+  const onUploaded = useCallback(
+    (files: FileType[]) => {
+      form.clearErrors('media');
+      if (hasInvalidFiles(files)) {
+        return;
+      }
+
+      form.setValue('media', [
+        { ...files[0], isThumbnail: false },
+      ]);
+    },
+    [form, hasInvalidFiles]
+  );
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    const { default_currency_code, ...rest } = values
+    console.log(values);
 
-    const normalizedMutation: HttpTypes.AdminUpdateStore = {
-      ...rest,
-      supported_currencies: store.supported_currencies?.map((c) => ({
-        ...c,
-        is_default: c.currency_code === default_currency_code,
-      })),
+    let uploadedMedia: (HttpTypes.AdminFile & {
+      isThumbnail: boolean;
+    })[] = [];
+    try {
+      if (values.media?.length) {
+        const fileReqs = [];
+        fileReqs.push(
+          uploadFilesQuery(values.media).then((r: any) =>
+            r.files.map((f: any) => ({
+              ...f,
+              isThumbnail: false,
+            }))
+          )
+        );
+
+        uploadedMedia = (
+          await Promise.all(fileReqs)
+        ).flat();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     }
-    await mutateAsync(normalizedMutation, {
-      onSuccess: () => {
-        toast.success(t("store.toast.update"))
-        handleSuccess()
+
+    await mutateAsync(
+      {
+        name: values.name,
+        email: values.email,
+        description: values.description,
+        photo: uploadedMedia[0]?.url || '',
       },
-      onError: (error) => {
-        toast.error(error.message)
-      },
-    })
-  })
+      {
+        onSuccess: () => {
+          toast.success('Store updated');
+
+          handleSuccess();
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      }
+    );
+  });
 
   return (
     <RouteDrawer.Form form={form}>
-      <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col">
+      <KeyboundForm
+        onSubmit={handleSubmit}
+        className='flex h-full flex-col'
+      >
         <RouteDrawer.Body>
-          <div className="flex flex-col gap-y-8">
+          <div className='flex flex-col gap-y-8'>
             <Form.Field
+              name='media'
               control={form.control}
-              name="name"
+              render={() => {
+                return (
+                  <Form.Item>
+                    <div className='flex flex-col gap-y-2'>
+                      <div className='flex flex-col gap-y-1'>
+                        <Form.Label optional>
+                          Logo
+                        </Form.Label>
+                      </div>
+                      <Form.Control>
+                        <FileUpload
+                          uploadedImage={
+                            fields[0]?.url || ''
+                          }
+                          multiple={false}
+                          label={t(
+                            'products.media.uploadImagesLabel'
+                          )}
+                          hint={t(
+                            'products.media.uploadImagesHint'
+                          )}
+                          hasError={
+                            !!form.formState.errors.media
+                          }
+                          formats={SUPPORTED_FORMATS}
+                          onUploaded={onUploaded}
+                        />
+                      </Form.Control>
+                      <Form.ErrorMessage />
+                    </div>
+                  </Form.Item>
+                );
+              }}
+            />
+            <Form.Field
+              name='name'
+              control={form.control}
               render={({ field }) => (
                 <Form.Item>
-                  <Form.Label>{t("fields.name")}</Form.Label>
+                  <Form.Label>Name</Form.Label>
                   <Form.Control>
-                    <Input placeholder="ACME" {...field} />
+                    <Input {...field} />
                   </Form.Control>
                   <Form.ErrorMessage />
                 </Form.Item>
               )}
             />
             <Form.Field
+              name='email'
               control={form.control}
-              name="default_currency_code"
-              render={({ field: { onChange, ...field } }) => {
-                return (
-                  <Form.Item>
-                    <Form.Label>{t("store.defaultCurrency")}</Form.Label>
-                    <Form.Control>
-                      <Select {...field} onValueChange={onChange}>
-                        <Select.Trigger ref={field.ref}>
-                          <Select.Value />
-                        </Select.Trigger>
-                        <Select.Content>
-                          {store.supported_currencies?.map((currency) => (
-                            <Select.Item
-                              key={currency.currency_code}
-                              value={currency.currency_code}
-                            >
-                              {currency.currency_code.toUpperCase()}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select>
-                    </Form.Control>
-                  </Form.Item>
-                )
-              }}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control>
+                    <Input {...field} />
+                  </Form.Control>
+                  <Form.ErrorMessage />
+                </Form.Item>
+              )}
             />
             <Form.Field
+              name='phone'
               control={form.control}
-              name="default_region_id"
-              render={({ field }) => {
-                return (
-                  <Form.Item>
-                    <Form.Label>{t("store.defaultRegion")}</Form.Label>
-                    <Form.Control>
-                      <Combobox
-                        {...field}
-                        options={regionsCombobox.options}
-                        searchValue={regionsCombobox.searchValue}
-                        onSearchValueChange={
-                          regionsCombobox.onSearchValueChange
-                        }
-                        disabled={regionsCombobox.disabled}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )
-              }}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control>
+                    <Input {...field} />
+                  </Form.Control>
+                  <Form.ErrorMessage />
+                </Form.Item>
+              )}
             />
             <Form.Field
+              name='description'
               control={form.control}
-              name="default_sales_channel_id"
-              render={({ field }) => {
-                return (
-                  <Form.Item>
-                    <Form.Label>{t("store.defaultSalesChannel")}</Form.Label>
-                    <Form.Control>
-                      <Combobox
-                        {...field}
-                        options={salesChannelsCombobox.options}
-                        searchValue={salesChannelsCombobox.searchValue}
-                        onSearchValueChange={
-                          salesChannelsCombobox.onSearchValueChange
-                        }
-                        disabled={salesChannelsCombobox.disabled}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )
-              }}
-            />
-            <Form.Field
-              control={form.control}
-              name="default_location_id"
-              render={({ field }) => {
-                return (
-                  <Form.Item>
-                    <Form.Label>{t("store.defaultLocation")}</Form.Label>
-                    <Form.Control>
-                      <Combobox
-                        {...field}
-                        options={locationsCombobox.options}
-                        searchValue={locationsCombobox.searchValue}
-                        onSearchValueChange={
-                          locationsCombobox.onSearchValueChange
-                        }
-                        disabled={locationsCombobox.disabled}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )
-              }}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control>
+                    <Textarea {...field} />
+                  </Form.Control>
+                  <Form.ErrorMessage />
+                </Form.Item>
+              )}
             />
           </div>
         </RouteDrawer.Body>
         <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
+          <div className='flex items-center justify-end gap-x-2'>
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
-                {t("actions.cancel")}
+              <Button size='small' variant='secondary'>
+                {t('actions.cancel')}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" isLoading={isPending} type="submit">
-              {t("actions.save")}
+            <Button
+              size='small'
+              isLoading={isPending}
+              type='submit'
+            >
+              {t('actions.save')}
             </Button>
           </div>
         </RouteDrawer.Footer>
       </KeyboundForm>
     </RouteDrawer.Form>
-  )
-}
+  );
+};
