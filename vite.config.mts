@@ -46,5 +46,10 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       entries: [],
     },
+    build: {
+      rollupOptions: {
+        external: ['talkjs'],
+      },
+    },
   };
 });
