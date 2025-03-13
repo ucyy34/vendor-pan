@@ -52,6 +52,7 @@ export default defineConfig(({ mode }) => {
           'talkjs',
           'recharts',
           'react-day-picker',
+          'react-day-picker/src/style.css',
         ],
       },
     },
