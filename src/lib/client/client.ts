@@ -46,7 +46,7 @@ export const fetchQuery = async (
   }: {
     method: 'GET' | 'POST' | 'DELETE';
     body?: object;
-    query?: { [key: string]: string | number };
+    query?: Record<string, string | number>;
     headers?: { [key: string]: string };
   }
 ) => {

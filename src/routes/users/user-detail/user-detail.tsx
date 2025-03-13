@@ -19,13 +19,7 @@ export const UserDetail = () => {
   const { getWidgets } = useDashboardExtension();
 
   if (isLoading || !member) {
-    return (
-      <SingleColumnPageSkeleton
-        sections={1}
-        showJSON
-        showMetadata
-      />
-    );
+    return <SingleColumnPageSkeleton />;
   }
 
   if (isError) {

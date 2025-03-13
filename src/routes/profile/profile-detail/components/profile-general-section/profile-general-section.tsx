@@ -1,26 +1,28 @@
-import { PencilSquare } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
-import { Container, Heading, Text } from "@medusajs/ui"
-import { useTranslation } from "react-i18next"
-import { ActionMenu } from "../../../../../components/common/action-menu"
-import { languages } from "../../../../../i18n/languages"
+import { PencilSquare } from '@medusajs/icons';
+
+import { Container, Heading, Text } from '@medusajs/ui';
+import { useTranslation } from 'react-i18next';
+import { ActionMenu } from '../../../../../components/common/action-menu';
+import { TeamMemberProps } from '../../../../../types/user';
 
 type ProfileGeneralSectionProps = {
-  user: HttpTypes.AdminUser
-}
+  user: TeamMemberProps;
+};
 
-export const ProfileGeneralSection = ({ user }: ProfileGeneralSectionProps) => {
-  const { i18n, t } = useTranslation()
+export const ProfileGeneralSection = ({
+  user,
+}: ProfileGeneralSectionProps) => {
+  const { t } = useTranslation();
 
-  const name = [user.first_name, user.last_name].filter(Boolean).join(" ")
+  const { name, email, photo, phone, bio } = user;
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className='divide-y p-0'>
+      <div className='flex items-center justify-between px-6 py-4'>
         <div>
-          <Heading>{t("profile.domain")}</Heading>
-          <Text className="text-ui-fg-subtle" size="small">
-            {t("profile.manageYourProfileDetails")}
+          <Heading>{t('profile.domain')}</Heading>
+          <Text className='text-ui-fg-subtle' size='small'>
+            {t('profile.manageYourProfileDetails')}
           </Text>
         </div>
         <ActionMenu
@@ -28,8 +30,8 @@ export const ProfileGeneralSection = ({ user }: ProfileGeneralSectionProps) => {
             {
               actions: [
                 {
-                  label: t("actions.edit"),
-                  to: "edit",
+                  label: t('actions.edit'),
+                  to: 'edit',
                   icon: <PencilSquare />,
                 },
               ],
@@ -37,40 +39,51 @@ export const ProfileGeneralSection = ({ user }: ProfileGeneralSectionProps) => {
           ]}
         />
       </div>
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
-          {t("fields.name")}
+      <div className='text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4'>
+        <Text size='small' leading='compact' weight='plus'>
+          Photo
         </Text>
-        <Text size="small" leading="compact">
-          {name || "-"}
-        </Text>
-      </div>
-      <div className="grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
-          {t("fields.email")}
-        </Text>
-        <Text size="small" leading="compact">
-          {user.email}
+        <Text size='small' leading='compact'>
+          <div
+            className='w-12 h-12 bg-cover bg-center bg-no-repeat rounded-full flex items-center justify-center border text-lg'
+            style={{ backgroundImage: `url(${photo})` }}
+          >
+            {!photo && name[0]}
+          </div>
         </Text>
       </div>
-      <div className="grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
-          {t("profile.fields.languageLabel")}
+      <div className='text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4'>
+        <Text size='small' leading='compact' weight='plus'>
+          {t('fields.name')}
         </Text>
-        <Text size="small" leading="compact">
-          {languages.find((lang) => lang.code === i18n.language)
-            ?.display_name || "-"}
+        <Text size='small' leading='compact'>
+          {name || '-'}
         </Text>
       </div>
-      {/* TODO: Do we want to implement usage insights in V2? */}
-      {/* <div className="grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
-          {t("profile.fields.usageInsightsLabel")}
+      <div className='grid grid-cols-2 items-center px-6 py-4'>
+        <Text size='small' leading='compact' weight='plus'>
+          {t('fields.email')}
         </Text>
-        <StatusBadge color="red" className="w-fit">
-          {t("general.disabled")}
-        </StatusBadge>
-      </div> */}
+        <Text size='small' leading='compact'>
+          {email}
+        </Text>
+      </div>
+      <div className='grid grid-cols-2 items-center px-6 py-4'>
+        <Text size='small' leading='compact' weight='plus'>
+          Phone
+        </Text>
+        <Text size='small' leading='compact'>
+          {phone}
+        </Text>
+      </div>
+      <div className='grid grid-cols-2 items-center px-6 py-4'>
+        <Text size='small' leading='compact' weight='plus'>
+          Bio
+        </Text>
+        <Text size='small' leading='compact'>
+          {bio}
+        </Text>
+      </div>
     </Container>
-  )
-}
+  );
+};

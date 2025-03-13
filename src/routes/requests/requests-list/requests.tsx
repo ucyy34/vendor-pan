@@ -67,39 +67,51 @@ export const Requests = () => {
         </div>
         <div className='px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4'>
           <Link to='/requests/collections'>
-            <Button className='w-full justify-between py-4'>
+            <Button
+              variant='secondary'
+              className='w-full justify-between py-4'
+            >
               <div className='flex gap-4 items-center'>
                 <Badge>{collectionRequestCount}</Badge>
                 Collections requests
               </div>
-              <TriangleRightMini />
+              <TriangleRightMini color='grey' />
             </Button>
           </Link>
           <Link to='/requests/categories'>
-            <Button className='w-full justify-between py-4'>
+            <Button
+              variant='secondary'
+              className='w-full justify-between py-4'
+            >
               <div className='flex gap-4 items-center'>
                 <Badge>{categoryRequestCount}</Badge>
                 Categories requests
               </div>
-              <TriangleRightMini />
+              <TriangleRightMini color='grey' />
             </Button>
           </Link>
           <Link to='/requests/reviews'>
-            <Button className='w-full justify-between py-4'>
+            <Button
+              variant='secondary'
+              className='w-full justify-between py-4'
+            >
               <div className='flex gap-4 items-center'>
                 <Badge>{reviewRequestCount}</Badge>
                 Reviews requests
               </div>
-              <TriangleRightMini />
+              <TriangleRightMini color='grey' />
             </Button>
           </Link>
           <Link to='/requests/orders'>
-            <Button className='w-full justify-between py-4'>
+            <Button
+              variant='secondary'
+              className='w-full justify-between py-4'
+            >
               <div className='flex gap-4 items-center'>
                 <Badge>{ordersRequestsCount}</Badge>
                 Orders requests
               </div>
-              <TriangleRightMini />
+              <TriangleRightMini color='grey' />
             </Button>
           </Link>
         </div>

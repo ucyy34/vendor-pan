@@ -75,6 +75,84 @@ export const useUpdateMe = (
   });
 };
 
+export const useOnboarding = () => {
+  const { data, ...rest } = useQuery({
+    queryFn: async () =>
+      fetchQuery('/vendor/sellers/me/onboarding', {
+        method: 'GET',
+      }),
+    queryKey: [usersQueryKeys.me(), 'onboarding'],
+  });
+
+  return {
+    ...data,
+    ...rest,
+  };
+};
+
+export const useUpdateOnboarding = () => {
+  return useMutation({
+    mutationFn: () =>
+      fetchQuery('/vendor/sellers/me/onboarding', {
+        method: 'POST',
+        body: {},
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [usersQueryKeys.me(), 'onboarding'],
+      });
+    },
+  });
+};
+
+export const useUserMe = (
+  query?: HttpTypes.AdminUserParams,
+  options?: Omit<
+    UseQueryOptions<
+      HttpTypes.AdminUserResponse,
+      FetchError,
+      HttpTypes.AdminUserResponse & {
+        member: TeamMemberProps;
+      },
+      QueryKey
+    >,
+    'queryFn' | 'queryKey'
+  >
+) => {
+  const { data, ...rest } = useQuery({
+    queryFn: () =>
+      fetchQuery(`/vendor/me`, {
+        method: 'GET',
+        query: query as { [key: string]: string | number },
+      }),
+    queryKey: [USERS_QUERY_KEY, 'user', 'me'],
+    ...options,
+  });
+
+  return { ...data, ...rest };
+};
+
+export const useStatistics = ({
+  from,
+  to,
+}: {
+  from: string;
+  to: string;
+}) => {
+  const { data, ...rest } = useQuery({
+    queryFn: () =>
+      fetchQuery(
+        `/vendor/statistics?time_from=${from}&time_to=${to}`,
+        {
+          method: 'GET',
+        }
+      ),
+    queryKey: [USERS_QUERY_KEY, 'statistics'],
+  });
+
+  return { ...data, ...rest };
+};
+
 export const useUser = (
   id: string,
   query?: HttpTypes.AdminUserParams,
@@ -154,9 +232,15 @@ export const useCreateUser = (
 export const useUpdateUser = (
   id: string,
   options?: UseMutationOptions<
-    HttpTypes.AdminUserResponse,
+    TeamMemberProps,
     FetchError,
-    { name: string },
+    {
+      name?: string;
+      photo?: string;
+      language?: string;
+      phone?: string;
+      bio?: string;
+    },
     QueryKey
   >
 ) => {
@@ -176,7 +260,7 @@ export const useUpdateUser = (
 
       // We invalidate the me query in case the user updates their own profile
       queryClient.invalidateQueries({
-        queryKey: usersQueryKeys.me(),
+        queryKey: [USERS_QUERY_KEY, 'user', 'me'],
       });
 
       options?.onSuccess?.(data, variables, context);

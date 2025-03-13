@@ -17,7 +17,11 @@ export const OrderListTable = () => {
   });
 
   const { orders, count, isError, error, isLoading } =
-    useOrders({ limit: 1000, offset: 0 });
+    useOrders({
+      limit: 1000,
+      offset: 0,
+      fields: '*customer',
+    });
 
   const filters = useOrderTableFilters();
   const columns = useOrderTableColumns({});
@@ -33,6 +37,8 @@ export const OrderListTable = () => {
   if (isError) {
     throw error;
   }
+
+  console.log({ orders });
 
   return (
     <Container className='divide-y p-0'>

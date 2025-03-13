@@ -9,11 +9,7 @@ import {
 } from '@medusajs/ui';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import {
-  Link,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 
 import { Form } from '../../components/common/form';
@@ -29,15 +25,8 @@ const LoginSchema = z.object({
 
 export const Login = () => {
   const { t } = useTranslation();
-  const location = useLocation();
   const navigate = useNavigate();
   const { getWidgets } = useDashboardExtension();
-
-  const from =
-    location.state?.from?.pathname &&
-    location.state.from.pathname !== '/'
-      ? location.state?.from?.pathname
-      : '/dashboard';
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -76,8 +65,9 @@ export const Login = () => {
             });
           },
           onSuccess: () => {
-            console.log('success', from);
-            navigate(from, { replace: true });
+            setTimeout(() => {
+              navigate('/dashboard', { replace: true });
+            }, 300);
           },
         }
       );

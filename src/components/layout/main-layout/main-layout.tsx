@@ -1,16 +1,12 @@
 import {
-  BuildingStorefront,
   Buildings,
   ChevronDownMini,
   CogSixTooth,
   CurrencyDollar,
-  EllipsisHorizontal,
   MagnifyingGlass,
   MinusMini,
-  OpenRectArrowOut,
   ReceiptPercent,
   ShoppingCart,
-  SquaresPlus,
   Tag,
   Users,
   Component,
@@ -18,13 +14,7 @@ import {
   ListCheckbox,
   ChatBubbleLeftRight,
 } from '@medusajs/icons';
-import {
-  Avatar,
-  Divider,
-  DropdownMenu,
-  Text,
-  clx,
-} from '@medusajs/ui';
+import { Divider, Text, clx } from '@medusajs/ui';
 import { Collapsible as RadixCollapsible } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -32,16 +22,12 @@ import { Skeleton } from '../../common/skeleton';
 import { INavItem, NavItem } from '../../layout/nav-item';
 import { Shell } from '../../layout/shell';
 
-import {
-  Link,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
-import { useDashboardExtension } from '../../../extensions';
-import { useLogout, useMe } from '../../../hooks/api';
-import { queryClient } from '../../../lib/query-client';
+import { useLocation } from 'react-router-dom';
+import { useMe } from '../../../hooks/api';
+
 import { useSearch } from '../../../providers/search-provider';
 import { UserMenu } from '../user-menu';
+import { StripeIcon } from '../../../assets/icons/Stripe';
 
 export const MainLayout = () => {
   return (
@@ -76,118 +62,35 @@ const MainSidebar = () => {
   );
 };
 
-const Logout = () => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  const { mutateAsync: logoutMutation } = useLogout();
-
-  const handleLogout = async () => {
-    await logoutMutation(undefined, {
-      onSuccess: () => {
-        /**
-         * When the user logs out, we want to clear the query cache
-         */
-        queryClient.clear();
-        navigate('/login');
-      },
-    });
-  };
-
-  return (
-    <DropdownMenu.Item onClick={handleLogout}>
-      <div className='flex items-center gap-x-2'>
-        <OpenRectArrowOut className='text-ui-fg-subtle' />
-        <span>{t('app.menus.actions.logout')}</span>
-      </div>
-    </DropdownMenu.Item>
-  );
-};
-
 const Header = () => {
-  const { t } = useTranslation();
-  const { seller, isPending } = useMe();
-
-  const isLoaded = !isPending && !seller;
+  const { seller } = useMe();
 
   const name = seller?.name || '';
   const fallback = seller?.photo || 'M';
 
   return (
-    <div className='w-full p-3'>
-      <DropdownMenu>
-        <DropdownMenu.Trigger
-          disabled={!isLoaded}
-          className={clx(
-            'bg-ui-bg-subtle transition-fg grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3 rounded-md p-0.5 pr-2 outline-none',
-            'hover:bg-ui-bg-subtle-hover',
-            'data-[state=open]:bg-ui-bg-subtle-hover',
-            'focus-visible:shadow-borders-focus'
-          )}
-        >
-          {fallback ? (
-            <Avatar
-              variant='squared'
-              size='xsmall'
-              fallback={fallback}
-            />
-          ) : (
-            <Skeleton className='h-6 w-6 rounded-md' />
-          )}
-          <div className='block overflow-hidden text-left'>
-            {name ? (
-              <Text
-                size='small'
-                weight='plus'
-                leading='compact'
-                className='truncate'
-              >
-                {name}
-              </Text>
-            ) : (
-              <Skeleton className='h-[9px] w-[120px]' />
-            )}
-          </div>
-          <EllipsisHorizontal className='text-ui-fg-muted' />
-        </DropdownMenu.Trigger>
-        {isLoaded && (
-          <DropdownMenu.Content className='w-[var(--radix-dropdown-menu-trigger-width)] min-w-0'>
-            <div className='flex items-center gap-x-3 px-2 py-1'>
-              <Avatar
-                variant='squared'
-                size='small'
-                fallback={fallback}
-              />
-              <div className='flex flex-col overflow-hidden'>
-                <Text
-                  size='small'
-                  weight='plus'
-                  leading='compact'
-                  className='truncate'
-                >
-                  {name}
-                </Text>
-                <Text
-                  size='xsmall'
-                  leading='compact'
-                  className='text-ui-fg-subtle'
-                >
-                  {t('app.nav.main.store')}
-                </Text>
-              </div>
-            </div>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item className='gap-x-2' asChild>
-              <Link to='/settings/store'>
-                <BuildingStorefront className='text-ui-fg-subtle' />
-                {t('app.nav.main.storeSettings')}
-              </Link>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator />
-            <Logout />
-          </DropdownMenu.Content>
+    <div className='w-full p-3 p-0.5 pr-2 bg-ui-bg-subtle grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3'>
+      {fallback ? (
+        <div className='w-6 h-6'>
+          <img src={seller?.photo || '/logo.svg'} />
+        </div>
+      ) : (
+        <Skeleton className='h-6 w-6 rounded-md' />
+      )}
+      <div className='block overflow-hidden text-left'>
+        {name ? (
+          <Text
+            size='small'
+            weight='plus'
+            leading='compact'
+            className='truncate'
+          >
+            {name}
+          </Text>
+        ) : (
+          <Skeleton className='h-[9px] w-[120px]' />
         )}
-      </DropdownMenu>
+      </div>
     </div>
   );
 };
@@ -289,6 +192,19 @@ const useCoreRoutes = (): Omit<INavItem, 'pathname'>[] => {
   ];
 };
 
+const useExtensionRoutes = (): Omit<
+  INavItem,
+  'pathname'
+>[] => {
+  return [
+    {
+      icon: <StripeIcon />,
+      label: 'Stripe Connect',
+      to: '/stripe-connect',
+    },
+  ];
+};
+
 const Searchbar = () => {
   const { t } = useTranslation();
   const { toggleSearch } = useSearch();
@@ -328,21 +244,6 @@ const Searchbar = () => {
 const CoreRouteSection = () => {
   const coreRoutes = useCoreRoutes();
 
-  const { getMenu } = useDashboardExtension();
-
-  const menuItems = getMenu('coreExtensions');
-
-  menuItems.forEach((item) => {
-    if (item.nested) {
-      const route = coreRoutes.find(
-        (route) => route.to === item.nested
-      );
-      if (route) {
-        route.items?.push(item);
-      }
-    }
-  });
-
   return (
     <nav className='flex flex-col gap-y-1 py-3'>
       <Searchbar />
@@ -354,16 +255,10 @@ const CoreRouteSection = () => {
 };
 
 const ExtensionRouteSection = () => {
+  const extensionRoutes = useExtensionRoutes();
   const { t } = useTranslation();
-  const { getMenu } = useDashboardExtension();
 
-  const menuItems = getMenu('coreExtensions').filter(
-    (item) => !item.nested
-  );
-
-  if (!menuItems.length) {
-    return null;
-  }
+  if (!extensionRoutes.length) return null;
 
   return (
     <div>
@@ -394,22 +289,9 @@ const ExtensionRouteSection = () => {
           </div>
           <RadixCollapsible.Content>
             <nav className='flex flex-col gap-y-0.5 py-1 pb-4'>
-              {menuItems.map((item, i) => {
+              {extensionRoutes.map((route) => {
                 return (
-                  <NavItem
-                    key={i}
-                    to={item.to}
-                    label={item.label}
-                    icon={
-                      item.icon ? (
-                        item.icon
-                      ) : (
-                        <SquaresPlus />
-                      )
-                    }
-                    items={item.items}
-                    type='extension'
-                  />
+                  <NavItem key={route.to} {...route} />
                 );
               })}
             </nav>

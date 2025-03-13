@@ -78,7 +78,10 @@ export const useCreateStockLocation = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.stockLocation.create(payload),
+      fetchQuery('/vendor/stock-locations', {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.lists(),

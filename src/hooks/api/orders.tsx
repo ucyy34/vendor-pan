@@ -49,7 +49,10 @@ export const useOrder = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: async () =>
-      sdk.admin.order.retrieve(id, query),
+      fetchQuery(`/vendor/orders/${id}`, {
+        method: 'GET',
+        query,
+      }),
     queryKey: ordersQueryKeys.detail(id, query),
     ...options,
   });
@@ -94,7 +97,7 @@ export const useUpdateOrder = (
 
 export const useOrderPreview = (
   id: string,
-  query?: HttpTypes.AdminOrderFilters,
+  query?: Record<string, any>,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminOrderPreviewResponse,
@@ -107,7 +110,10 @@ export const useOrderPreview = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: async () =>
-      sdk.admin.order.retrievePreview(id, query),
+      fetchQuery(`/vendor/orders/${id}`, {
+        method: 'GET',
+        query,
+      }),
     queryKey: ordersQueryKeys.preview(id),
     ...options,
   });
@@ -198,7 +204,10 @@ export const useCreateOrderFulfillment = (
     mutationFn: (
       payload: HttpTypes.AdminCreateOrderFulfillment
     ) =>
-      sdk.admin.order.createFulfillment(orderId, payload),
+      fetchQuery(`/vendor/orders/${orderId}/fulfillment`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (
       data: any,
       variables: any,

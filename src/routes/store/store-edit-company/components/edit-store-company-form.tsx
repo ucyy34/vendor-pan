@@ -56,8 +56,6 @@ export const EditStoreCompanyForm = ({
     );
   });
 
-  console.log({ seller });
-
   return (
     <RouteDrawer.Form form={form}>
       <KeyboundForm

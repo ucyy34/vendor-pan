@@ -138,7 +138,7 @@ export const EditProductMediaForm = ({
         const { files } = await uploadFilesQuery(
           filesToUpload
         )
-          .then((res) => res.json())
+          // .then((res) => res.json())
           .catch(() => {
             form.setError('media', {
               type: 'invalid_file',
@@ -161,6 +161,7 @@ export const EditProductMediaForm = ({
         }
         return entry;
       });
+
       const thumbnail = withUpdatedUrls.find(
         (m) => m.isThumbnail
       )?.url;

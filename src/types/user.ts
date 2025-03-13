@@ -32,4 +32,8 @@ export interface TeamMemberProps {
   seller_id: string;
   name: string;
   email?: string;
+  photo?: string;
+  bio?: string;
+  phone?: string;
+  role: string;
 }

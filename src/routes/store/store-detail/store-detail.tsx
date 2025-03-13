@@ -31,13 +31,7 @@ export const StoreDetail = () => {
   const { getWidgets } = useDashboardExtension();
 
   if (isPending || sellerPending || !store || !seller) {
-    return (
-      <SingleColumnPageSkeleton
-        sections={2}
-        showJSON
-        showMetadata
-      />
-    );
+    return <SingleColumnPageSkeleton sections={2} />;
   }
 
   if (isError || sellerError) {

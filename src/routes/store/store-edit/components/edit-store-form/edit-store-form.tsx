@@ -119,8 +119,6 @@ export const EditStoreForm = ({
   );
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    console.log(values);
-
     let uploadedMedia: (HttpTypes.AdminFile & {
       isThumbnail: boolean;
     })[] = [];

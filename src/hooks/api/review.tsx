@@ -87,6 +87,10 @@ export const useUpdateReview = (
         queryKey: reviewsQueryKeys.details(),
       });
 
+      queryClient.invalidateQueries({
+        queryKey: reviewsQueryKeys.list(),
+      });
+
       options?.onSuccess?.(data, variables, context);
     },
     ...options,
