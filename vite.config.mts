@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       rollupOptions: {
-        external: ['talkjs'],
+        external: ['talkjs', 'recharts'],
       },
     },
   };
