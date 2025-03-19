@@ -3,13 +3,17 @@ import { LoaderFunctionArgs } from 'react-router-dom';
 import { inventoryItemsQueryKeys } from '../../../hooks/api/inventory';
 import { fetchQuery } from '../../../lib/client';
 import { queryClient } from '../../../lib/query-client';
+import { INVENTORY_DETAIL_FIELDS } from './constants';
 
 const inventoryDetailQuery = (id: string) => ({
   queryKey: inventoryItemsQueryKeys.detail(id),
   queryFn: async () =>
-    fetchQuery(`/vendor/inventory-items/${id}`, {
-      method: 'GET',
-    }),
+    fetchQuery(
+      `/vendor/inventory-items/${id}?fields=${INVENTORY_DETAIL_FIELDS}`,
+      {
+        method: 'GET',
+      }
+    ),
 });
 
 export const inventoryItemLoader = async ({

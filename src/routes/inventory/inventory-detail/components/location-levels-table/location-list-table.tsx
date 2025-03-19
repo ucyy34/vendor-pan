@@ -15,16 +15,11 @@ export const ItemLocationListTable = ({
     pageSize: PAGE_SIZE,
   });
 
-  const {
-    location_levels,
-    count,
-    isLoading,
-    isError,
-    error,
-  } = useInventoryItemLevels(inventory_item_id, {
-    ...searchParams,
-    fields: '*stock_locations',
-  });
+  const { location_levels, count, isLoading } =
+    useInventoryItemLevels(inventory_item_id, {
+      ...searchParams,
+      fields: '*stock_locations',
+    });
 
   const columns = useLocationListTableColumns();
 
@@ -37,16 +32,12 @@ export const ItemLocationListTable = ({
     pageSize: PAGE_SIZE,
   });
 
-  if (isError) {
-    throw error;
-  }
-
   return (
     <_DataTable
       table={table}
       columns={columns}
       pageSize={PAGE_SIZE}
-      count={count}
+      count={location_levels?.length}
       isLoading={isLoading}
       pagination
       queryObject={raw}

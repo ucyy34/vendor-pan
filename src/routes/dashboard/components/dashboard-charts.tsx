@@ -19,11 +19,16 @@ import {
   Popover,
   Text,
 } from '@medusajs/ui';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useStatistics } from '../../../hooks/api';
 import { ChartSkeleton } from './chart-skeleton';
-import { useState } from 'react';
-import { addDays, format, subDays } from 'date-fns';
+import { useEffect, useState } from 'react';
+import {
+  addDays,
+  differenceInDays,
+  format,
+  subDays,
+} from 'date-fns';
 import { Calendar } from '../../../components/common/calendar/calendar';
 
 const colorPicker = (line: string) => {
@@ -37,7 +42,64 @@ const colorPicker = (line: string) => {
   }
 };
 
+const generateChartData = ({
+  range,
+  customers,
+  orders,
+}: {
+  range: DateRange | undefined;
+  customers: { date: string; count: string }[];
+  orders: { date: string; count: string }[];
+}) => {
+  const res = [
+    ...Array(
+      differenceInDays(
+        range?.to || addDays(new Date(), +1),
+        range?.from || addDays(new Date(), -7)
+      ) + 1
+    ).keys(),
+  ].map((index) => ({
+    date: format(
+      subDays(
+        range?.from || addDays(new Date(), index),
+        -index
+      ),
+      'yyyy-MM-dd'
+    ),
+    orders: parseInt(
+      orders?.find(
+        (item) =>
+          format(item.date, 'yyyy-MM-dd') ===
+          format(
+            subDays(
+              range?.from || addDays(new Date(), index),
+              -index
+            ),
+            'yyyy-MM-dd'
+          )
+      )?.count || '0'
+    ),
+    customers: parseInt(
+      customers?.find(
+        (item) =>
+          format(item.date, 'yyyy-MM-dd') ===
+          format(
+            subDays(
+              range?.from || addDays(new Date(), index),
+              -index
+            ),
+            'yyyy-MM-dd'
+          )
+      )?.count || '0'
+    ),
+  }));
+
+  return res;
+};
+
 export const DashboardCharts = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [filters, setFilters] = useState([
     'customers',
     'orders',
@@ -48,20 +110,43 @@ export const DashboardCharts = () => {
     to: new Date(),
   });
 
-  const { customers, orders, isPending } = useStatistics({
-    from: `${format(subDays(new Date(), 7), 'yyyy-MM-dd')}`,
-    to: `${format(new Date(), 'yyyy-MM-dd')}`,
-  });
+  useEffect(() => {
+    searchParams.set(
+      'from',
+      format(
+        date?.from || addDays(new Date(), -7),
+        'yyyy-MM-dd'
+      )
+    );
+    searchParams.set(
+      'to',
+      format(
+        date?.to || format(new Date(), 'yyyy-MM-dd'),
+        'yyyy-MM-dd'
+      )
+    );
+    setSearchParams(searchParams);
+  }, [date]);
 
-  const chartData = [
-    { date: '2025-03-05', orders: 1, customers: 10 },
-    { date: '2025-03-06', orders: 2, customers: 1 },
-    { date: '2025-03-07', orders: 8, customers: 4 },
-    { date: '2025-03-08', orders: 3, customers: 6 },
-    { date: '2025-03-09', orders: 5, customers: 9 },
-    { date: '2025-03-10', orders: 10, customers: 10 },
-    { date: '2025-03-11', orders: 7, customers: 8 },
-  ];
+  useEffect(() => {
+    refetch();
+  }, [searchParams]);
+
+  const { customers, orders, isPending, refetch } =
+    useStatistics({
+      from:
+        searchParams.get('from') ||
+        `${format(addDays(new Date(), -7), 'yyyy-MM-dd')}`,
+      to:
+        searchParams.get('to') ||
+        `${format(new Date(), 'yyyy-MM-dd')}`,
+    });
+
+  const chartData = generateChartData({
+    range: date,
+    customers,
+    orders,
+  });
 
   const totals = chartData.reduce(
     (acc, curr) => {
@@ -71,7 +156,7 @@ export const DashboardCharts = () => {
       };
     },
     { orders: 0, customers: 0 }
-  ); // Inicjalizujemy wartości od 0
+  );
 
   const handleFilter = (label: string) => {
     if (filters.find((item) => item === label)) {
@@ -158,7 +243,7 @@ export const DashboardCharts = () => {
           </div>
           <div>
             <Popover>
-              <Popover.Trigger>
+              <Popover.Trigger asChild>
                 <Button variant='secondary'>
                   <CalendarMini />
                   {date?.from ? (

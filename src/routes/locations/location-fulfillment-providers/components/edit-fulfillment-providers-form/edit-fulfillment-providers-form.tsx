@@ -82,14 +82,13 @@ export const LocationEditFulfillmentProvidersForm = ({
     setRowSelection(ids);
   };
 
-  const { searchParams, raw } =
-    useFulfillmentProvidersTableQuery({
-      pageSize: PAGE_SIZE,
-    });
+  const { raw } = useFulfillmentProvidersTableQuery({
+    pageSize: PAGE_SIZE,
+  });
 
   const { fulfillment_providers, count, isLoading } =
     useFulfillmentProviders(
-      { ...searchParams, is_enabled: true },
+      {},
       { placeholderData: keepPreviousData }
     );
 

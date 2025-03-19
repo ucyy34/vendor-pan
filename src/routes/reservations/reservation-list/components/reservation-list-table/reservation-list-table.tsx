@@ -1,12 +1,6 @@
-import {
-  Button,
-  Container,
-  Heading,
-  Text,
-} from '@medusajs/ui';
+import { Container, Heading, Text } from '@medusajs/ui';
 
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { _DataTable } from '../../../../../components/table/data-table';
 import { useReservationItems } from '../../../../../hooks/api/reservations';
 import { useDataTable } from '../../../../../hooks/use-data-table';
@@ -53,9 +47,6 @@ export const ReservationListTable = () => {
             {t('reservations.subtitle')}
           </Text>
         </div>
-        <Button variant='secondary' size='small' asChild>
-          <Link to='create'>{t('actions.create')}</Link>
-        </Button>
       </div>
       <_DataTable
         table={table}

@@ -23,7 +23,7 @@ export const reservationItemsQueryKeys = queryKeysFactory(
 
 export const useReservationItem = (
   id: string,
-  query?: HttpTypes.AdminReservationParams,
+  query?: Record<string, string | number>,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminReservationResponse,
@@ -37,7 +37,10 @@ export const useReservationItem = (
   const { data, ...rest } = useQuery({
     queryKey: reservationItemsQueryKeys.detail(id),
     queryFn: async () =>
-      sdk.admin.reservation.retrieve(id, query),
+      fetchQuery(`/vendor/reservations/${id}`, {
+        method: 'GET',
+        query,
+      }),
     ...options,
   });
 

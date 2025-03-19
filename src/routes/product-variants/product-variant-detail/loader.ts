@@ -12,10 +12,6 @@ const variantDetailQuery = (
   queryKey: variantsQueryKeys.detail(variantId, {
     fields: VARIANT_DETAIL_FIELDS,
   }),
-  // queryFn: async () =>
-  //   sdk.admin.product.retrieveVariant(productId, variantId, {
-  //     fields: VARIANT_DETAIL_FIELDS,
-  //   }),
   queryFn: async () =>
     await fetchQuery(`/vendor/products/${productId}`, {
       method: 'GET',

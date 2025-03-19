@@ -5,7 +5,7 @@ import {
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { sdk } from '../../lib/client';
+import { fetchQuery, sdk } from '../../lib/client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
 
 const FULFILLMENT_PROVIDERS_QUERY_KEY =
@@ -19,7 +19,7 @@ export const fulfillmentProviderOptionsQueryKeys =
   queryKeysFactory(FULFILLMENT_PROVIDER_OPTIONS_QUERY_KEY);
 
 export const useFulfillmentProviders = (
-  query?: HttpTypes.AdminFulfillmentProviderListParams,
+  query?: Record<string, string | number>,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminFulfillmentProviderListResponse,
@@ -32,7 +32,10 @@ export const useFulfillmentProviders = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      sdk.admin.fulfillmentProvider.list(query),
+      fetchQuery('/vendor/fulfillment-providers', {
+        method: 'GET',
+        query,
+      }),
     queryKey: fulfillmentProvidersQueryKeys.list(query),
     ...options,
   });

@@ -28,6 +28,9 @@ export const Login = () => {
   const navigate = useNavigate();
   const { getWidgets } = useDashboardExtension();
 
+  const from =
+    location.state?.from?.pathname || '/dashboard';
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -66,8 +69,8 @@ export const Login = () => {
           },
           onSuccess: () => {
             setTimeout(() => {
-              navigate('/dashboard', { replace: true });
-            }, 300);
+              navigate(from, { replace: true });
+            }, 600);
           },
         }
       );

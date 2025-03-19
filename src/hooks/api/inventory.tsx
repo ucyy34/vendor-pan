@@ -230,10 +230,9 @@ export const useUpdateInventoryLevel = (
     mutationFn: (
       payload: HttpTypes.AdminUpdateInventoryLevel
     ) =>
-      sdk.admin.inventoryItem.updateLevel(
-        inventoryItemId,
-        locationId,
-        payload
+      fetchQuery(
+        `/vendor/inventory-items/${inventoryItemId}/location-levels/${locationId}`,
+        { method: 'POST', body: payload }
       ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
@@ -265,9 +264,9 @@ export const useBatchInventoryItemLocationLevels = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.inventoryItem.batchInventoryItemLocationLevels(
-        inventoryItemId,
-        payload
+      fetchQuery(
+        `/vendor/inventory-items/${inventoryItemId}/location-levels`,
+        { method: 'POST', body: payload }
       ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({

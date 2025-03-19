@@ -18,7 +18,7 @@ export const ProductDetail = () => {
   const { product, isLoading, isError, error } = useProduct(
     id!,
     {
-      fields: '*variants.inventory_items',
+      fields: '*variants.inventory_items,*categories',
     }
   );
 

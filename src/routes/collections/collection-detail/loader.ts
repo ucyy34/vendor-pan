@@ -1,17 +1,22 @@
-import { LoaderFunctionArgs } from "react-router-dom"
+import { LoaderFunctionArgs } from 'react-router-dom';
 
-import { collectionsQueryKeys } from "../../../hooks/api/collections"
-import { sdk } from "../../../lib/client"
-import { queryClient } from "../../../lib/query-client"
+import { collectionsQueryKeys } from '../../../hooks/api/collections';
+import { fetchQuery } from '../../../lib/client';
+import { queryClient } from '../../../lib/query-client';
 
 const collectionDetailQuery = (id: string) => ({
   queryKey: collectionsQueryKeys.detail(id),
-  queryFn: async () => sdk.admin.productCollection.retrieve(id),
-})
+  queryFn: async () =>
+    fetchQuery(`/store/collections/${id}`, {
+      method: 'GET',
+    }),
+});
 
-export const collectionLoader = async ({ params }: LoaderFunctionArgs) => {
-  const id = params.id
-  const query = collectionDetailQuery(id!)
+export const collectionLoader = async ({
+  params,
+}: LoaderFunctionArgs) => {
+  const id = params.id;
+  const query = collectionDetailQuery(id!);
 
-  return queryClient.ensureQueryData(query)
-}
+  return queryClient.ensureQueryData(query);
+};

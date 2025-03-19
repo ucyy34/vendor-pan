@@ -36,7 +36,9 @@ export const useCollection = (
   const { data, ...rest } = useQuery({
     queryKey: collectionsQueryKeys.detail(id),
     queryFn: async () =>
-      sdk.admin.productCollection.retrieve(id),
+      fetchQuery(`/store/collections/${id}`, {
+        method: 'GET',
+      }),
     ...options,
   });
 

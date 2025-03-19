@@ -407,7 +407,8 @@ export const useProducts = (
       QueryKey
     >,
     'queryFn' | 'queryKey'
-  >
+  >,
+  filter?: Record<string, string>
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -419,7 +420,23 @@ export const useProducts = (
     ...options,
   });
 
-  return { ...data, ...rest };
+  if (!filter) {
+    return { ...data, ...rest };
+  }
+
+  return {
+    ...data,
+    products: data?.products.filter(
+      (item) =>
+        (item?.categories?.find(
+          ({ id }) => id === filter.categoryId
+        ) &&
+          item) ||
+        (item?.collection?.id === filter.collectionId &&
+          item)
+    ),
+    ...rest,
+  };
 };
 
 export const useCreateProduct = (

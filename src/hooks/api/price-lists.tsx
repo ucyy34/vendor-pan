@@ -53,7 +53,6 @@ export const usePriceLists = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    // queryFn: () => sdk.admin.priceList.list(query),
     queryFn: () =>
       fetchQuery('/vendor/price-lists', {
         method: 'GET',

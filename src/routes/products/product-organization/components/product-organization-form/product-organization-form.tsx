@@ -17,7 +17,7 @@ import {
 } from '../../../../../extensions';
 import { useUpdateProduct } from '../../../../../hooks/api/products';
 import { useComboboxData } from '../../../../../hooks/use-combobox-data';
-import { fetchQuery, sdk } from '../../../../../lib/client';
+import { fetchQuery } from '../../../../../lib/client';
 import { CategoryCombobox } from '../../../common/components/category-combobox';
 
 type ProductOrganizationFormProps = {
@@ -45,9 +45,12 @@ export const ProductOrganizationForm = ({
   const collections = useComboboxData({
     queryKey: ['product_collections'],
     queryFn: (params) =>
-      sdk.admin.productCollection.list(params),
+      fetchQuery('/store/collections', {
+        method: 'GET',
+        query: params as Record<string, string | number>,
+      }),
     getOptions: (data) =>
-      data.collections.map((collection) => ({
+      data.collections.map((collection: any) => ({
         label: collection.title!,
         value: collection.id!,
       })),

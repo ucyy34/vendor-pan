@@ -1,4 +1,4 @@
-import { Buildings, XCircle } from '@medusajs/icons';
+import { XCircle } from '@medusajs/icons';
 import {
   AdminOrder,
   AdminOrderFulfillment,

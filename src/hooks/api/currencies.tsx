@@ -27,7 +27,6 @@ export const useCurrencies = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    // queryFn: () => sdk.admin.currency.list(query),
     queryFn: () =>
       fetchQuery('/store/currencies', { method: 'GET' }),
     queryKey: currenciesQueryKeys.list(query),

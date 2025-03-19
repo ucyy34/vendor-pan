@@ -51,6 +51,7 @@ export const CreateCategoryForm = ({
       parent_category_id,
       rank,
       name,
+      handle,
       ...rest
     } = data;
     const parsedData = transformNullableFormData(
@@ -64,6 +65,7 @@ export const CreateCategoryForm = ({
           type: 'product_category',
           data: {
             name: name,
+            handle,
             ...parsedData,
             is_active: 'active',
             is_internal: true,

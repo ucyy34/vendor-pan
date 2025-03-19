@@ -1,125 +1,134 @@
-import { InventoryTypes, ProductVariantDTO } from "@medusajs/types"
+import {
+  InventoryTypes,
+  ProductVariantDTO,
+} from '@medusajs/types';
 
-import { Checkbox } from "@medusajs/ui"
-import { createColumnHelper } from "@tanstack/react-table"
-import { useMemo } from "react"
-import { useTranslation } from "react-i18next"
-import { PlaceholderCell } from "../../../../components/table/table-cells/common/placeholder-cell"
-import { InventoryActions } from "./inventory-actions"
+import { Checkbox } from '@medusajs/ui';
+import { createColumnHelper } from '@tanstack/react-table';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { PlaceholderCell } from '../../../../components/table/table-cells/common/placeholder-cell';
+import { InventoryActions } from './inventory-actions';
 
 /**
  * Adds missing properties to the InventoryItemDTO type.
  */
-interface ExtendedInventoryItem extends InventoryTypes.InventoryItemDTO {
-  variants?: ProductVariantDTO[] | null
-  stocked_quantity?: number
-  reserved_quantity?: number
+interface ExtendedInventoryItem
+  extends InventoryTypes.InventoryItemDTO {
+  variants?: ProductVariantDTO[] | null;
+  stocked_quantity?: number;
+  reserved_quantity?: number;
 }
 
-const columnHelper = createColumnHelper<ExtendedInventoryItem>()
+const columnHelper =
+  createColumnHelper<ExtendedInventoryItem>();
 
 export const useInventoryTableColumns = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return useMemo(
     () => [
       columnHelper.display({
-        id: "select",
+        id: 'select',
         header: ({ table }) => {
           return (
             <Checkbox
               checked={
                 table.getIsSomePageRowsSelected()
-                  ? "indeterminate"
+                  ? 'indeterminate'
                   : table.getIsAllPageRowsSelected()
               }
               onCheckedChange={(value) =>
                 table.toggleAllPageRowsSelected(!!value)
               }
             />
-          )
+          );
         },
         cell: ({ row }) => {
           return (
             <Checkbox
               checked={row.getIsSelected()}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
+              onCheckedChange={(value) =>
+                row.toggleSelected(!!value)
+              }
               onClick={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
               }}
             />
-          )
+          );
         },
       }),
-      columnHelper.accessor("title", {
-        header: t("fields.title"),
+      columnHelper.accessor('title', {
+        header: t('fields.title'),
         cell: ({ getValue }) => {
-          const title = getValue()
+          const title = getValue();
 
           if (!title) {
-            return <PlaceholderCell />
+            return <PlaceholderCell />;
           }
 
           return (
-            <div className="flex size-full items-center overflow-hidden">
-              <span className="truncate">{title}</span>
+            <div className='flex size-full items-center overflow-hidden'>
+              <span className='truncate'>{title}</span>
             </div>
-          )
+          );
         },
       }),
-      columnHelper.accessor("sku", {
-        header: t("fields.sku"),
+      columnHelper.accessor('sku', {
+        header: t('fields.sku'),
         cell: ({ getValue }) => {
-          const sku = getValue() as string
+          const sku = getValue() as string;
 
           if (!sku) {
-            return <PlaceholderCell />
+            return <PlaceholderCell />;
           }
 
           return (
-            <div className="flex size-full items-center overflow-hidden">
-              <span className="truncate">{sku}</span>
+            <div className='flex size-full items-center overflow-hidden'>
+              <span className='truncate'>{sku}</span>
             </div>
-          )
+          );
         },
       }),
-      columnHelper.accessor("reserved_quantity", {
-        header: t("inventory.reserved"),
+      columnHelper.accessor('reserved_quantity', {
+        header: t('inventory.reserved'),
         cell: ({ getValue }) => {
-          const quantity = getValue()
+          const quantity = getValue();
 
           if (Number.isNaN(quantity)) {
-            return <PlaceholderCell />
+            return <PlaceholderCell />;
           }
 
           return (
-            <div className="flex size-full items-center overflow-hidden">
-              <span className="truncate">{quantity}</span>
+            <div className='flex size-full items-center overflow-hidden'>
+              <span className='truncate'>{quantity}</span>
             </div>
-          )
+          );
         },
       }),
-      columnHelper.accessor("stocked_quantity", {
-        header: t("fields.inStock"),
+      columnHelper.accessor('stocked_quantity', {
+        header: t('fields.inStock'),
         cell: ({ getValue }) => {
-          const quantity = getValue()
+          const quantity = getValue();
 
           if (Number.isNaN(quantity)) {
-            return <PlaceholderCell />
+            return <PlaceholderCell />;
           }
 
           return (
-            <div className="flex size-full items-center overflow-hidden">
-              <span className="truncate">{quantity}</span>
+            <div className='flex size-full items-center overflow-hidden'>
+              <span className='truncate'>{quantity}</span>
             </div>
-          )
+          );
         },
       }),
       columnHelper.display({
-        id: "actions",
-        cell: ({ row }) => <InventoryActions item={row.original} />,
+        id: 'actions',
+        cell: ({ row }) => (
+          <InventoryActions item={row.original} />
+        ),
       }),
     ],
     [t]
-  )
-}
+  );
+};

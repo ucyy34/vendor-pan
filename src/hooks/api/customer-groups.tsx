@@ -54,7 +54,6 @@ export const useCustomerGroups = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    // queryFn: () => sdk.admin.customerGroup.list(query),
     queryFn: () =>
       fetchQuery('/vendor/customer-groups', {
         method: 'GET',

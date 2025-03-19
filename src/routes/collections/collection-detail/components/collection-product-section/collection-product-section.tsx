@@ -1,44 +1,55 @@
-import { PencilSquare, Plus, Trash } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
-import { Checkbox, Container, Heading, toast, usePrompt } from "@medusajs/ui"
-import { keepPreviousData } from "@tanstack/react-query"
-import { createColumnHelper } from "@tanstack/react-table"
-import { useMemo } from "react"
-import { useTranslation } from "react-i18next"
-import { ActionMenu } from "../../../../../components/common/action-menu"
-import { _DataTable } from "../../../../../components/table/data-table"
-import { useUpdateCollectionProducts } from "../../../../../hooks/api/collections"
-import { useProducts } from "../../../../../hooks/api/products"
-import { useProductTableColumns } from "../../../../../hooks/table/columns/use-product-table-columns"
-import { useProductTableFilters } from "../../../../../hooks/table/filters/use-product-table-filters"
-import { useProductTableQuery } from "../../../../../hooks/table/query/use-product-table-query"
-import { useDataTable } from "../../../../../hooks/use-data-table"
+import { PencilSquare, Plus, Trash } from '@medusajs/icons';
+import { HttpTypes } from '@medusajs/types';
+import {
+  Checkbox,
+  Container,
+  Heading,
+  toast,
+  usePrompt,
+} from '@medusajs/ui';
+import { keepPreviousData } from '@tanstack/react-query';
+import { createColumnHelper } from '@tanstack/react-table';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ActionMenu } from '../../../../../components/common/action-menu';
+import { _DataTable } from '../../../../../components/table/data-table';
+import { useUpdateCollectionProducts } from '../../../../../hooks/api/collections';
+import { useProducts } from '../../../../../hooks/api/products';
+import { useProductTableColumns } from '../../../../../hooks/table/columns/use-product-table-columns';
+import { useProductTableFilters } from '../../../../../hooks/table/filters/use-product-table-filters';
+import { useProductTableQuery } from '../../../../../hooks/table/query/use-product-table-query';
+import { useDataTable } from '../../../../../hooks/use-data-table';
 
 type CollectionProductSectionProps = {
-  collection: HttpTypes.AdminCollection
-}
+  collection: HttpTypes.AdminCollection;
+};
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 10;
 
 export const CollectionProductSection = ({
   collection,
 }: CollectionProductSectionProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const { searchParams, raw } = useProductTableQuery({ pageSize: PAGE_SIZE })
-  const { products, count, isLoading, isError, error } = useProducts(
-    {
-      limit: PAGE_SIZE,
-      ...searchParams,
-      collection_id: [collection.id!],
-    },
-    {
-      placeholderData: keepPreviousData,
-    }
-  )
+  const { searchParams, raw } = useProductTableQuery({
+    pageSize: PAGE_SIZE,
+  });
+  const { products, count, isLoading, isError, error } =
+    useProducts(
+      {
+        limit: PAGE_SIZE,
+        ...searchParams,
+      },
+      {
+        placeholderData: keepPreviousData,
+      },
+      {
+        collectionId: collection.id!,
+      }
+    );
 
-  const filters = useProductTableFilters(["collections"])
-  const columns = useColumns()
+  const filters = useProductTableFilters(['collections']);
+  const columns = useColumns();
 
   const { table } = useDataTable({
     data: products ?? [],
@@ -51,26 +62,30 @@ export const CollectionProductSection = ({
     meta: {
       collectionId: collection.id,
     },
-  })
+  });
 
-  const prompt = usePrompt()
+  const prompt = usePrompt();
 
-  const { mutateAsync } = useUpdateCollectionProducts(collection.id!)
+  const { mutateAsync } = useUpdateCollectionProducts(
+    collection.id!
+  );
 
-  const handleRemove = async (selection: Record<string, boolean>) => {
-    const ids = Object.keys(selection)
+  const handleRemove = async (
+    selection: Record<string, boolean>
+  ) => {
+    const ids = Object.keys(selection);
 
     const res = await prompt({
-      title: t("general.areYouSure"),
-      description: t("collections.removeProductsWarning", {
+      title: t('general.areYouSure'),
+      description: t('collections.removeProductsWarning', {
         count: ids.length,
       }),
-      confirmText: t("actions.remove"),
-      cancelText: t("actions.cancel"),
-    })
+      confirmText: t('actions.remove'),
+      cancelText: t('actions.cancel'),
+    });
 
     if (!res) {
-      return
+      return;
     }
 
     await mutateAsync(
@@ -80,34 +95,34 @@ export const CollectionProductSection = ({
       {
         onSuccess: () => {
           toast.success(
-            t("collections.products.remove.successToast", {
+            t('collections.products.remove.successToast', {
               count: ids.length,
             })
-          )
+          );
         },
         onError: (e) => {
-          toast.error(e.message)
+          toast.error(e.message);
         },
       }
-    )
-  }
+    );
+  };
 
   if (isError) {
-    throw error
+    throw error;
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.domain")}</Heading>
+    <Container className='divide-y p-0'>
+      <div className='flex items-center justify-between px-6 py-4'>
+        <Heading level='h2'>{t('products.domain')}</Heading>
         <ActionMenu
           groups={[
             {
               actions: [
                 {
                   icon: <Plus />,
-                  label: t("actions.add"),
-                  to: "products",
+                  label: t('actions.add'),
+                  to: 'products',
                 },
               ],
             },
@@ -120,54 +135,68 @@ export const CollectionProductSection = ({
         search
         pagination
         pageSize={PAGE_SIZE}
-        navigateTo={({ original }) => `/products/${original.id}`}
+        navigateTo={({ original }) =>
+          `/products/${original.id}`
+        }
         count={count}
         filters={filters}
         isLoading={isLoading}
         orderBy={[
-          { key: "title", label: t("fields.title") },
-          { key: "created_at", label: t("fields.createdAt") },
-          { key: "updated_at", label: t("fields.updatedAt") },
+          { key: 'title', label: t('fields.title') },
+          {
+            key: 'created_at',
+            label: t('fields.createdAt'),
+          },
+          {
+            key: 'updated_at',
+            label: t('fields.updatedAt'),
+          },
         ]}
         queryObject={raw}
         commands={[
           {
             action: handleRemove,
-            label: t("actions.remove"),
-            shortcut: "r",
+            label: t('actions.remove'),
+            shortcut: 'r',
           },
         ]}
         noRecords={{
-          message: t("collections.products.list.noRecordsMessage"),
+          message: t(
+            'collections.products.list.noRecordsMessage'
+          ),
         }}
       />
     </Container>
-  )
-}
+  );
+};
 
 const ProductActions = ({
   product,
   collectionId,
 }: {
-  product: HttpTypes.AdminProduct
-  collectionId: string
+  product: HttpTypes.AdminProduct;
+  collectionId: string;
 }) => {
-  const { t } = useTranslation()
-  const prompt = usePrompt()
-  const { mutateAsync } = useUpdateCollectionProducts(collectionId)
+  const { t } = useTranslation();
+  const prompt = usePrompt();
+  const { mutateAsync } =
+    useUpdateCollectionProducts(collectionId);
 
   const handleRemove = async () => {
     const res = await prompt({
-      title: t("general.areYouSure"),
-      description: t("collections.removeSingleProductWarning", {
-        title: product.title,
-      }),
-      confirmText: t("actions.remove"),
-      cancelText: t("actions.cancel"),
-    })
+      title: t('general.areYouSure'),
+      description: t(
+        'collections.removeSingleProductWarning',
+        {
+          title: product.title,
+        }
+      ),
+      confirmText: t('actions.remove'),
+      cancelText: t('actions.cancel'),
+    });
 
     if (!res) {
-      return
+      return;
     }
 
     await mutateAsync(
@@ -177,17 +206,17 @@ const ProductActions = ({
       {
         onSuccess: () => {
           toast.success(
-            t("collections.products.remove.successToast", {
+            t('collections.products.remove.successToast', {
               count: 1,
             })
-          )
+          );
         },
         onError: (e) => {
-          toast.error(e.message)
+          toast.error(e.message);
         },
       }
-    )
-  }
+    );
+  };
 
   return (
     <ActionMenu
@@ -196,7 +225,7 @@ const ProductActions = ({
           actions: [
             {
               icon: <PencilSquare />,
-              label: t("actions.edit"),
+              label: t('actions.edit'),
               to: `/products/${product.id}/edit`,
             },
           ],
@@ -205,68 +234,71 @@ const ProductActions = ({
           actions: [
             {
               icon: <Trash />,
-              label: t("actions.remove"),
+              label: t('actions.remove'),
               onClick: handleRemove,
             },
           ],
         },
       ]}
     />
-  )
-}
+  );
+};
 
-const columnHelper = createColumnHelper<HttpTypes.AdminProduct>()
+const columnHelper =
+  createColumnHelper<HttpTypes.AdminProduct>();
 
 const useColumns = () => {
-  const columns = useProductTableColumns()
+  const columns = useProductTableColumns();
 
   return useMemo(
     () => [
       columnHelper.display({
-        id: "select",
+        id: 'select',
         header: ({ table }) => {
           return (
             <Checkbox
               checked={
                 table.getIsSomePageRowsSelected()
-                  ? "indeterminate"
+                  ? 'indeterminate'
                   : table.getIsAllPageRowsSelected()
               }
               onCheckedChange={(value) =>
                 table.toggleAllPageRowsSelected(!!value)
               }
             />
-          )
+          );
         },
         cell: ({ row }) => {
           return (
             <Checkbox
               checked={row.getIsSelected()}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
+              onCheckedChange={(value) =>
+                row.toggleSelected(!!value)
+              }
               onClick={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
               }}
             />
-          )
+          );
         },
       }),
       ...columns,
       columnHelper.display({
-        id: "actions",
+        id: 'actions',
         cell: ({ row, table }) => {
           const { collectionId } = table.options.meta as {
-            collectionId: string
-          }
+            collectionId: string;
+          };
 
           return (
             <ProductActions
               product={row.original}
               collectionId={collectionId}
             />
-          )
+          );
         },
       }),
     ],
     [columns]
-  )
-}
+  );
+};

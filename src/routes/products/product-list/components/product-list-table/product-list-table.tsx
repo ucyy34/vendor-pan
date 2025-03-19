@@ -14,7 +14,7 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
+  // useLocation,
 } from 'react-router-dom';
 
 import { HttpTypes } from '@medusajs/types';
@@ -34,7 +34,7 @@ const PAGE_SIZE = 20;
 
 export const ProductListTable = () => {
   const { t } = useTranslation();
-  const location = useLocation();
+  // const location = useLocation();
 
   const initialData = useLoaderData() as Awaited<
     ReturnType<ReturnType<typeof productsLoader>>
@@ -76,14 +76,14 @@ export const ProductListTable = () => {
       <div className='flex items-center justify-between px-6 py-4'>
         <Heading level='h2'>{t('products.domain')}</Heading>
         <div className='flex items-center justify-center gap-x-2'>
-          <Button size='small' variant='secondary' asChild>
+          {/* <Button size='small' variant='secondary' asChild>
             <Link to={`export${location.search}`}>
               {t('actions.export')}
             </Link>
           </Button>
           <Button size='small' variant='secondary' asChild>
             <Link to='import'>{t('actions.import')}</Link>
-          </Button>
+          </Button> */}
           <Button size='small' variant='secondary' asChild>
             <Link to='create'>{t('actions.create')}</Link>
           </Button>

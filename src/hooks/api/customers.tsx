@@ -60,7 +60,6 @@ export const useCustomers = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    // queryFn: () => sdk.admin.customer.list(query),
     queryFn: () =>
       fetchQuery('/vendor/customers', {
         method: 'GET',
