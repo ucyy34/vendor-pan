@@ -67,12 +67,15 @@
     "react": "^18.2.0",
     "react-country-flag": "^3.1.0",
     "react-currency-input-field": "^3.6.11",
+    "react-day-picker": "^9.6.3",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "7.49.1",
     "react-i18next": "13.5.0",
     "react-jwt": "^1.2.0",
     "react-router-dom": "6.20.1",
+    "recharts": "^2.15.1",
+    "talkjs": "^0.35.0",
     "zod": "3.22.4"
   },
   "devDependencies": {
