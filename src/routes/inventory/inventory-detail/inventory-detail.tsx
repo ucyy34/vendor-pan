@@ -35,8 +35,6 @@ export const InventoryDetail = () => {
     }
   );
 
-  console.log({ inventory_item });
-
   const { getWidgets } = useDashboardExtension();
 
   if (isLoading || !inventory_item) {
