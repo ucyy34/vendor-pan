@@ -215,8 +215,6 @@ const useColumns = () => {
 
           const expired =
             new Date(row.original.expires_at) < new Date();
-
-          console.log(accepted, expired);
           if (accepted) {
             return (
               <Tooltip

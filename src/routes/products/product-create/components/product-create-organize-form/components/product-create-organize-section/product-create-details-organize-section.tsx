@@ -47,8 +47,6 @@ export const ProductCreateOrganizationSection = ({
       })),
   });
 
-  console.log(types);
-
   const tags = useComboboxData({
     queryKey: ['product_tags'],
     queryFn: (params) => sdk.store.productTag.list(params),

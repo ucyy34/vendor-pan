@@ -28,7 +28,6 @@ export const Connected = ({
       toast.error('Connection error!');
     }
   };
-  console.log(status);
 
   return status === 'connected' ? (
     <div className='flex items-center justify-center text-center my-32 flex-col'>
