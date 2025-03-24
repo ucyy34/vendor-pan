@@ -16,7 +16,7 @@ cd vendor-panel
 
 Install dependencies
 ```js
-yarn install
+npm install
 ```
 &nbsp;
 
@@ -32,5 +32,5 @@ VITE_TALK_JS_APP_ID=<talkjs public key here>
 
 Start storefront
 ```js
-yarn dev
+npm run dev
 ```
