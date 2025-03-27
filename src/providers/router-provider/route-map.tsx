@@ -39,7 +39,7 @@ export const RouteMap: RouteObject[] = [
               import('../../routes/stripe-connect'),
           },
           {
-            path: '/dashboard',
+            path: 'dashboard',
             errorElement: <ErrorBoundary />,
             lazy: () => import('../../routes/dashboard'),
           },
