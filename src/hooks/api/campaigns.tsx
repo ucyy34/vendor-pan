@@ -77,7 +77,10 @@ export const useCreateCampaign = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.campaign.create(payload),
+      fetchQuery('/vendor/campaigns', {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: campaignsQueryKeys.lists(),

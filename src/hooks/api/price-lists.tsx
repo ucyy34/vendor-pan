@@ -20,19 +20,23 @@ export const priceListsQueryKeys = queryKeysFactory(
 
 export const usePriceList = (
   id: string,
-  query?: HttpTypes.AdminPriceListListParams,
+  query?: Record<string, string | number>,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminPriceListResponse,
       FetchError,
-      HttpTypes.AdminPriceListResponse,
+      any,
       QueryKey
     >,
     'queryKey' | 'queryFn'
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.priceList.retrieve(id, query),
+    queryFn: () =>
+      fetchQuery(`/vendor/price-lists/${id}`, {
+        method: 'GET',
+        query,
+      }),
     queryKey: priceListsQueryKeys.detail(id),
     ...options,
   });
@@ -66,7 +70,6 @@ export const usePriceLists = (
 };
 
 export const useCreatePriceList = (
-  query?: HttpTypes.AdminPriceListParams,
   options?: UseMutationOptions<
     HttpTypes.AdminPriceListResponse,
     FetchError,
@@ -75,7 +78,10 @@ export const useCreatePriceList = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.priceList.create(payload, query),
+      fetchQuery('/vendor/price-lists', {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
@@ -93,7 +99,6 @@ export const useCreatePriceList = (
 
 export const useUpdatePriceList = (
   id: string,
-  query?: HttpTypes.AdminPriceListParams,
   options?: UseMutationOptions<
     HttpTypes.AdminPriceListResponse,
     FetchError,
@@ -102,7 +107,10 @@ export const useUpdatePriceList = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.priceList.update(id, payload, query),
+      fetchQuery(`/vendor/price-lists/${id}`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
@@ -130,7 +138,10 @@ export const useDeletePriceList = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.priceList.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/price-lists/${id}`, {
+        method: 'DELETE',
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),

@@ -632,10 +632,10 @@ const transformMap: TransformMap = {
   promotion: {
     dataKey: 'promotions',
     transform: (promotion: HttpTypes.AdminPromotion) => ({
-      id: promotion.id,
-      title: promotion.code!,
-      to: `/promotions/${promotion.id}`,
-      value: `promotion:${promotion.id}`,
+      id: promotion?.id,
+      title: promotion?.code!,
+      to: `/promotions/${promotion?.id}`,
+      value: `promotion:${promotion?.id}`,
     }),
   },
   campaign: {
