@@ -4,10 +4,6 @@ import { DashboardCharts } from './components/dashboard-charts';
 import { DashboardOnboarding } from './components/dashboard-onboarding';
 
 export const Dashboard = () => {
-  return <DashboardContent />;
-};
-
-const DashboardContent = () => {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
 
