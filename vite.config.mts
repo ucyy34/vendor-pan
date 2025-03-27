@@ -50,7 +50,6 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       entries: [],
-      include: ['recharts'],
     },
     build: {
       rollupOptions: {
