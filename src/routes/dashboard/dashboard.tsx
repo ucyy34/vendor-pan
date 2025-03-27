@@ -5,9 +5,16 @@ import { DashboardOnboarding } from './components/dashboard-onboarding';
 export const Dashboard = () => {
   const { onboarding, isError, error } = useOnboarding();
 
-  console.log({ onboarding, isError, error });
+  // if (isError) {
+  //   throw error;
+  // }
+
   if (isError) {
-    throw error;
+    return (
+      <div>
+        Error: {error} {JSON.stringify(onboarding)}
+      </div>
+    );
   }
 
   if (
