@@ -77,8 +77,8 @@ export const useUpdateMe = (
 
 export const useOnboarding = () => {
   const { data, ...rest } = useQuery({
-    queryFn: async () =>
-      await fetchQuery('/vendor/sellers/me/onboarding', {
+    queryFn: () =>
+      fetchQuery('/vendor/sellers/me/onboarding', {
         method: 'GET',
       }),
     queryKey: ['onboarding'],

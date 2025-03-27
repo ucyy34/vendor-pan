@@ -1,9 +1,19 @@
+import { useEffect, useState } from 'react';
 import { useOnboarding } from '../../hooks/api';
 import { DashboardCharts } from './components/dashboard-charts';
 import { DashboardOnboarding } from './components/dashboard-onboarding';
 
 export const Dashboard = () => {
+  return <DashboardContent />;
+};
+
+const DashboardContent = () => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => setIsClient(true), []);
+
   const { onboarding, isError, error } = useOnboarding();
+
+  if (!isClient) return null;
 
   if (isError) {
     throw error;
