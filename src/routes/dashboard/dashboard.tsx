@@ -5,11 +5,10 @@ import { DashboardOnboarding } from './components/dashboard-onboarding';
 export const Dashboard = () => {
   const { onboarding, isError, error } = useOnboarding();
 
+  console.log({ onboarding, isError, error });
   if (isError) {
     throw error;
   }
-
-  return <DashboardCharts />;
 
   if (
     !onboarding?.products ||
@@ -25,4 +24,6 @@ export const Dashboard = () => {
         stripe_connect={onboarding?.stripe_connect}
       />
     );
+
+  return <DashboardCharts />;
 };
