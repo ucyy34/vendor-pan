@@ -46,7 +46,10 @@ export const usePromotion = (
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: promotionsQueryKeys.detail(id),
-    queryFn: async () => sdk.admin.promotion.retrieve(id),
+    queryFn: async () =>
+      fetchQuery(`/vendor/promotions/${id}`, {
+        method: 'GET',
+      }),
     ...options,
   });
 
@@ -176,7 +179,10 @@ export const useDeletePromotion = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.promotion.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/promotions/${id}`, {
+        method: 'DELETE',
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.lists(),
@@ -200,7 +206,10 @@ export const useCreatePromotion = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.create(payload),
+      fetchQuery('/vendor/promotions', {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.lists(),

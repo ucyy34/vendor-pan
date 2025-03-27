@@ -66,30 +66,22 @@ export const useOrderTableColumns = (
           return <DateCell date={date} />;
         },
       }),
-      columnHelper.accessor('customer', {
-        header: () => <CustomerHeader />,
-        cell: ({ getValue }) => {
-          const customer = getValue();
+      // columnHelper.accessor('payment_status', {
+      //   header: () => <PaymentStatusHeader />,
+      //   cell: ({ getValue }) => {
+      //     const status = getValue();
 
-          return <CustomerCell customer={customer} />;
-        },
-      }),
-      columnHelper.accessor('payment_status', {
-        header: () => <PaymentStatusHeader />,
-        cell: ({ getValue }) => {
-          const status = getValue();
+      //     return <PaymentStatusCell status={status} />;
+      //   },
+      // }),
+      // columnHelper.accessor('fulfillment_status', {
+      //   header: () => <FulfillmentStatusHeader />,
+      //   cell: ({ getValue }) => {
+      //     const status = getValue();
 
-          return <PaymentStatusCell status={status} />;
-        },
-      }),
-      columnHelper.accessor('fulfillment_status', {
-        header: () => <FulfillmentStatusHeader />,
-        cell: ({ getValue }) => {
-          const status = getValue();
-
-          return <FulfillmentStatusCell status={status} />;
-        },
-      }),
+      //     return <FulfillmentStatusCell status={status} />;
+      //   },
+      // }),
       columnHelper.accessor('total', {
         header: () => <TotalHeader />,
         cell: ({ getValue, row }) => {
