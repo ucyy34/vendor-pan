@@ -209,10 +209,7 @@ export const CategorySelect = forwardRef<
           } as CSSProperties
         }
       >
-        <Select.Value
-          placeholder='Wybierz opcję'
-          aria-label={value[0]}
-        />
+        <Select.Value aria-label={value[0]} />
         <Select.Icon className='ml-auto'>
           <TrianglesMini className='text-ui-fg-muted' />
         </Select.Icon>
