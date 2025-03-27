@@ -18,8 +18,8 @@ export const Dashboard = () => {
   if (
     !onboarding?.products ||
     !onboarding?.locations_shipping ||
-    !onboarding?.store_information ||
-    !onboarding?.stripe_connect
+    !onboarding?.store_information
+    // !onboarding?.stripe_connect
   )
     return (
       <DashboardOnboarding
@@ -29,4 +29,6 @@ export const Dashboard = () => {
         stripe_connect={onboarding?.stripe_connect}
       />
     );
+
+  return <DashboardCharts />;
 };

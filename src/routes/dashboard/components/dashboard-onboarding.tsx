@@ -14,7 +14,7 @@ export const DashboardOnboarding = ({
   products,
   locations_shipping,
   store_information,
-  stripe_connect,
+  // stripe_connect,
 }: DashboardProps) => {
   const { mutateAsync } = useUpdateOnboarding();
 
@@ -40,12 +40,12 @@ export const DashboardOnboarding = ({
           link='/settings/store'
           buttonLabel='Manage'
         />
-        <OnboardingRow
+        {/* <OnboardingRow
           label='Setup Stripe Connect account'
           state={stripe_connect}
           link='/stripe-connect'
           buttonLabel='Setup'
-        />
+        /> */}
         <OnboardingRow
           label='Setup Locations & Shipping'
           state={locations_shipping}
