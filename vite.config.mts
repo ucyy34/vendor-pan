@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         external: [
           'talkjs',
-          'recharts',
+          // 'recharts',
           'react-day-picker',
           'react-day-picker/src/style.css',
         ],
