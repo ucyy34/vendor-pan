@@ -81,7 +81,8 @@ export const useOnboarding = () => {
       await fetchQuery('/vendor/sellers/me/onboarding', {
         method: 'GET',
       }),
-    queryKey: [usersQueryKeys.me(), 'onboarding'],
+    queryKey: ['onboarding'],
+    staleTime: 0,
   });
 
   return {
@@ -99,7 +100,7 @@ export const useUpdateOnboarding = () => {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [usersQueryKeys.me(), 'onboarding'],
+        queryKey: ['onboarding'],
       });
     },
   });
