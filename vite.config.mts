@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => {
   const PUBLISHABLE_API_KEY =
     env.VITE_PUBLISHABLE_API_KEY || '';
   const TALK_JS_APP_ID = env.VITE_TALK_JS_APP_ID || '';
+  const DISABLE_SELLERS_REGISTRATION =
+    env.VITE_DISABLE_SELLERS_REGISTRATION || 'false';
 
   /**
    * Add this to your .env file to specify the project to load admin extensions from.
@@ -39,6 +41,9 @@ export default defineConfig(({ mode }) => {
         PUBLISHABLE_API_KEY
       ),
       __TALK_JS_APP_ID__: JSON.stringify(TALK_JS_APP_ID),
+      __DISABLE_SELLERS_REGISTRATION__: JSON.stringify(
+        DISABLE_SELLERS_REGISTRATION
+      ),
     },
     server: {
       open: true,

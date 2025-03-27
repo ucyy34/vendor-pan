@@ -9,6 +9,8 @@ export const Dashboard = () => {
     throw error;
   }
 
+  return <DashboardCharts />;
+
   if (
     !onboarding?.products ||
     !onboarding?.locations_shipping ||
@@ -23,6 +25,4 @@ export const Dashboard = () => {
         stripe_connect={onboarding?.stripe_connect}
       />
     );
-
-  return <DashboardCharts />;
 };
