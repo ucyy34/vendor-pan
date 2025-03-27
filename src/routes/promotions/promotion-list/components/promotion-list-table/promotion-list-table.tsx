@@ -44,8 +44,6 @@ export const PromotionListTable = () => {
 
   const promotions = data?.filter((item) => item !== null);
 
-  console.log({ promotions });
-
   const filters = usePromotionTableFilters();
   const columns = useColumns();
 

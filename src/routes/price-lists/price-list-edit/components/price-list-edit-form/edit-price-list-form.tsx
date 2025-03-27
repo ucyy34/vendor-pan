@@ -52,7 +52,6 @@ export const PriceListEditForm = ({
       resolver: zodResolver(PriceListEditSchema),
     }
   );
-  console.log({ priceList });
 
   const { mutateAsync, isPending } = useUpdatePriceList(
     priceList.id

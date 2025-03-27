@@ -33,7 +33,6 @@ export const CustomerOrderSection = ({
   const filters = useOrderTableFilters();
 
   const count = orders?.length || 0;
-  console.log({ orders });
 
   const { table } = useDataTable({
     data: orders ?? [],

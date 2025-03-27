@@ -155,7 +155,6 @@ const useColumns = () => {
           'filters.sorting.alphabeticallyDesc'
         ),
         cell: ({ row }) => {
-          console.log(row);
           return (
             <TextCell
               text={

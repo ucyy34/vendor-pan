@@ -79,7 +79,6 @@ export const PromotionGeneralSection = ({
     });
   };
 
-  console.log({ promotion });
   const displayValue = getDisplayValue(promotion);
 
   return (
