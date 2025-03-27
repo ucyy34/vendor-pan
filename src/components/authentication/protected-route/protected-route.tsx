@@ -20,15 +20,15 @@ export const ProtectedRoute = () => {
     );
   }
 
-  if (!seller) {
-    return (
-      <Navigate
-        to='/login'
-        state={{ from: location }}
-        replace
-      />
-    );
-  }
+  // if (!seller) {
+  //   return (
+  //     <Navigate
+  //       to='/login'
+  //       state={{ from: location }}
+  //       replace
+  //     />
+  //   );
+  // }
 
   return (
     <SidebarProvider>

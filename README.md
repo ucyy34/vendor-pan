@@ -16,7 +16,7 @@ cd vendor-panel
 
 Install dependencies
 ```js
-yarn install
+npm install
 ```
 &nbsp;
 
@@ -33,5 +33,5 @@ VITE_DISABLE_SELLERS_REGISTRATION=false
 
 Start storefront
 ```js
-yarn dev
+npm run dev
 ```
