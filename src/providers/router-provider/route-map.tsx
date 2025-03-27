@@ -39,7 +39,7 @@ export const RouteMap: RouteObject[] = [
               import('../../routes/stripe-connect'),
           },
           {
-            path: '/dashboard',
+            path: 'dashboard',
             errorElement: <ErrorBoundary />,
             lazy: () => import('../../routes/dashboard'),
           },
@@ -2142,7 +2142,10 @@ export const RouteMap: RouteObject[] = [
           },
           {
             path: '/register',
-            lazy: () => import('../../routes/register'),
+            lazy:
+              __DISABLE_SELLERS_REGISTRATION__ === 'false'
+                ? () => import('../../routes/register')
+                : undefined,
           },
           {
             path: '/reset-password',

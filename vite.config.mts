@@ -50,13 +50,14 @@ export default defineConfig(({ mode }) => {
     },
     optimizeDeps: {
       entries: [],
+      include: ['recharts'],
     },
     build: {
       rollupOptions: {
         external: [
           'talkjs',
-          'recharts',
-          'react-day-picker',
+          // 'recharts',
+          // 'react-day-picker',
           'react-day-picker/src/style.css',
         ],
       },
