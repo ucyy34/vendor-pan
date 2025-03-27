@@ -22,8 +22,6 @@ export const ProfileDetail = () => {
     throw error;
   }
 
-  console.log({ member });
-
   return (
     <SingleColumnPage
       widgets={{

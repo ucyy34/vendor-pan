@@ -36,7 +36,10 @@ export const useCustomer = (
   const { data, ...rest } = useQuery({
     queryKey: customersQueryKeys.detail(id),
     queryFn: async () =>
-      sdk.admin.customer.retrieve(id, query),
+      fetchQuery(`/vendor/customers/${id}`, {
+        method: 'GET',
+        query,
+      }),
     ...options,
   });
 
@@ -171,4 +174,30 @@ export const useBatchCustomerCustomerGroups = (
     },
     ...options,
   });
+};
+
+export const useCustomerOrders = (
+  id: string,
+  query?: Record<string, any>,
+  options?: Omit<
+    UseQueryOptions<
+      { orders: HttpTypes.AdminOrder[] },
+      FetchError,
+      { orders: HttpTypes.AdminOrder[] },
+      QueryKey
+    >,
+    'queryFn' | 'queryKey'
+  >
+) => {
+  const { data, ...rest } = useQuery({
+    queryKey: [CUSTOMERS_QUERY_KEY, id, 'orders'],
+    queryFn: async () =>
+      fetchQuery(`/vendor/customers/${id}/orders`, {
+        method: 'GET',
+        query,
+      }),
+    ...options,
+  });
+
+  return { ...data, ...rest };
 };

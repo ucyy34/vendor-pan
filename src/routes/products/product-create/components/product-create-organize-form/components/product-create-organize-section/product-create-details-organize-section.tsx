@@ -1,22 +1,17 @@
-import { Button, Heading } from '@medusajs/ui';
-import {
-  UseFormReturn,
-  useFieldArray,
-} from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { Heading } from '@medusajs/ui';
+import { UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { ChipGroup } from '../../../../../../../components/common/chip-group';
 import { Form } from '../../../../../../../components/common/form';
 import { SwitchBox } from '../../../../../../../components/common/switch-box';
 import { Combobox } from '../../../../../../../components/inputs/combobox';
-import { StackedFocusModal } from '../../../../../../../components/modals';
 import { useComboboxData } from '../../../../../../../hooks/use-combobox-data';
 import {
   fetchQuery,
   sdk,
 } from '../../../../../../../lib/client';
-import { CategoryCombobox } from '../../../../../common/components/category-combobox';
 import { ProductCreateSchemaType } from '../../../../types';
+import { CategorySelect } from '../../../../../common/components/category-combobox/category-select';
 
 type ProductCreateOrganizationSectionProps = {
   form: UseFormReturn<ProductCreateSchemaType>;
@@ -38,8 +33,12 @@ export const ProductCreateOrganizationSection = ({
   });
 
   const types = useComboboxData({
-    queryKey: ['product_types'],
-    queryFn: (params) => sdk.store.productType.list(params),
+    queryKey: ['product_types', 'creating'],
+    queryFn: (params) =>
+      fetchQuery('/store/product-types', {
+        method: 'GET',
+        query: params,
+      }),
     getOptions: (data) =>
       data.product_types.map((type: any) => ({
         label: type.value,
@@ -47,29 +46,18 @@ export const ProductCreateOrganizationSection = ({
       })),
   });
 
-  console.log(types);
-
   const tags = useComboboxData({
-    queryKey: ['product_tags'],
-    queryFn: (params) => sdk.store.productTag.list(params),
+    queryKey: ['product_tags', 'creating'],
+    queryFn: (params) =>
+      fetchQuery('/store/product-tags', {
+        method: 'GET',
+        query: params,
+      }),
     getOptions: (data) =>
       data.product_tags.map((tag: any) => ({
         label: tag.value,
         value: tag.id,
       })),
-  });
-
-  const shippingProfiles = useComboboxData({
-    queryKey: ['shipping_profiles'],
-    queryFn: (params) =>
-      sdk.store.shippingProfile.list(params),
-    getOptions: (data) =>
-      data.shipping_profiles.map(
-        (shippingProfile: any) => ({
-          label: shippingProfile.name,
-          value: shippingProfile.id,
-        })
-      ),
   });
 
   return (
@@ -147,7 +135,7 @@ export const ProductCreateOrganizationSection = ({
                   {t('products.fields.categories.label')}
                 </Form.Label>
                 <Form.Control>
-                  <CategoryCombobox {...field} />
+                  <CategorySelect {...field} />
                 </Form.Control>
                 <Form.ErrorMessage />
               </Form.Item>
@@ -172,46 +160,6 @@ export const ProductCreateOrganizationSection = ({
                       tags.onSearchValueChange
                     }
                     fetchNextPage={tags.fetchNextPage}
-                  />
-                </Form.Control>
-                <Form.ErrorMessage />
-              </Form.Item>
-            );
-          }}
-        />
-      </div>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-        <div>
-          <Form.Label optional>
-            {t('products.fields.shipping_profile.label')}
-          </Form.Label>
-          <Form.Hint>
-            <Trans
-              i18nKey={
-                'products.fields.shipping_profile.hint'
-              }
-            />
-          </Form.Hint>
-        </div>
-        <Form.Field
-          control={form.control}
-          name='shipping_profile_id'
-          render={({ field }) => {
-            return (
-              <Form.Item>
-                <Form.Control>
-                  <Combobox
-                    {...field}
-                    options={shippingProfiles.options}
-                    searchValue={
-                      shippingProfiles.searchValue
-                    }
-                    onSearchValueChange={
-                      shippingProfiles.onSearchValueChange
-                    }
-                    fetchNextPage={
-                      shippingProfiles.fetchNextPage
-                    }
                   />
                 </Form.Control>
                 <Form.ErrorMessage />

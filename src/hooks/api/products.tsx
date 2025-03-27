@@ -523,7 +523,10 @@ export const useDeleteProduct = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.product.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/products/${id}`, {
+        method: 'DELETE',
+      }),
     onSuccess: (
       data: any,
       variables: any,
