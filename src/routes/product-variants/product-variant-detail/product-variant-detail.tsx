@@ -34,8 +34,6 @@ export const ProductVariantDetail = () => {
       <TwoColumnPageSkeleton
         mainSections={2}
         sidebarSections={1}
-        showJSON
-        showMetadata
       />
     );
   }
@@ -71,7 +69,7 @@ export const ProductVariantDetail = () => {
               inventoryItems={variant.inventory_items.map(
                 (i) => {
                   return {
-                    ...i.inventory,
+                    id: i.inventory_item_id,
                     required_quantity: i.required_quantity,
                     variant,
                   };

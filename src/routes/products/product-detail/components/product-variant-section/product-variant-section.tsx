@@ -57,6 +57,7 @@ export const ProductVariantSection = ({
         getRowId={(row) => row.id}
         pageSize={PAGE_SIZE}
         heading={t('products.variants.header')}
+        rowHref={(row) => `variants/${row.id}`}
         emptyState={{
           empty: {
             heading: t('products.variants.empty.heading'),
