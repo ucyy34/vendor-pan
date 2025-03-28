@@ -2,14 +2,14 @@ import {
   CalendarMini,
   TriangleRightMini,
 } from '@medusajs/icons';
-// import {
-//   CartesianGrid,
-//   Line,
-//   LineChart,
-//   ResponsiveContainer,
-//   XAxis,
-//   YAxis,
-// } from 'recharts';
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import {
   Badge,
   Button,
@@ -274,7 +274,7 @@ export const DashboardCharts = () => {
         </div>
         <div className='relative px-6 py-4 grid grid-cols-1 lg:grid-cols-4 gap-4'>
           <div className='col-span-3 relative h-[150px] md:h-[300px] w-[calc(100%-2rem)]'>
-            {/* {isPending ? (
+            {isPending ? (
               <ChartSkeleton />
             ) : (
               <ResponsiveContainer
@@ -298,7 +298,7 @@ export const DashboardCharts = () => {
                   ))}
                 </LineChart>
               </ResponsiveContainer>
-            )} */}
+            )}
           </div>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:block gap-4'>
             {isPending ? (

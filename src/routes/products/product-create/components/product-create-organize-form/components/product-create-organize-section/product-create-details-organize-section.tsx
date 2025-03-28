@@ -12,6 +12,7 @@ import {
 } from '../../../../../../../lib/client';
 import { ProductCreateSchemaType } from '../../../../types';
 import { CategorySelect } from '../../../../../common/components/category-combobox/category-select';
+import { CategoryCombobox } from '../../../../../common/components/category-combobox';
 
 type ProductCreateOrganizationSectionProps = {
   form: UseFormReturn<ProductCreateSchemaType>;
@@ -135,7 +136,8 @@ export const ProductCreateOrganizationSection = ({
                   {t('products.fields.categories.label')}
                 </Form.Label>
                 <Form.Control>
-                  <CategorySelect {...field} />
+                  <CategoryCombobox {...field} />
+                  {/* <CategorySelect  /> */}
                 </Form.Control>
                 <Form.ErrorMessage />
               </Form.Item>

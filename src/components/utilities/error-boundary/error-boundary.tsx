@@ -14,8 +14,6 @@ export const ErrorBoundary = () => {
   const location = useLocation();
   const { t } = useTranslation();
 
-  console.log({ error });
-
   let code: number | null = null;
 
   if (isFetchError(error)) {
