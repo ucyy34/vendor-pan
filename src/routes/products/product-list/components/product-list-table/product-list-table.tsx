@@ -64,7 +64,7 @@ export const ProductListTable = () => {
     count,
     enablePagination: true,
     pageSize: PAGE_SIZE,
-    getRowId: (row) => row.id,
+    getRowId: (row) => row?.id || '',
   });
 
   if (isError) {

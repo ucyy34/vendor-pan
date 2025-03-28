@@ -20,21 +20,21 @@ export const Requests = () => {
     requests?.filter(
       ({ type }: { type: string }) =>
         type === 'product_category'
-    ) || [];
+    ) ?? [];
   const collectionRequests =
     requests?.filter(
       ({ type }: { type: string }) =>
         type === 'product_collection'
-    ) || [];
+    ) ?? [];
   const reviewRequests =
     requests?.filter(
       ({ type }: { type: string }) =>
         type === 'review_remove'
-    ) || [];
+    ) ?? [];
   const ordersRequests =
     requests?.filter(
       ({ type }: { type: string }) => type === 'orders'
-    ) || [];
+    ) ?? [];
 
   const categoryRequestCount = categoryRequests.length;
   const collectionRequestCount = collectionRequests.length;

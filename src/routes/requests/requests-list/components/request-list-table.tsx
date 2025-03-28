@@ -18,7 +18,7 @@ export const RequestListTable = ({
   const data =
     requests?.filter(
       ({ type }: { type: string }) => type === request_type
-    ) || [];
+    ) ?? [];
 
   const count = data?.length || 0;
 
@@ -29,7 +29,7 @@ export const RequestListTable = ({
     columns: customColumns || columns,
     count,
     enablePagination: true,
-    getRowId: (row: any) => row.id,
+    getRowId: (row: any) => row?.id || '',
     pageSize: PAGE_SIZE,
   });
 
