@@ -137,12 +137,21 @@ export const useProductVariant = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () =>
-      sdk.admin.product.retrieveVariant(
-        productId,
-        variantId,
-        query
-      ),
+    queryFn: async () => {
+      const { product } = await fetchQuery(
+        `/vendor/products/${productId}`,
+        {
+          method: 'GET',
+          query: { fields: '*variants' },
+        }
+      );
+
+      const variant = product.variants.find(
+        ({ id }: { id: string }) => id === variantId
+      );
+
+      return { variant };
+    },
     queryKey: variantsQueryKeys.detail(variantId, query),
     ...options,
   });
@@ -447,8 +456,8 @@ export const useCreateProduct = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      fetchQuery('/vendor/products', {
+    mutationFn: async (payload) =>
+      await fetchQuery('/vendor/products', {
         method: 'POST',
         body: payload,
       }),
@@ -456,7 +465,6 @@ export const useCreateProduct = (
       queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),
       });
-      // if `manage_inventory` is true on created variants that will create inventory items automatically
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),
       });
@@ -481,14 +489,18 @@ export const useUpdateProduct = (
         {
           method: 'GET',
           query: {
-            fields: '-options,-variants,-type,-collection',
+            fields:
+              '-status,-options,-variants,-type,-collection',
           },
         }
       );
 
       await delete product.id;
       await delete product.rating;
+      await delete payload.status;
       await delete payload.additional_data;
+
+      console.log({ product, payload });
 
       return fetchQuery(`/vendor/products/${id}`, {
         method: 'POST',

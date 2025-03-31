@@ -66,7 +66,7 @@ export const fetchQuery = async (
     },
     ''
   );
-  return await fetch(
+  const response = await fetch(
     `${backendUrl}${url}${params && `?${params}`}`,
     {
       method: method,
@@ -78,7 +78,14 @@ export const fetchQuery = async (
       },
       body: body ? JSON.stringify(body) : null,
     }
-  )
-    .then((res) => res.json())
-    .catch(() => null);
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.message || 'Nieznany błąd serwera'
+    );
+  }
+
+  return response.json();
 };

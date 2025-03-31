@@ -63,7 +63,7 @@ export const useReservationItems = (
     queryFn: () =>
       fetchQuery('/vendor/reservations', {
         method: 'GET',
-        query: query as { [key: string]: string | number },
+        // query: query as { [key: string]: string | number },
       }),
     queryKey: reservationItemsQueryKeys.list(query),
     ...options,

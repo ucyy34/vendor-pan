@@ -41,13 +41,13 @@ export const PricingEdit = ({
   variantId,
 }: {
   product: HttpTypes.AdminProduct;
-  variantId: string;
+  variantId?: string;
 }) => {
   const { t } = useTranslation();
   const { handleSuccess } = useRouteModal();
   // const { mutateAsync, isPending } = useUpdateProductVariantsBatch(product.id)
   const { mutateAsync, isPending } =
-    useUpdateProductVariant(product.id, variantId);
+    useUpdateProductVariant(product.id, variantId!);
 
   const { regions } = useRegions({ limit: 9999 });
   const regionsCurrencyMap = useMemo(() => {
@@ -138,8 +138,6 @@ export const PricingEdit = ({
     delete data['created_at'];
     delete data['updated_at'];
     delete data['deleted_at'];
-
-    console.log(data);
 
     await mutateAsync(data, {
       onSuccess: () => {

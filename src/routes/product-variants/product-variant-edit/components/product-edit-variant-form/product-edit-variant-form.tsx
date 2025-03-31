@@ -60,7 +60,7 @@ export const ProductEditVariantForm = ({
   const { handleSuccess } = useRouteModal();
   const defaultOptions = product.options?.reduce(
     (acc: any, option: any) => {
-      const varOpt = variant.options?.find(
+      const varOpt = variant?.options?.find(
         (o: any) => o.option_id === option.id
       );
       acc[option.title] = varOpt?.value;
@@ -73,21 +73,21 @@ export const ProductEditVariantForm = ({
     z.infer<typeof ProductEditVariantSchema>
   >({
     defaultValues: {
-      title: variant.title || '',
-      material: variant.material || '',
-      sku: variant.sku || '',
-      ean: variant.ean || '',
-      upc: variant.upc || '',
-      barcode: variant.barcode || '',
-      manage_inventory: variant.manage_inventory || false,
-      allow_backorder: variant.allow_backorder || false,
-      weight: variant.weight || '',
-      height: variant.height || '',
-      width: variant.width || '',
-      length: variant.length || '',
-      mid_code: variant.mid_code || '',
-      hs_code: variant.hs_code || '',
-      origin_country: variant.origin_country || '',
+      title: variant?.title || '',
+      material: variant?.material || '',
+      sku: variant?.sku || '',
+      ean: variant?.ean || '',
+      upc: variant?.upc || '',
+      barcode: variant?.barcode || '',
+      manage_inventory: variant?.manage_inventory || false,
+      allow_backorder: variant?.allow_backorder || false,
+      weight: variant?.weight || '',
+      height: variant?.height || '',
+      width: variant?.width || '',
+      length: variant?.length || '',
+      mid_code: variant?.mid_code || '',
+      hs_code: variant?.hs_code || '',
+      origin_country: variant?.origin_country || '',
       options: defaultOptions,
     },
     resolver: zodResolver(ProductEditVariantSchema),
@@ -95,8 +95,8 @@ export const ProductEditVariantForm = ({
 
   const { mutateAsync, isPending } =
     useUpdateProductVariant(
-      variant.product_id!,
-      variant.id
+      variant?.product_id!,
+      variant?.id!
     );
 
   const handleSubmit = form.handleSubmit(async (data) => {
@@ -117,7 +117,7 @@ export const ProductEditVariantForm = ({
 
     await mutateAsync(
       {
-        id: variant.id,
+        id: variant?.id!,
         weight: transformNullableFormNumber(weight),
         height: transformNullableFormNumber(height),
         width: transformNullableFormNumber(width),

@@ -48,7 +48,7 @@ type ProductCreateFormProps = {
 export const ProductCreateForm = ({
   defaultChannel,
   store,
-  pricePreferences,
+  // pricePreferences,
 }: ProductCreateFormProps) => {
   const [tab, setTab] = useState<Tab>(Tab.DETAILS);
   const [tabState, setTabState] = useState<TabState>({
@@ -186,7 +186,12 @@ export const ProductCreateForm = ({
             is_default: undefined,
             inventory_kit: undefined,
             inventory: undefined,
-            prices: [],
+            prices: Object.keys(variant.prices).map(
+              (key) => ({
+                currency_code: key,
+                amount: parseFloat(variant.prices[key]),
+              })
+            ),
           })),
         },
         {
@@ -351,7 +356,7 @@ export const ProductCreateForm = ({
             >
               <ProductCreateVariantsForm
                 form={form}
-                // store={store}
+                store={store}
                 // regions={regions}
                 // pricePreferences={pricePreferences}
               />
