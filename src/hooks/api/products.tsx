@@ -500,8 +500,6 @@ export const useUpdateProduct = (
       await delete payload.status;
       await delete payload.additional_data;
 
-      console.log({ product, payload });
-
       return fetchQuery(`/vendor/products/${id}`, {
         method: 'POST',
         body: {

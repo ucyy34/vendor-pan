@@ -13,12 +13,17 @@ export const PriceListDetails = () => {
   const { id } = useParams();
 
   const { price_list, isLoading, isError, error } =
-    usePriceList(id!);
+    usePriceList(id!, {
+      fields: '*products'
+    });
+
   const { getWidgets } = useDashboardExtension();
 
-  if (isLoading || !price_list) {
+  const list = price_list[0];
+
+  if (isLoading || !list) {
     return (
-      <TwoColumnPageSkeleton
+      <TwoColumnPageSkeleton 
         mainSections={2}
         sidebarSections={1}
         showJSON
@@ -30,7 +35,6 @@ export const PriceListDetails = () => {
     throw error;
   }
 
-  const list = price_list[0];
 
   return (
     <TwoColumnPage

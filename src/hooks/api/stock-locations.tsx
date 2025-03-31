@@ -83,6 +83,21 @@ export const useCreateStockLocation = (
         body: payload,
       }),
     onSuccess: async (data, variables, context) => {
+      const { sales_channels } = await fetchQuery(
+        '/vendor/sales-channels',
+        {
+          method: 'GET',
+        }
+      );
+      await fetchQuery(
+        `/vendor/stock-locations/${
+          data.stock_location.id
+        }/sales-channels`,
+        {
+          method: 'POST',
+          body: { add: [sales_channels?.[0].id || null] },
+        }
+      );
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.lists(),
       });

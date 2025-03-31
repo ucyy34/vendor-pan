@@ -15,7 +15,7 @@ const variantDetailQuery = (
   queryFn: async () =>
     await fetchQuery(`/vendor/products/${productId}`, {
       method: 'GET',
-      query: { fields: VARIANT_DETAIL_FIELDS },
+      // query: { fields: VARIANT_DETAIL_FIELDS },
     }),
 });
 

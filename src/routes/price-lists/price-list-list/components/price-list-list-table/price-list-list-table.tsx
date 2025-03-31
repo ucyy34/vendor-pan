@@ -22,10 +22,12 @@ export const PriceListListTable = () => {
   const { searchParams, raw } = usePricingTableQuery({
     pageSize: PAGE_SIZE,
   });
-  const { price_lists, count, isLoading, isError, error } =
+  const { price_lists: list, count, isLoading, isError, error } =
     usePriceLists(searchParams, {
       placeholderData: keepPreviousData,
     });
+
+    const price_lists = list?.filter((item) => item.price_list && item);
 
   const filters = usePricingTableFilters();
   const columns = usePricingTableColumns();
