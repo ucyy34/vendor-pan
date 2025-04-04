@@ -289,7 +289,7 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
       });
 
       const { location_levels } = useInventoryItemLevels(
-        variant.inventory_items?.[0].inventory_item_id!
+        variant?.inventory_items?.[0]?.inventory_item_id!
       );
 
       const quantity =

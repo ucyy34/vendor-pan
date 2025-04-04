@@ -7,6 +7,7 @@ import {
   Line,
   LineChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -284,6 +285,7 @@ export const DashboardCharts = () => {
                     stroke='#333'
                     vertical={false}
                   />
+                  <Tooltip content={<CustomTooltip />} />
                   {filters.map((item) => (
                     <Line
                       key={item}
@@ -352,4 +354,45 @@ export const DashboardCharts = () => {
       </Container>
     </>
   );
+};
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  label?: string;
+  payload?: {
+    dataKey: string;
+    name: string;
+    stroke: string;
+    value: number;
+  }[];
+}) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className='bg-ui-bg-component p-4 rounded-lg border border-ui-border-base'>
+        <p className='font-bold'>{`${label}`}</p>
+        <ul>
+          {payload.map((item) => (
+            <li
+              key={item.dataKey}
+              className='flex gap-2 items-center'
+            >
+              <span
+                className='capitalize'
+                style={{ color: item.stroke }}
+              >
+                {item.name}:
+              </span>
+              <span>{item.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  return null;
 };
