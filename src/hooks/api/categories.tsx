@@ -33,7 +33,7 @@ export const useProductCategory = (
   const { data, ...rest } = useQuery({
     queryKey: categoriesQueryKeys.detail(id, query),
     queryFn: () =>
-      fetchQuery(`/store/product-categories/${id}`, {
+      fetchQuery(`/vendor/product-categories/${id}`, {
         method: 'GET',
         query: query as { [key: string]: string },
       }),
@@ -58,7 +58,7 @@ export const useProductCategories = (
   const { data, ...rest } = useQuery({
     queryKey: categoriesQueryKeys.list(query),
     queryFn: () =>
-      fetchQuery('/store/product-categories', {
+      fetchQuery('/vendor/product-categories', {
         method: 'GET',
         query: query as { [key: string]: string | number },
       }),
