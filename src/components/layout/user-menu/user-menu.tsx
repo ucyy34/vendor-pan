@@ -89,6 +89,7 @@ const UserBadge = () => {
   const fallback = displayName
     ? displayName[0].toUpperCase()
     : null;
+  const avatar = member?.photo || '';
 
   if (isPending) {
     return (
@@ -116,7 +117,12 @@ const UserBadge = () => {
       >
         <div className='flex size-6 items-center justify-center'>
           {fallback ? (
-            <Avatar size='xsmall' fallback={fallback} />
+            <Avatar
+              size='small'
+              variant='rounded'
+              src={avatar || undefined}
+              fallback={fallback}
+            />
           ) : (
             <Skeleton className='h-6 w-6 rounded-full' />
           )}
