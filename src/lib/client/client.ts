@@ -17,6 +17,25 @@ if (typeof window !== 'undefined') {
   (window as any).__sdk = sdk;
 }
 
+export const importProductsQuery = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return await fetch(
+    `${backendUrl}/vendor/products/import`,
+    {
+      method: 'POST',
+      body: formData,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'x-publishable-api-key': publishableApiKey,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .catch(() => null);
+};
+
 export const uploadFilesQuery = async (files: any[]) => {
   const formData = new FormData();
 

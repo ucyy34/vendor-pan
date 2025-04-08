@@ -7,6 +7,7 @@ import {
   Line,
   LineChart,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -22,7 +23,7 @@ import {
 import { Link, useSearchParams } from 'react-router-dom';
 import { useStatistics } from '../../../hooks/api';
 import { ChartSkeleton } from './chart-skeleton';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   addDays,
   differenceInDays,
@@ -105,45 +106,35 @@ export const DashboardCharts = () => {
     'orders',
   ]);
 
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: addDays(new Date(), -7),
-    to: new Date(),
-  });
+  const from = (searchParams.get('from') ||
+    format(
+      addDays(new Date(), -7),
+      'yyyy-MM-dd'
+    )) as unknown as Date;
+  const to = (searchParams.get('to') ||
+    format(new Date(), 'yyyy-MM-dd')) as unknown as Date;
 
-  useEffect(() => {
-    searchParams.set(
+  const updateDateRange = async (
+    newFrom: string,
+    newTo: string
+  ) => {
+    const newSearchParams = new URLSearchParams(
+      searchParams
+    );
+    newSearchParams.set(
       'from',
-      format(
-        date?.from || addDays(new Date(), -7),
-        'yyyy-MM-dd'
-      )
+      format(newFrom, 'yyyy-MM-dd')
     );
-    searchParams.set(
-      'to',
-      format(
-        date?.to || format(new Date(), 'yyyy-MM-dd'),
-        'yyyy-MM-dd'
-      )
-    );
-    setSearchParams(searchParams);
-  }, [date]);
-
-  useEffect(() => {
+    newSearchParams.set('to', format(newTo, 'yyyy-MM-dd'));
+    await setSearchParams(newSearchParams);
     refetch();
-  }, [searchParams]);
+  };
 
   const { customers, orders, isPending, refetch } =
-    useStatistics({
-      from:
-        searchParams.get('from') ||
-        `${format(addDays(new Date(), -7), 'yyyy-MM-dd')}`,
-      to:
-        searchParams.get('to') ||
-        `${format(new Date(), 'yyyy-MM-dd')}`,
-    });
+    useStatistics({ from: `${from}`, to: `${to}` });
 
   const chartData = generateChartData({
-    range: date,
+    range: { from, to },
     customers,
     orders,
   });
@@ -181,7 +172,7 @@ export const DashboardCharts = () => {
           </div>
         </div>
         <div className='px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4'>
-          <Link to='/requests/collections'>
+          <Link to='/orders'>
             <Button
               variant='secondary'
               className='w-full justify-between py-4'
@@ -193,7 +184,7 @@ export const DashboardCharts = () => {
               <TriangleRightMini color='grey' />
             </Button>
           </Link>
-          <Link to='/requests/collections'>
+          <Link to='/orders'>
             <Button
               variant='secondary'
               className='w-full justify-between py-4'
@@ -205,7 +196,7 @@ export const DashboardCharts = () => {
               <TriangleRightMini color='grey' />
             </Button>
           </Link>
-          <Link to='/requests/collections'>
+          <Link to='/reviews'>
             <Button
               variant='secondary'
               className='w-full justify-between py-4'
@@ -220,7 +211,7 @@ export const DashboardCharts = () => {
           <Link to='/messages'>
             <Button
               variant='secondary'
-              className='w-full justify-between py-4 h-[48px]'
+              className='w-full justify-between py-4 h-full'
             >
               <div className='flex gap-4 items-center'>
                 Messages
@@ -246,14 +237,14 @@ export const DashboardCharts = () => {
               <Popover.Trigger asChild>
                 <Button variant='secondary'>
                   <CalendarMini />
-                  {date?.from ? (
-                    date.to ? (
+                  {from ? (
+                    to ? (
                       <>
-                        {format(date.from, 'LLL dd, y')} -{' '}
-                        {format(date.to, 'LLL dd, y')}
+                        {format(from, 'LLL dd, y')} -{' '}
+                        {format(to, 'LLL dd, y')}
                       </>
                     ) : (
-                      format(date.from, 'LLL dd, y')
+                      format(from, 'LLL dd, y')
                     )
                   ) : (
                     <span>Pick a date</span>
@@ -263,10 +254,16 @@ export const DashboardCharts = () => {
               <Popover.Content>
                 <Calendar
                   mode='range'
-                  selected={date}
-                  onSelect={setDate}
+                  selected={{ from, to }}
+                  onSelect={(range) =>
+                    range &&
+                    updateDateRange(
+                      `${range.from}`,
+                      `${range.to}`
+                    )
+                  }
                   numberOfMonths={2}
-                  defaultMonth={date?.from}
+                  defaultMonth={from}
                 />
               </Popover.Content>
             </Popover>
@@ -288,6 +285,7 @@ export const DashboardCharts = () => {
                     stroke='#333'
                     vertical={false}
                   />
+                  <Tooltip content={<CustomTooltip />} />
                   {filters.map((item) => (
                     <Line
                       key={item}
@@ -356,4 +354,45 @@ export const DashboardCharts = () => {
       </Container>
     </>
   );
+};
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  label?: string;
+  payload?: {
+    dataKey: string;
+    name: string;
+    stroke: string;
+    value: number;
+  }[];
+}) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className='bg-ui-bg-component p-4 rounded-lg border border-ui-border-base'>
+        <p className='font-bold'>{`${label}`}</p>
+        <ul>
+          {payload.map((item) => (
+            <li
+              key={item.dataKey}
+              className='flex gap-2 items-center'
+            >
+              <span
+                className='capitalize'
+                style={{ color: item.stroke }}
+              >
+                {item.name}:
+              </span>
+              <span>{item.value}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  return null;
 };

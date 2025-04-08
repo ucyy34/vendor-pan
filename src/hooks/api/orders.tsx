@@ -171,7 +171,7 @@ export const useOrderChanges = (
 
 export const useOrderLineItems = (
   id: string,
-  query?: HttpTypes.AdminOrderItemsFilters,
+  query?: Record<string, string | number>,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminOrderLineItemsListResponse,
@@ -184,7 +184,10 @@ export const useOrderLineItems = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: async () =>
-      sdk.admin.order.listLineItems(id, query),
+      fetchQuery(`/vendor/orders/${id}`, {
+        method: 'GET',
+        query,
+      }),
     queryKey: ordersQueryKeys.lineItems(id),
     ...options,
   });

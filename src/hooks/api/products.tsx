@@ -7,7 +7,11 @@ import {
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { fetchQuery, sdk } from '../../lib/client';
+import {
+  fetchQuery,
+  importProductsQuery,
+  sdk,
+} from '../../lib/client';
 import { queryClient } from '../../lib/query-client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
 import { inventoryItemsQueryKeys } from './inventory.tsx';
@@ -558,14 +562,18 @@ export const useDeleteProduct = (
 export const useExportProducts = (
   query?: HttpTypes.AdminProductListParams,
   options?: UseMutationOptions<
-    HttpTypes.AdminExportProductResponse,
+    HttpTypes.AdminExportProductResponse & { url: string },
     FetchError,
     HttpTypes.AdminExportProductRequest
   >
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.product.export(payload, query),
+      fetchQuery('/vendor/products/export', {
+        method: 'POST',
+        body: payload,
+        query: query as { [key: string]: string },
+      }),
     onSuccess: (data, variables, context) => {
       options?.onSuccess?.(data, variables, context);
     },
@@ -582,7 +590,7 @@ export const useImportProducts = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.product.import(payload),
+      importProductsQuery(payload.file),
     onSuccess: (data, variables, context) => {
       options?.onSuccess?.(data, variables, context);
     },

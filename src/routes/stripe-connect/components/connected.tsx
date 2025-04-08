@@ -1,5 +1,5 @@
 import { ExclamationCircle } from '@medusajs/icons';
-import { Button, Heading, Text, toast } from '@medusajs/ui';
+import { Button, Heading, Text } from '@medusajs/ui';
 import { useCreateStripeOnboarding } from '../../../hooks/api';
 import { Link } from 'react-router-dom';
 
@@ -25,7 +25,8 @@ export const Connected = ({
         payout_account.onboarding.data.url
       );
     } catch {
-      toast.error('Connection error!');
+      // toast.error('Connection error!');
+      window.location.reload();
     }
   };
 
