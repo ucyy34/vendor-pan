@@ -167,9 +167,9 @@ export const useDeleteFulfillmentServiceZone = (
 ) => {
   return useMutation({
     mutationFn: () =>
-      sdk.admin.fulfillmentSet.deleteServiceZone(
-        fulfillmentSetId,
-        serviceZoneId
+      fetchQuery(
+        `/vendor/fulfillment-sets/${fulfillmentSetId}/service-zones/${serviceZoneId}`,
+        { method: 'DELETE' }
       ),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({

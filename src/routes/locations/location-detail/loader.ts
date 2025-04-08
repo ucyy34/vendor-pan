@@ -12,6 +12,7 @@ const locationQuery = (id: string) => ({
   queryFn: async () =>
     fetchQuery(`/vendor/stock-locations/${id}`, {
       method: 'GET',
+      query: { fields: LOCATION_DETAILS_FIELD },
     }),
 });
 

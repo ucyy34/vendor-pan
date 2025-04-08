@@ -1,4 +1,9 @@
-import { Container, Heading, Text } from '@medusajs/ui';
+import {
+  Avatar,
+  Container,
+  Heading,
+  Text,
+} from '@medusajs/ui';
 import { useTranslation } from 'react-i18next';
 
 import { StoreVendor } from '../../../../../types/user';
@@ -37,7 +42,12 @@ export const StoreGeneralSection = ({
           Image
         </Text>
         <div className='w-6 h-6'>
-          <img src={seller.photo || '/logo.svg'} />
+          <Avatar
+            size='small'
+            variant='rounded'
+            src={seller.photo || '/logo.svg'}
+            fallback={'/logo.svg'}
+          />
         </div>
       </div>
       <div className='text-ui-fg-subtle grid grid-cols-2 px-6 py-4'>

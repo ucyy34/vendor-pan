@@ -14,7 +14,7 @@ import {
   ListCheckbox,
   ChatBubbleLeftRight,
 } from '@medusajs/icons';
-import { Divider, Text, clx } from '@medusajs/ui';
+import { Avatar, Divider, Text, clx } from '@medusajs/ui';
 import { Collapsible as RadixCollapsible } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -72,7 +72,12 @@ const Header = () => {
     <div className='w-full p-3 p-0.5 pr-2 bg-ui-bg-subtle grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3'>
       {fallback ? (
         <div className='w-6 h-6'>
-          <img src={seller?.photo || '/logo.svg'} />
+          <Avatar
+            size='small'
+            variant='rounded'
+            src={seller?.photo || '/logo.svg'}
+            fallback={'/logo.svg'}
+          />
         </div>
       ) : (
         <Skeleton className='h-6 w-6 rounded-md' />

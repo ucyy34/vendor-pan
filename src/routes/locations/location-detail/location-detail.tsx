@@ -62,9 +62,7 @@ export const LocationDetail = () => {
         <LocationGeneralSection location={location} />
       </TwoColumnPage.Main>
       <TwoColumnPage.Sidebar>
-        <LocationsFulfillmentProvidersSection
-          location={location}
-        />
+        <LocationsFulfillmentProvidersSection />
       </TwoColumnPage.Sidebar>
     </TwoColumnPage>
   );
