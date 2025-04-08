@@ -117,7 +117,7 @@ export const ProductCreateForm = ({
       })[] = [];
       try {
         if (media.length) {
-          const thumbnailReq = media.find(
+          const thumbnailReq = media.filter(
             (m) => m.isThumbnail
           );
           const otherMediaReq = media.filter(
@@ -125,9 +125,9 @@ export const ProductCreateForm = ({
           );
 
           const fileReqs = [];
-          if (thumbnailReq) {
+          if (thumbnailReq?.length) {
             fileReqs.push(
-              uploadFilesQuery(thumbnailReq.file).then(
+              uploadFilesQuery(thumbnailReq).then(
                 (r: any) =>
                   r.files.map((f: any) => ({
                     ...f,
