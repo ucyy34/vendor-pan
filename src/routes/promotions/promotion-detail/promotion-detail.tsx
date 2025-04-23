@@ -23,8 +23,6 @@ export const PromotionDetail = () => {
   });
   const query: Record<string, string> = {};
 
-  console.log({ promotion });
-
   if (promotion?.type === 'buyget') {
     query.promotion_type = promotion.type;
   }
