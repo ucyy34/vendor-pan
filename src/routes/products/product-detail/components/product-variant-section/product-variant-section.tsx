@@ -212,12 +212,14 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
       const inventoryItemsCount =
         variant.inventory_items?.length || 0;
 
+      console.log({ variant });
+
       switch (inventoryItemsCount) {
         case 0:
           break;
         case 1: {
           const inventoryItemLink = `/inventory/${
-            variant.inventory_items![0].id
+            variant.inventory_items![0].inventory_item_id
           }`;
 
           mainActions.push({
