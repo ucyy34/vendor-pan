@@ -77,7 +77,13 @@ export const usePromotionRules = (
       query
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRules(id, ruleType, query),
+      fetchQuery(`/vendor/promotions/${id}/${ruleType}`, {
+        method: 'GET',
+        query: query as {
+          [key: string]: string | number;
+        },
+      }),
+    // sdk.admin.promotion.listRules(id, ruleType, query),
     ...options,
   });
 
@@ -128,9 +134,14 @@ export const usePromotionRuleAttributes = (
       promotionType
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleAttributes(
-        ruleType,
-        promotionType
+      fetchQuery(
+        `/vendor/promotions/rule-attribute-options/${ruleType}`,
+        {
+          method: 'GET',
+          query: {
+            promotion_type: promotionType as string,
+          },
+        }
       ),
     ...options,
   });
@@ -159,10 +170,16 @@ export const usePromotionRuleValues = (
       query || {}
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleValues(
-        ruleType,
-        ruleValue,
-        query
+      await fetchQuery(
+        `/vendor/promotions/rule-value-options/${ruleType}/${ruleValue}`,
+        {
+          method: 'GET',
+          query: {
+            ...(query as {
+              [key: string]: string | number;
+            }),
+          },
+        }
       ),
     ...options,
   });
