@@ -7,7 +7,7 @@ import {
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { fetchQuery, sdk } from '../../lib/client';
+import { fetchQuery } from '../../lib/client';
 import { queryClient } from '../../lib/query-client';
 import { queryKeysFactory } from '../../lib/query-key-factory';
 import { campaignsQueryKeys } from './campaigns';
@@ -249,7 +249,6 @@ export const useUpdatePromotion = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      // sdk.admin.promotion.update(id, payload),
       fetchQuery(`/vendor/promotions/${id}`, {
         method: 'POST',
         body: payload,
