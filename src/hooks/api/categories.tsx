@@ -59,6 +59,7 @@ export const useProductCategories = (
     queryFn: () =>
       fetchQuery('/vendor/product-categories', {
         method: 'GET',
+        query: query as Record<string, string>,
       }),
     ...options,
   });
