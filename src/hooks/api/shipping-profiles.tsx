@@ -78,7 +78,6 @@ export const useShippingProfiles = (
     queryFn: () =>
       fetchQuery('/vendor/shipping-options', {
         method: 'GET',
-        query: query as { [key: string]: string | number },
       }),
     queryKey: shippingProfileQueryKeys.list(query),
     ...options,
