@@ -249,7 +249,11 @@ export const useUpdatePromotion = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.update(id, payload),
+      // sdk.admin.promotion.update(id, payload),
+      fetchQuery(`/vendor/promotions/${id}`, {
+        method: 'POST',
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.all,
