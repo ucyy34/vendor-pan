@@ -136,8 +136,6 @@ function LocationListItem(props: LocationProps) {
     });
   };
 
-  console.log({ location });
-
   return (
     <Container className='flex flex-col divide-y p-0'>
       <div className='px-6 py-4'>

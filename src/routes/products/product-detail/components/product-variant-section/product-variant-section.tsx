@@ -212,8 +212,6 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
       const inventoryItemsCount =
         variant.inventory_items?.length || 0;
 
-      console.log({ variant });
-
       switch (inventoryItemsCount) {
         case 0:
           break;
