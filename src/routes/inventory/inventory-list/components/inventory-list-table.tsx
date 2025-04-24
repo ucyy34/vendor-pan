@@ -34,6 +34,7 @@ export const InventoryListTable = () => {
   } = useInventoryItems({
     limit: PAGE_SIZE,
     offset: searchParams?.offset,
+    fields: 'id,title,sku,*location_levels',
   });
 
   const columns = useInventoryTableColumns();

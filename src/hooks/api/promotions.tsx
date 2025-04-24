@@ -77,7 +77,12 @@ export const usePromotionRules = (
       query
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRules(id, ruleType, query),
+      fetchQuery(`/vendor/promotions/${id}/${ruleType}`, {
+        method: 'GET',
+        query: query as {
+          [key: string]: string | number;
+        },
+      }),
     ...options,
   });
 
@@ -128,9 +133,14 @@ export const usePromotionRuleAttributes = (
       promotionType
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleAttributes(
-        ruleType,
-        promotionType
+      fetchQuery(
+        `/vendor/promotions/rule-attribute-options/${ruleType}`,
+        {
+          method: 'GET',
+          query: {
+            promotion_type: promotionType as string,
+          },
+        }
       ),
     ...options,
   });
@@ -159,10 +169,16 @@ export const usePromotionRuleValues = (
       query || {}
     ),
     queryFn: async () =>
-      sdk.admin.promotion.listRuleValues(
-        ruleType,
-        ruleValue,
-        query
+      await fetchQuery(
+        `/vendor/promotions/rule-value-options/${ruleType}/${ruleValue}`,
+        {
+          method: 'GET',
+          query: {
+            ...(query as {
+              [key: string]: string | number;
+            }),
+          },
+        }
       ),
     ...options,
   });
@@ -256,7 +272,13 @@ export const usePromotionAddRules = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.addRules(id, ruleType, payload),
+      fetchQuery(
+        `/vendor/promotions/${id}/${ruleType}/batch`,
+        {
+          method: 'POST',
+          body: { create: payload.rules },
+        }
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.all,
@@ -274,15 +296,17 @@ export const usePromotionRemoveRules = (
   options?: UseMutationOptions<
     HttpTypes.AdminPromotionResponse,
     FetchError,
-    HttpTypes.BatchRemovePromotionRulesReq
+    HttpTypes.BatchAddPromotionRulesReq
   >
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.promotion.removeRules(
-        id,
-        ruleType,
-        payload
+      fetchQuery(
+        `/vendor/promotions/${id}/${ruleType}/batch`,
+        {
+          method: 'POST',
+          body: { delete: payload.rules },
+        }
       ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
@@ -305,12 +329,38 @@ export const usePromotionUpdateRules = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.promotion.updateRules(
-        id,
-        ruleType,
-        payload
-      ),
+    mutationFn: async (payload) => {
+      const { rules } = await fetchQuery(
+        `/vendor/promotions/${id}/${ruleType}`,
+        {
+          method: 'GET',
+        }
+      );
+
+      const rulesIds = rules.map((rule: any) => rule.id);
+      console.log('rules', rulesIds);
+      await fetchQuery(
+        `/vendor/promotions/${id}/${ruleType}/batch`,
+        {
+          method: 'POST',
+          body: { delete: rulesIds },
+        }
+      );
+
+      return fetchQuery(
+        `/vendor/promotions/${id}/${ruleType}/batch`,
+        {
+          method: 'POST',
+          body: {
+            create: payload.rules.map((rule) => ({
+              attribute: rule.attribute,
+              operator: rule.operator,
+              values: rule.values,
+            })),
+          },
+        }
+      );
+    },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: promotionsQueryKeys.all,
