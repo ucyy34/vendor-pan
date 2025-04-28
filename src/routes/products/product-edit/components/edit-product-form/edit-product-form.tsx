@@ -93,7 +93,7 @@ export const EditProductForm = ({
         discountable,
         handle,
         status: status as HttpTypes.AdminProductStatus,
-        // ...nullableData,
+        ...nullableData,
       },
       {
         onSuccess: ({ product }) => {
