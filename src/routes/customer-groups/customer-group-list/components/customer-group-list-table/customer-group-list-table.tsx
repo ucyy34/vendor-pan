@@ -31,21 +31,18 @@ export const CustomerGroupListTable = () => {
   const columns = useColumns();
   const filters = useFilters();
 
-  const {
-    customer_groups,
-    count,
-    isPending,
-    isError,
-    error,
-  } = useCustomerGroups();
+  const { customer_groups, isPending, isError, error } =
+    useCustomerGroups();
 
   if (isError) {
     throw error;
   }
 
   const filteredList = customer_groups?.filter(
-    (group) => group
+    (group) => group.customer_group
   );
+
+  const count = filteredList?.length || 0;
 
   return (
     <SingleColumnPage
