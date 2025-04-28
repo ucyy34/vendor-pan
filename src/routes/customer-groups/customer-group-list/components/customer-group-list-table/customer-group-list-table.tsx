@@ -44,7 +44,7 @@ export const CustomerGroupListTable = () => {
   }
 
   const filteredList = customer_groups?.filter(
-    (group) => group.customers && group.customers.length > 0
+    (group) => group
   );
 
   return (
