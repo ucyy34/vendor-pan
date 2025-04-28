@@ -98,8 +98,6 @@ export const ProductOrganizationForm = ({
       })),
   });
 
-  console.log({ product });
-
   const form = useExtendableForm({
     defaultValues: {
       type_id: product.type_id ?? '',

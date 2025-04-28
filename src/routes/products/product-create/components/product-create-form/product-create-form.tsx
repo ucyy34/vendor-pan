@@ -111,8 +111,6 @@ export const ProductCreateForm = ({
       const media = values.media || [];
       const payload = { ...values, media: undefined };
 
-      console.log({ values });
-
       let uploadedMedia: (HttpTypes.AdminFile & {
         isThumbnail: boolean;
       })[] = [];
