@@ -93,7 +93,7 @@ export const EditProductForm = ({
         discountable,
         handle,
         status: status as HttpTypes.AdminProductStatus,
-        ...nullableData,
+        // ...nullableData,
       },
       {
         onSuccess: ({ product }) => {
@@ -184,7 +184,7 @@ export const EditProductForm = ({
                   );
                 }}
               />
-              <Form.Field
+              {/* <Form.Field
                 control={form.control}
                 name='subtitle'
                 render={({ field }) => {
@@ -200,7 +200,7 @@ export const EditProductForm = ({
                     </Form.Item>
                   );
                 }}
-              />
+              /> */}
               <Form.Field
                 control={form.control}
                 name='handle'
@@ -233,7 +233,7 @@ export const EditProductForm = ({
                   );
                 }}
               />
-              <Form.Field
+              {/* <Form.Field
                 control={form.control}
                 name='material'
                 render={({ field }) => {
@@ -249,7 +249,7 @@ export const EditProductForm = ({
                     </Form.Item>
                   );
                 }}
-              />
+              /> */}
               <Form.Field
                 control={form.control}
                 name='description'

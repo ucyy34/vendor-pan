@@ -510,6 +510,8 @@ export const useUpdateProduct = (
           ...product,
           height: parseInt(product.height),
           width: parseInt(product.width),
+          weight: parseInt(product.weight),
+          length: parseInt(product.length),
           ...payload,
         },
       });

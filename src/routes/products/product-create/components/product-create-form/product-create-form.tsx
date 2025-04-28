@@ -48,7 +48,6 @@ type ProductCreateFormProps = {
 export const ProductCreateForm = ({
   defaultChannel,
   store,
-  // pricePreferences,
 }: ProductCreateFormProps) => {
   const [tab, setTab] = useState<Tab>(Tab.DETAILS);
   const [tabState, setTabState] = useState<TabState>({
@@ -111,6 +110,8 @@ export const ProductCreateForm = ({
 
       const media = values.media || [];
       const payload = { ...values, media: undefined };
+
+      console.log({ values });
 
       let uploadedMedia: (HttpTypes.AdminFile & {
         isThumbnail: boolean;
@@ -180,6 +181,8 @@ export const ProductCreateForm = ({
           })),
           variants: payload.variants.map((variant) => ({
             ...variant,
+            sku:
+              variant.sku === '' ? undefined : variant.sku,
             manage_inventory: true,
             allow_backorder: false,
             should_create: undefined,

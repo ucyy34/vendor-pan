@@ -75,7 +75,7 @@ export const ProductEditVariantForm = ({
     defaultValues: {
       title: variant?.title || '',
       material: variant?.material || '',
-      sku: variant?.sku || '',
+      sku: variant?.sku || undefined,
       ean: variant?.ean || '',
       upc: variant?.upc || '',
       barcode: variant?.barcode || '',

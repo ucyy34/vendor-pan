@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { RouteFocusModal } from '../../../components/modals';
 import { useSalesChannels } from '../../../hooks/api';
-// import { usePricePreferences } from '../../../hooks/api/price-preferences';
 import { useStore } from '../../../hooks/api/store';
 import { ProductCreateForm } from './components/product-create-form/product-create-form';
 
@@ -14,8 +13,6 @@ export const ProductCreate = () => {
     sales_channels,
     isPending: isSalesChannelPending,
   } = useSalesChannels();
-
-  // const { price_preferences } = usePricePreferences();
 
   const ready =
     !!store &&
@@ -39,7 +36,6 @@ export const ProductCreate = () => {
         <ProductCreateForm
           defaultChannel={sales_channels[0]}
           store={store}
-          // pricePreferences={price_preferences}
         />
       )}
     </RouteFocusModal>
