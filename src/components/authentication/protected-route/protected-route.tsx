@@ -9,7 +9,7 @@ import { SearchProvider } from '../../../providers/search-provider';
 import { SidebarProvider } from '../../../providers/sidebar-provider';
 
 export const ProtectedRoute = () => {
-  const { seller, isPending } = useMe();
+  const { seller, isPending, error } = useMe();
 
   const location = useLocation();
   if (isPending) {
@@ -23,7 +23,7 @@ export const ProtectedRoute = () => {
   if (!seller) {
     return (
       <Navigate
-        to='/login'
+        to={`/login${error?.message ? `?reason=${error.message}` : ''}`}
         state={{ from: location }}
         replace
       />
