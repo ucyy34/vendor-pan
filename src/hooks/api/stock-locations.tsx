@@ -170,7 +170,10 @@ export const useDeleteStockLocation = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.stockLocation.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/stock-locations/${id}`, {
+        method: 'DELETE',
+      }),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.lists(),
