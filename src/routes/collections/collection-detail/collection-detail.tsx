@@ -14,14 +14,14 @@ export const CollectionDetail = () => {
   >;
 
   const { id } = useParams();
-  const { collection, isLoading, isError, error } =
+  const { product_collection, isLoading, isError, error } =
     useCollection(id!, {
       initialData,
     });
 
   const { getWidgets } = useDashboardExtension();
 
-  if (isLoading || !collection) {
+  if (isLoading || !product_collection) {
     return <SingleColumnPageSkeleton sections={2} />;
   }
 
@@ -39,12 +39,14 @@ export const CollectionDetail = () => {
           'product_collection.details.before'
         ),
       }}
-      showJSON
-      showMetadata
-      data={collection}
+      data={product_collection}
     >
-      <CollectionGeneralSection collection={collection} />
-      <CollectionProductSection collection={collection} />
+      <CollectionGeneralSection
+        collection={product_collection}
+      />
+      <CollectionProductSection
+        collection={product_collection}
+      />
     </SingleColumnPage>
   );
 };

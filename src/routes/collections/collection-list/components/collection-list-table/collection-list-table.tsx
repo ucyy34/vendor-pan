@@ -23,22 +23,27 @@ export const CollectionListTable = () => {
   const { searchParams, raw } = useCollectionTableQuery({
     pageSize: PAGE_SIZE,
   });
-  const { collections, count, isError, error, isLoading } =
-    useCollections(
-      {
-        ...searchParams,
-        fields: '+products.id',
-      },
-      {
-        placeholderData: keepPreviousData,
-      }
-    );
+  const {
+    product_collections,
+    count,
+    isError,
+    error,
+    isLoading,
+  } = useCollections(
+    {
+      ...searchParams,
+      fields: '+products.id',
+    },
+    {
+      placeholderData: keepPreviousData,
+    }
+  );
 
   const filters = useCollectionTableFilters();
   const columns = useColumns();
 
   const { table } = useDataTable({
-    data: collections ?? [],
+    data: product_collections ?? [],
     columns,
     count,
     enablePagination: true,

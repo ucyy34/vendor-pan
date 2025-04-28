@@ -18,7 +18,6 @@ import {
 import { useUpdateProduct } from '../../../../../hooks/api/products';
 import { useComboboxData } from '../../../../../hooks/use-combobox-data';
 import { fetchQuery } from '../../../../../lib/client';
-import { CategoryCombobox } from '../../../common/components/category-combobox';
 
 type ProductOrganizationFormProps = {
   product: HttpTypes.AdminProduct;
@@ -27,7 +26,8 @@ type ProductOrganizationFormProps = {
 const ProductOrganizationSchema = zod.object({
   type_id: zod.string().nullable(),
   collection_id: zod.string().nullable(),
-  category_ids: zod.array(zod.string()),
+  category_ids: zod.string().nullable(),
+  // category_ids: zod.array(zod.string()),
   tag_ids: zod.array(zod.string()),
 });
 
@@ -42,15 +42,29 @@ export const ProductOrganizationForm = ({
   const configs = getFormConfigs('product', 'organize');
   const fields = getFormFields('product', 'organize');
 
-  const collections = useComboboxData({
-    queryKey: ['product_collections'],
+  const categories = useComboboxData({
+    queryKey: ['product_categories'],
     queryFn: (params) =>
-      fetchQuery('/store/collections', {
+      fetchQuery('/vendor/product-categories', {
         method: 'GET',
         query: params as Record<string, string | number>,
       }),
     getOptions: (data) =>
-      data.collections.map((collection: any) => ({
+      data.product_categories.map((category: any) => ({
+        label: category.name!,
+        value: category.id!,
+      })),
+  });
+
+  const collections = useComboboxData({
+    queryKey: ['product_collections'],
+    queryFn: (params) =>
+      fetchQuery('/vendor/product-collections', {
+        method: 'GET',
+        query: params as Record<string, string | number>,
+      }),
+    getOptions: (data) =>
+      data.product_collections.map((collection: any) => ({
         label: collection.title!,
         value: collection.id!,
       })),
@@ -88,8 +102,7 @@ export const ProductOrganizationForm = ({
     defaultValues: {
       type_id: product.type_id ?? '',
       collection_id: product.collection_id ?? '',
-      category_ids:
-        product.categories?.map((c) => c.id) || [],
+      category_ids: product.categories?.[0].id || '',
       tag_ids: product.tags?.map((t) => t.id) || [],
     },
     schema: ProductOrganizationSchema,
@@ -106,9 +119,7 @@ export const ProductOrganizationForm = ({
       {
         type_id: data.type_id || null,
         collection_id: data.collection_id || null,
-        categories: data.category_ids.map((c) => ({
-          id: c,
-        })),
+        categories: [{ id: data.category_ids || '' }],
         tags: data.tag_ids?.map((t) => ({ id: t })),
       },
       {
@@ -201,7 +212,16 @@ export const ProductOrganizationForm = ({
                       )}
                     </Form.Label>
                     <Form.Control>
-                      <CategoryCombobox {...field} />
+                      {/* <CategoryCombobox {...field} /> */}
+                      <Combobox
+                        {...field}
+                        multiple={false}
+                        options={categories.options}
+                        onSearchValueChange={
+                          categories.onSearchValueChange
+                        }
+                        searchValue={categories.searchValue}
+                      />
                     </Form.Control>
                     <Form.ErrorMessage />
                   </Form.Item>

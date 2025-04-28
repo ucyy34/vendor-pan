@@ -25,9 +25,9 @@ export const useCollection = (
   id: string,
   options?: Omit<
     UseQueryOptions<
-      { collection: HttpTypes.AdminCollection },
+      { product_collection: HttpTypes.AdminCollection },
       FetchError,
-      { collection: HttpTypes.AdminCollection },
+      { product_collection: HttpTypes.AdminCollection },
       QueryKey
     >,
     'queryFn' | 'queryKey'
@@ -36,7 +36,7 @@ export const useCollection = (
   const { data, ...rest } = useQuery({
     queryKey: collectionsQueryKeys.detail(id),
     queryFn: async () =>
-      fetchQuery(`/store/collections/${id}`, {
+      fetchQuery(`/vendor/product-collections/${id}`, {
         method: 'GET',
       }),
     ...options,
@@ -50,11 +50,11 @@ export const useCollections = (
   options?: Omit<
     UseQueryOptions<
       PaginatedResponse<{
-        collections: HttpTypes.AdminCollection[];
+        product_collections: HttpTypes.AdminCollection[];
       }>,
       FetchError,
       PaginatedResponse<{
-        collections: HttpTypes.AdminCollection[];
+        product_collections: HttpTypes.AdminCollection[];
       }>,
       QueryKey
     >,
@@ -64,7 +64,7 @@ export const useCollections = (
   const { data, ...rest } = useQuery({
     queryKey: collectionsQueryKeys.list(query),
     queryFn: async () =>
-      fetchQuery('/store/collections', {
+      fetchQuery('/vendor/product-collections', {
         method: 'GET',
         query: query as { [key: string]: string | number },
       }),
@@ -142,7 +142,18 @@ export const useCreateCollection = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.productCollection.create(payload),
+      fetchQuery(`/vendor/requests`, {
+        method: 'POST',
+        body: {
+          request: {
+            type: 'product_collection',
+            data: {
+              title: payload.title,
+              handle: payload.handle,
+            },
+          },
+        },
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: collectionsQueryKeys.lists(),
