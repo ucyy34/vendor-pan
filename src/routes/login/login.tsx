@@ -9,7 +9,11 @@ import {
 } from '@medusajs/ui';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import * as z from 'zod';
 
 import { Form } from '../../components/common/form';
@@ -26,6 +30,10 @@ const LoginSchema = z.object({
 export const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const reason = searchParams.get('reason') || '';
+
   const { getWidgets } = useDashboardExtension();
 
   const from = '/dashboard';
@@ -77,7 +85,8 @@ export const Login = () => {
   );
 
   const serverError =
-    form.formState.errors?.root?.serverError?.message;
+    form.formState.errors?.root?.serverError?.message ||
+    reason;
   const validationError =
     form.formState.errors.email?.message ||
     form.formState.errors.password?.message;
