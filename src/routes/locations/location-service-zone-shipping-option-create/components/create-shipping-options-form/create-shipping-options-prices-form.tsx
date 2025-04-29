@@ -7,7 +7,6 @@ import {
   useRouteModal,
   useStackedModal,
 } from "../../../../../components/modals"
-import { useRegions } from "../../../../../hooks/api/regions"
 import { useStore } from "../../../../../hooks/api/store"
 import { ConditionalPriceForm } from "../../../common/components/conditional-price-form"
 import { ShippingOptionPriceProvider } from "../../../common/components/shipping-option-price-provider"
@@ -55,16 +54,6 @@ export const CreateShippingOptionsPricesForm = ({
     [store]
   )
 
-  const {
-    regions,
-    isLoading: isRegionsLoading,
-    isError: isRegionsError,
-    error: regionsError,
-  } = useRegions({
-    fields: "id,name,currency_code",
-    limit: 999,
-  })
-
   const { setCloseOnEscape } = useRouteModal()
 
   const name = useWatch({
@@ -75,15 +64,11 @@ export const CreateShippingOptionsPricesForm = ({
   const columns = useShippingOptionPriceColumns({
     name,
     currencies,
-    regions,
   })
 
-  const isLoading = isStoreLoading || !store || isRegionsLoading || !regions
+  const isLoading = isStoreLoading || !store
 
-  const data = useMemo(
-    () => [[...(currencies || []), ...(regions || [])]],
-    [currencies, regions]
-  )
+  const data = useMemo(() => [[...(currencies || [])]], [currencies])
 
   /**
    * Prefill prices with 0 if createing a pickup (shipping) option
@@ -96,20 +81,16 @@ export const CreateShippingOptionsPricesForm = ({
         })
       }
 
-      if (regions.length > 0) {
-        regions.forEach((region) => {
-          form.setValue(`region_prices.${region.id}`, "0")
-        })
-      }
+      // if (regions.length > 0) {
+      //   regions.forEach((region) => {
+      //     form.setValue(`region_prices.${region.id}`, "0")
+      //   })
+      // }
     }
   }, [isLoading, isPickup])
 
   if (isStoreError) {
     throw storeError
-  }
-
-  if (isRegionsError) {
-    throw regionsError
   }
 
   return (

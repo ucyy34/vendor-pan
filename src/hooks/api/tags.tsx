@@ -32,6 +32,7 @@ export const useProductTag = (
     queryFn: async () =>
       fetchQuery(`/vendor/product-tags/${id}`, {
         method: "GET",
+        query: { fields: "*products" },
       }),
     ...options,
   })

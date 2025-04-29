@@ -246,17 +246,17 @@ const useDynamicSearchResults = (
     }
   )
 
-  const regionResponse = useRegions(
-    {
-      q: debouncedSearch,
-      limit,
-      fields: "id,name",
-    },
-    {
-      enabled: isAreaEnabled(currentArea, "region"),
-      placeholderData: keepPreviousData,
-    }
-  )
+  // const regionResponse = useRegions(
+  //   {
+  //     q: debouncedSearch,
+  //     limit,
+  //     fields: "id,name",
+  //   },
+  //   {
+  //     enabled: isAreaEnabled(currentArea, "region"),
+  //     placeholderData: keepPreviousData,
+  //   }
+  // )
 
   // const taxRegionResponse = useTaxRegions(
   //   {
@@ -383,7 +383,7 @@ const useDynamicSearchResults = (
       campaign: campaignResponse,
       priceList: priceListResponse,
       user: userResponse,
-      region: regionResponse,
+      // region: regionResponse,
       // taxRegion: taxRegionResponse,
       // returnReason: returnReasonResponse,
       salesChannel: salesChannelResponse,
@@ -407,7 +407,7 @@ const useDynamicSearchResults = (
       campaignResponse,
       priceListResponse,
       userResponse,
-      regionResponse,
+      // regionResponse,
       // taxRegionResponse,
       // returnReasonResponse,
       salesChannelResponse,

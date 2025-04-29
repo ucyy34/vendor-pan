@@ -1,11 +1,11 @@
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { UseFormReturn, useWatch } from "react-hook-form"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
 import { CreateProductVariantSchema } from "./constants"
-import { useRegions, useStore } from "../../../../../hooks/api"
+import { useStore } from "../../../../../hooks/api"
 import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
 import { useRouteModal } from "../../../../../components/modals"
 import {
@@ -20,14 +20,13 @@ type PricingTabProps = {
 
 function PricingTab({ form }: PricingTabProps) {
   const { store } = useStore()
-  const { regions } = useRegions({ limit: 9999 })
   const { price_preferences: pricePreferences } = usePricePreferences({})
 
   const { setCloseOnEscape } = useRouteModal()
 
   const columns = useVariantPriceGridColumns({
     currencies: store?.supported_currencies,
-    regions,
+    regions: [],
     pricePreferences,
   })
 

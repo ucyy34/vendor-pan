@@ -1,13 +1,11 @@
 import Medusa from "@medusajs/js-sdk"
 
 export const backendUrl = __BACKEND_URL__ ?? "/"
-export const publishableApiKey = __PUBLISHABLE_API_KEY__ ?? ""
 
 const token = window.localStorage.getItem("medusa_auth_token") || ""
 
 export const sdk = new Medusa({
   baseUrl: backendUrl,
-  publishableKey: publishableApiKey,
 })
 
 // useful when you want to call the BE from the console and try things out quickly
@@ -24,7 +22,6 @@ export const importProductsQuery = async (file: File) => {
     body: formData,
     headers: {
       authorization: `Bearer ${token}`,
-      "x-publishable-api-key": publishableApiKey,
     },
   })
     .then((res) => res.json())
@@ -43,7 +40,6 @@ export const uploadFilesQuery = async (files: any[]) => {
     body: formData,
     headers: {
       authorization: `Bearer ${token}`,
-      "x-publishable-api-key": publishableApiKey,
     },
   })
     .then((res) => res.json())
@@ -82,7 +78,6 @@ export const fetchQuery = async (
     headers: {
       authorization: `Bearer ${bearer}`,
       "Content-Type": "application/json",
-      "x-publishable-api-key": publishableApiKey,
       ...headers,
     },
     body: body ? JSON.stringify(body) : null,
