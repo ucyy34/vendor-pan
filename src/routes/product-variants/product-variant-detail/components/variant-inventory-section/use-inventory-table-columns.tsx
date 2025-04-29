@@ -1,68 +1,63 @@
-import { ProductVariantDTO } from '@medusajs/types';
+import { ProductVariantDTO } from "@medusajs/types"
 
-import { InventoryActions } from './inventory-actions';
-import { PlaceholderCell } from '../../../../../components/table/table-cells/common/placeholder-cell';
-import { createColumnHelper } from '@tanstack/react-table';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { InventoryActions } from "./inventory-actions"
+import { PlaceholderCell } from "../../../../../components/table/table-cells/common/placeholder-cell"
+import { createColumnHelper } from "@tanstack/react-table"
+import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 
 export interface ExtendedInventoryItem {
-  required_quantity: number;
+  required_quantity: number
   variant: ProductVariantDTO[] & {
-    inventory_items: any[];
-    id: string;
-  };
+    inventory_items: any[]
+    id: string
+  }
 }
 
-const columnHelper =
-  createColumnHelper<ExtendedInventoryItem>();
+const columnHelper = createColumnHelper<ExtendedInventoryItem>()
 
 export const useInventoryTableColumns = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return useMemo(
     () => [
-      columnHelper.accessor('variant.title', {
-        header: t('fields.title'),
+      columnHelper.accessor("variant.title", {
+        header: t("fields.title"),
         cell: ({ getValue }) => {
-          const title = getValue() as string;
+          const title = getValue() as string
 
           if (!title) {
-            return <PlaceholderCell />;
+            return <PlaceholderCell />
           }
 
           return (
-            <div className='flex size-full items-center overflow-hidden'>
-              <span className='truncate'>{title}</span>
+            <div className="flex size-full items-center overflow-hidden">
+              <span className="truncate">{title}</span>
             </div>
-          );
+          )
         },
       }),
-      columnHelper.accessor('variant.sku', {
-        header: t('fields.sku'),
+      columnHelper.accessor("variant.sku", {
+        header: t("fields.sku"),
         cell: ({ getValue }) => {
-          const sku = getValue() as string;
+          const sku = getValue() as string
 
           if (!sku) {
-            return <PlaceholderCell />;
+            return <PlaceholderCell />
           }
 
           return (
-            <div className='flex size-full items-center overflow-hidden'>
-              <span className='truncate'>{sku}</span>
+            <div className="flex size-full items-center overflow-hidden">
+              <span className="truncate">{sku}</span>
             </div>
-          );
+          )
         },
       }),
       columnHelper.display({
-        id: 'actions',
-        cell: ({ row }) => (
-          <InventoryActions
-            item={row.original.variant.id}
-          />
-        ),
+        id: "actions",
+        cell: ({ row }) => <InventoryActions item={row.original.variant.id} />,
       }),
     ],
     [t]
-  );
-};
+  )
+}

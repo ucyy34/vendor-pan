@@ -1,26 +1,26 @@
-import { HttpTypes } from '@medusajs/types';
-import { useMemo } from 'react';
-import { UseFormReturn, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { HttpTypes } from "@medusajs/types"
+import { useMemo } from "react"
+import { UseFormReturn, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 import {
   createDataGridHelper,
   createDataGridPriceColumns,
   DataGrid,
-} from '../../../../../components/data-grid';
-import { useRouteModal } from '../../../../../components/modals';
+} from "../../../../../components/data-grid"
+import { useRouteModal } from "../../../../../components/modals"
 import {
   ProductCreateOptionSchema,
   ProductCreateVariantSchema,
-} from '../../constants';
-import { ProductCreateSchemaType } from '../../types';
+} from "../../constants"
+import { ProductCreateSchemaType } from "../../types"
 
 type ProductCreateVariantsFormProps = {
-  form: UseFormReturn<ProductCreateSchemaType>;
-  regions?: HttpTypes.AdminRegion[];
-  store?: HttpTypes.AdminStore;
-  pricePreferences?: HttpTypes.AdminPricePreference[];
-};
+  form: UseFormReturn<ProductCreateSchemaType>
+  regions?: HttpTypes.AdminRegion[]
+  store?: HttpTypes.AdminStore
+  pricePreferences?: HttpTypes.AdminPricePreference[]
+}
 
 export const ProductCreateVariantsForm = ({
   form,
@@ -28,27 +28,24 @@ export const ProductCreateVariantsForm = ({
   store,
   pricePreferences,
 }: ProductCreateVariantsFormProps) => {
-  const { setCloseOnEscape } = useRouteModal();
+  const { setCloseOnEscape } = useRouteModal()
 
   const currencyCodes = useMemo(
-    () =>
-      store?.supported_currencies?.map(
-        (c) => c.currency_code
-      ) || [],
+    () => store?.supported_currencies?.map((c) => c.currency_code) || [],
     [store]
-  );
+  )
 
   const variants = useWatch({
     control: form.control,
-    name: 'variants',
+    name: "variants",
     defaultValue: [],
-  });
+  })
 
   const options = useWatch({
     control: form.control,
-    name: 'options',
+    name: "options",
     defaultValue: [],
-  });
+  })
 
   /**
    * NOTE: anything that goes to the datagrid component needs to be memoised otherwise DataGrid will rerender and inputs will loose focus
@@ -58,38 +55,36 @@ export const ProductCreateVariantsForm = ({
     currencies: currencyCodes,
     regions,
     pricePreferences,
-  });
+  })
 
   const variantData = useMemo(() => {
-    const ret: any[] = [];
+    const ret: any[] = []
 
     variants.forEach((v, i) => {
       if (v.should_create) {
-        ret.push({ ...v, originalIndex: i });
+        ret.push({ ...v, originalIndex: i })
       }
-    });
+    })
 
-    return ret;
-  }, [variants]);
+    return ret
+  }, [variants])
 
   return (
-    <div className='flex size-full flex-col divide-y overflow-hidden'>
+    <div className="flex size-full flex-col divide-y overflow-hidden">
       <DataGrid
         columns={columns}
         data={variantData}
         state={form}
-        onEditingChange={(editing) =>
-          setCloseOnEscape(!editing)
-        }
+        onEditingChange={(editing) => setCloseOnEscape(!editing)}
       />
     </div>
-  );
-};
+  )
+}
 
 const columnHelper = createDataGridHelper<
   ProductCreateVariantSchema,
   ProductCreateSchemaType
->();
+>()
 
 const useColumns = ({
   options,
@@ -97,21 +92,21 @@ const useColumns = ({
   regions = [],
   pricePreferences = [],
 }: {
-  options: ProductCreateOptionSchema[];
-  currencies?: string[];
-  regions?: HttpTypes.AdminRegion[];
-  pricePreferences?: HttpTypes.AdminPricePreference[];
+  options: ProductCreateOptionSchema[]
+  currencies?: string[]
+  regions?: HttpTypes.AdminRegion[]
+  pricePreferences?: HttpTypes.AdminPricePreference[]
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return useMemo(
     () => [
       columnHelper.column({
-        id: 'options',
+        id: "options",
         header: () => (
-          <div className='flex size-full items-center overflow-hidden'>
-            <span className='truncate'>
-              {options.map((o) => o.title).join(' / ')}
+          <div className="flex size-full items-center overflow-hidden">
+            <span className="truncate">
+              {options.map((o) => o.title).join(" / ")}
             </span>
           </div>
         ),
@@ -119,36 +114,33 @@ const useColumns = ({
           return (
             <DataGrid.ReadonlyCell context={context}>
               {options
-                .map(
-                  (o) =>
-                    context.row.original.options[o.title]
-                )
-                .join(' / ')}
+                .map((o) => context.row.original.options[o.title])
+                .join(" / ")}
             </DataGrid.ReadonlyCell>
-          );
+          )
         },
         disableHiding: true,
       }),
       columnHelper.column({
-        id: 'title',
-        name: t('fields.title'),
-        header: t('fields.title'),
+        id: "title",
+        name: t("fields.title"),
+        header: t("fields.title"),
         field: (context) =>
           `variants.${context.row.original.originalIndex}.title`,
-        type: 'text',
+        type: "text",
         cell: (context) => {
-          return <DataGrid.TextCell context={context} />;
+          return <DataGrid.TextCell context={context} />
         },
       }),
       columnHelper.column({
-        id: 'sku',
-        name: t('fields.sku'),
-        header: t('fields.sku'),
+        id: "sku",
+        name: t("fields.sku"),
+        header: t("fields.sku"),
         field: (context) =>
           `variants.${context.row.original.originalIndex}.sku`,
-        type: 'text',
+        type: "text",
         cell: (context) => {
-          return <DataGrid.TextCell context={context} />;
+          return <DataGrid.TextCell context={context} />
         },
       }),
 
@@ -160,16 +152,14 @@ const useColumns = ({
         regions,
         pricePreferences,
         getFieldName: (context, value) => {
-          if (
-            context.column.id?.startsWith('currency_prices')
-          ) {
-            return `variants.${context.row.original.originalIndex}.prices.${value}`;
+          if (context.column.id?.startsWith("currency_prices")) {
+            return `variants.${context.row.original.originalIndex}.prices.${value}`
           }
-          return `variants.${context.row.original.originalIndex}.prices.${value}`;
+          return `variants.${context.row.original.originalIndex}.prices.${value}`
         },
         t,
       }),
     ],
     [currencies, regions, options, pricePreferences, t]
-  );
-};
+  )
+}

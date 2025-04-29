@@ -1,35 +1,34 @@
-import { Container, Heading } from '@medusajs/ui';
-import { keepPreviousData } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Container, Heading } from "@medusajs/ui"
+import { keepPreviousData } from "@tanstack/react-query"
+import { useMemo } from "react"
+import { useTranslation } from "react-i18next"
 
-import { _DataTable } from '../../../../../components/table/data-table';
-import { useCustomers } from '../../../../../hooks/api/customers';
-import { useCustomerTableColumns } from '../../../../../hooks/table/columns/use-customer-table-columns';
-import { useCustomerTableFilters } from '../../../../../hooks/table/filters/use-customer-table-filters';
-import { useCustomerTableQuery } from '../../../../../hooks/table/query/use-customer-table-query';
-import { useDataTable } from '../../../../../hooks/use-data-table';
+import { _DataTable } from "../../../../../components/table/data-table"
+import { useCustomers } from "../../../../../hooks/api/customers"
+import { useCustomerTableColumns } from "../../../../../hooks/table/columns/use-customer-table-columns"
+import { useCustomerTableFilters } from "../../../../../hooks/table/filters/use-customer-table-filters"
+import { useCustomerTableQuery } from "../../../../../hooks/table/query/use-customer-table-query"
+import { useDataTable } from "../../../../../hooks/use-data-table"
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 20
 
 export const CustomerListTable = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const { searchParams, raw } = useCustomerTableQuery({
     pageSize: PAGE_SIZE,
-  });
-  const { customers, count, isLoading, isError, error } =
-    useCustomers(
-      {
-        ...searchParams,
-      },
-      {
-        placeholderData: keepPreviousData,
-      }
-    );
+  })
+  const { customers, count, isLoading, isError, error } = useCustomers(
+    {
+      ...searchParams,
+    },
+    {
+      placeholderData: keepPreviousData,
+    }
+  )
 
-  const filters = useCustomerTableFilters();
-  const columns = useColumns();
+  const filters = useCustomerTableFilters()
+  const columns = useColumns()
 
   const { table } = useDataTable({
     data: customers ?? [],
@@ -38,16 +37,16 @@ export const CustomerListTable = () => {
     enablePagination: true,
     getRowId: (row) => row.id,
     pageSize: PAGE_SIZE,
-  });
+  })
 
   if (isError) {
-    throw error;
+    throw error
   }
 
   return (
-    <Container className='divide-y p-0'>
-      <div className='flex items-center justify-between px-6 py-4'>
-        <Heading>{t('customers.domain')}</Heading>
+    <Container className="divide-y p-0">
+      <div className="flex items-center justify-between px-6 py-4">
+        <Heading>{t("customers.domain")}</Heading>
       </div>
       <_DataTable
         table={table}
@@ -56,23 +55,23 @@ export const CustomerListTable = () => {
         count={count}
         filters={filters}
         orderBy={[
-          { key: 'email', label: t('fields.email') },
+          { key: "email", label: t("fields.email") },
           {
-            key: 'first_name',
-            label: t('fields.firstName'),
+            key: "first_name",
+            label: t("fields.firstName"),
           },
-          { key: 'last_name', label: t('fields.lastName') },
+          { key: "last_name", label: t("fields.lastName") },
           {
-            key: 'has_account',
-            label: t('customers.hasAccount'),
-          },
-          {
-            key: 'created_at',
-            label: t('fields.createdAt'),
+            key: "has_account",
+            label: t("customers.hasAccount"),
           },
           {
-            key: 'updated_at',
-            label: t('fields.updatedAt'),
+            key: "created_at",
+            label: t("fields.createdAt"),
+          },
+          {
+            key: "updated_at",
+            label: t("fields.updatedAt"),
           },
         ]}
         isLoading={isLoading}
@@ -80,15 +79,15 @@ export const CustomerListTable = () => {
         search
         queryObject={raw}
         noRecords={{
-          message: t('customers.list.noRecordsMessage'),
+          message: t("customers.list.noRecordsMessage"),
         }}
       />
     </Container>
-  );
-};
+  )
+}
 
 const useColumns = () => {
-  const columns = useCustomerTableColumns();
+  const columns = useCustomerTableColumns()
 
-  return useMemo(() => [...columns], [columns]);
-};
+  return useMemo(() => [...columns], [columns])
+}

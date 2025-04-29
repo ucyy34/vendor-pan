@@ -142,7 +142,7 @@
   "operators": {
     "in": "In"
   },
-  "app": { 
+  "app": {
     "search": {
       "label": "Search",
       "title": "Search",
@@ -2640,7 +2640,7 @@
     "forgotPassword": "Forgot password? - <0>Reset</0>",
     "title": "Welcome to Mercur Seller Panel",
     "hint": "Sign in to access the account area",
-    "notSellerYet":  "Not a seller yet? - <0>Create an account</0>"
+    "notSellerYet": "Not a seller yet? - <0>Create an account</0>"
   },
   "register": {
     "title": "Join Mercur Seller Panel",

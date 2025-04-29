@@ -1,9 +1,9 @@
-import { LoaderFunctionArgs } from 'react-router-dom';
+import { LoaderFunctionArgs } from "react-router-dom"
 
-import { inventoryItemsQueryKeys } from '../../../hooks/api/inventory';
-import { fetchQuery } from '../../../lib/client';
-import { queryClient } from '../../../lib/query-client';
-import { INVENTORY_DETAIL_FIELDS } from './constants';
+import { inventoryItemsQueryKeys } from "../../../hooks/api/inventory"
+import { fetchQuery } from "../../../lib/client"
+import { queryClient } from "../../../lib/query-client"
+import { INVENTORY_DETAIL_FIELDS } from "./constants"
 
 const inventoryDetailQuery = (id: string) => ({
   queryKey: inventoryItemsQueryKeys.detail(id),
@@ -11,16 +11,14 @@ const inventoryDetailQuery = (id: string) => ({
     fetchQuery(
       `/vendor/inventory-items/${id}?fields=${INVENTORY_DETAIL_FIELDS}`,
       {
-        method: 'GET',
+        method: "GET",
       }
     ),
-});
+})
 
-export const inventoryItemLoader = async ({
-  params,
-}: LoaderFunctionArgs) => {
-  const id = params.id;
-  const query = inventoryDetailQuery(id!);
+export const inventoryItemLoader = async ({ params }: LoaderFunctionArgs) => {
+  const id = params.id
+  const query = inventoryDetailQuery(id!)
 
-  return queryClient.ensureQueryData(query);
-};
+  return queryClient.ensureQueryData(query)
+}

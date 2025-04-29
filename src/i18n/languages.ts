@@ -19,7 +19,7 @@ import {
   faIR,
   cs,
   ru,
-  el
+  el,
 } from "date-fns/locale"
 import { Language } from "./types"
 
