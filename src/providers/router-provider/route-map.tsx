@@ -79,7 +79,7 @@ export const RouteMap: RouteObject[] = [
                   },
                   {
                     path: ":id/edit",
-                    lazy: () => import("../../routes/categories/category-edit"),
+                    lazy: () => import("../../routes/requests/request-edit"),
                   },
                 ],
               },
@@ -97,6 +97,17 @@ export const RouteMap: RouteObject[] = [
                     Component: RequestsCollectionsList,
                   }
                 },
+                children: [
+                  {
+                    path: "create",
+                    lazy: () =>
+                      import("../../routes/collections/collection-create"),
+                  },
+                  {
+                    path: ":id/edit",
+                    lazy: () => import("../../routes/requests/request-edit"),
+                  },
+                ],
               },
               {
                 path: "reviews",

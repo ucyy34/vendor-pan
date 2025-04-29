@@ -14,7 +14,11 @@ export const useRequestsTableColumns = () => {
     () => [
       columnHelper.accessor("data.name", {
         header: "Title",
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => {
+          return (
+            <span>{row.original.data.name || row.original.data.title}</span>
+          )
+        },
       }),
       columnHelper.accessor("data.handle", {
         header: "Handle",

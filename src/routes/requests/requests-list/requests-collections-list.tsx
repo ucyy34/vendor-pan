@@ -1,7 +1,8 @@
-import { Container, Heading, Text } from "@medusajs/ui"
+import { Button, Container, Heading, Text } from "@medusajs/ui"
 import { SingleColumnPage } from "../../../components/layout/pages"
 import { useDashboardExtension } from "../../../extensions"
 import { RequestListTable } from "./components/request-list-table"
+import { Link } from "react-router-dom"
 
 export const RequestsCollectionsList = () => {
   const { getWidgets } = useDashboardExtension()
@@ -21,6 +22,9 @@ export const RequestsCollectionsList = () => {
               Your requests to add a new collection
             </Text>
           </div>
+          <Button variant="secondary" asChild>
+            <Link to="create">Request Collection</Link>
+          </Button>
         </div>
         <div className="px-6 py-4">
           <RequestListTable request_type="product_collection" />

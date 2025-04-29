@@ -11,6 +11,7 @@ import { fetchQuery, sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { productsQueryKeys } from "./products"
+import { REQUESTS_QUERY_KEY } from "./requests"
 
 const COLLECTION_QUERY_KEY = "collections" as const
 export const collectionsQueryKeys = queryKeysFactory(COLLECTION_QUERY_KEY)
@@ -147,6 +148,9 @@ export const useCreateCollection = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: collectionsQueryKeys.lists(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: [REQUESTS_QUERY_KEY, "list"],
       })
 
       options?.onSuccess?.(data, variables, context)

@@ -11,7 +11,7 @@ import { queryKeysFactory } from "../../lib/query-key-factory"
 import { fetchQuery } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 
-const REQUESTS_QUERY_KEY = "requests" as const
+export const REQUESTS_QUERY_KEY = "requests" as const
 export const requestsQueryKeys = queryKeysFactory(REQUESTS_QUERY_KEY)
 
 export const useRequest = (
@@ -67,7 +67,7 @@ export const useRequests = (
         query: query as { [key: string]: string | number },
       }),
 
-    queryKey: requestsQueryKeys.list(query),
+    queryKey: [REQUESTS_QUERY_KEY, "list"],
     ...options,
   })
 
@@ -80,6 +80,27 @@ export const useCreateVendorRequest = (
   return useMutation({
     mutationFn: (payload) =>
       fetchQuery("/vendor/requests", {
+        method: "POST",
+        body: payload,
+      }),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [REQUESTS_QUERY_KEY, "list"],
+      })
+
+      options?.onSuccess?.(data, variables, context)
+    },
+    ...options,
+  })
+}
+
+export const useUpdateVendorRequest = (
+  id: string,
+  options?: UseMutationOptions<any, FetchError, any>
+) => {
+  return useMutation({
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/requests/${id}`, {
         method: "POST",
         body: payload,
       }),
