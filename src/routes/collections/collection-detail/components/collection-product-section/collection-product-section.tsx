@@ -1,4 +1,4 @@
-import { PencilSquare, Plus, Trash } from '@medusajs/icons';
+import { PencilSquare, Trash } from '@medusajs/icons';
 import { HttpTypes } from '@medusajs/types';
 import {
   Checkbox,
@@ -115,7 +115,7 @@ export const CollectionProductSection = ({
     <Container className='divide-y p-0'>
       <div className='flex items-center justify-between px-6 py-4'>
         <Heading level='h2'>{t('products.domain')}</Heading>
-        <ActionMenu
+        {/* <ActionMenu
           groups={[
             {
               actions: [
@@ -127,7 +127,7 @@ export const CollectionProductSection = ({
               ],
             },
           ]}
-        />
+        /> */}
       </div>
       <_DataTable
         table={table}
