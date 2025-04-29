@@ -7,7 +7,7 @@ import { ConfigField } from "../types"
 interface UseExtendableFormProps<
   TSchema extends ZodObject<any> | ZodEffects<ZodObject<any>>,
   TContext = any,
-  TData = any
+  TData = any,
 > extends Omit<UseFormProps<z.infer<TSchema>, TContext>, "resolver"> {
   schema: TSchema
   configs: ConfigField[]
@@ -15,14 +15,17 @@ interface UseExtendableFormProps<
 }
 
 function createAdditionalDataSchema(configs: ConfigField[]) {
-  return configs.reduce((acc, config) => {
-    acc[config.name] = config.validation
-    return acc
-  }, {} as Record<string, z.ZodTypeAny>)
+  return configs.reduce(
+    (acc, config) => {
+      acc[config.name] = config.validation
+      return acc
+    },
+    {} as Record<string, z.ZodTypeAny>
+  )
 }
 
 function createExtendedSchema<
-  TSchema extends ZodObject<any> | ZodEffects<ZodObject<any>>
+  TSchema extends ZodObject<any> | ZodEffects<ZodObject<any>>,
 >(baseSchema: TSchema, additionalDataSchema: Record<string, z.ZodTypeAny>) {
   const extendedObjectSchema = z.object({
     ...(baseSchema instanceof ZodEffects
@@ -48,13 +51,16 @@ function createExtendedDefaultValues<TData>(
   configs: ConfigField[],
   data?: TData
 ) {
-  const additional_data = configs.reduce((acc, config) => {
-    const { name, defaultValue } = config
+  const additional_data = configs.reduce(
+    (acc, config) => {
+      const { name, defaultValue } = config
 
-    acc[name] =
-      typeof defaultValue === "function" ? defaultValue(data) : defaultValue
-    return acc
-  }, {} as Record<string, any>)
+      acc[name] =
+        typeof defaultValue === "function" ? defaultValue(data) : defaultValue
+      return acc
+    },
+    {} as Record<string, any>
+  )
 
   return Object.assign(baseDefaultValues, { additional_data })
 }
@@ -62,7 +68,7 @@ function createExtendedDefaultValues<TData>(
 export const useExtendableForm = <
   TSchema extends ZodObject<any> | ZodEffects<ZodObject<any>>,
   TContext = any,
-  TTransformedValues extends FieldValues | undefined = undefined
+  TTransformedValues extends FieldValues | undefined = undefined,
 >({
   defaultValues: baseDefaultValues,
   schema: baseSchema,

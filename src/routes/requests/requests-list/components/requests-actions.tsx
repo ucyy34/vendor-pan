@@ -1,47 +1,41 @@
-import { PencilSquare, Trash } from '@medusajs/icons';
+import { PencilSquare, Trash } from "@medusajs/icons"
 
-import { ActionMenu } from '../../../../components/common/action-menu';
-import { useDeleteReservationItem } from '../../../../hooks/api/reservations';
-import { usePrompt } from '@medusajs/ui';
-import { useTranslation } from 'react-i18next';
+import { ActionMenu } from "../../../../components/common/action-menu"
+import { useDeleteReservationItem } from "../../../../hooks/api/reservations"
+import { usePrompt } from "@medusajs/ui"
+import { useTranslation } from "react-i18next"
 
 const getRequestType = (type: string) => {
   switch (type) {
-    case 'product_category':
-      return 'categories';
-    case 'product_collection':
-      return 'collections';
+    case "product_category":
+      return "categories"
+    case "product_collection":
+      return "collections"
     default:
-      return '';
+      return ""
   }
-};
-export const RequestsActions = ({
-  request,
-}: {
-  request: any;
-}) => {
-  const { t } = useTranslation();
-  const prompt = usePrompt();
-  const { mutateAsync } = useDeleteReservationItem(
-    request.id
-  );
+}
+export const RequestsActions = ({ request }: { request: any }) => {
+  const { t } = useTranslation()
+  const prompt = usePrompt()
+  const { mutateAsync } = useDeleteReservationItem(request.id)
 
-  const type = getRequestType(request.type);
+  const type = getRequestType(request.type)
 
   const handleDelete = async () => {
     const res = await prompt({
-      title: t('general.areYouSure'),
-      description: t('reservations.deleteWarning'),
-      confirmText: t('actions.delete'),
-      cancelText: t('actions.cancel'),
-    });
+      title: t("general.areYouSure"),
+      description: t("reservations.deleteWarning"),
+      confirmText: t("actions.delete"),
+      cancelText: t("actions.cancel"),
+    })
 
     if (!res) {
-      return;
+      return
     }
 
-    await mutateAsync();
-  };
+    await mutateAsync()
+  }
 
   return (
     <ActionMenu
@@ -49,7 +43,7 @@ export const RequestsActions = ({
         {
           actions: [
             {
-              label: t('actions.edit'),
+              label: t("actions.edit"),
               to: `/requests/${type}/${request.id}/edit`,
               icon: <PencilSquare />,
             },
@@ -58,7 +52,7 @@ export const RequestsActions = ({
         {
           actions: [
             {
-              label: t('actions.delete'),
+              label: t("actions.delete"),
               onClick: handleDelete,
               icon: <Trash />,
             },
@@ -66,5 +60,5 @@ export const RequestsActions = ({
         },
       ]}
     />
-  );
-};
+  )
+}

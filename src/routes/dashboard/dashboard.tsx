@@ -1,28 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useOnboarding } from '../../hooks/api';
-import { DashboardCharts } from './components/dashboard-charts';
-import { DashboardOnboarding } from './components/dashboard-onboarding';
-import { ChartSkeleton } from './components/chart-skeleton';
+import { useEffect, useState } from "react"
+import { useOnboarding } from "../../hooks/api"
+import { DashboardCharts } from "./components/dashboard-charts"
+import { DashboardOnboarding } from "./components/dashboard-onboarding"
+import { ChartSkeleton } from "./components/chart-skeleton"
 
 export const Dashboard = () => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => setIsClient(true), []);
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => setIsClient(true), [])
 
-  const { onboarding, isError, error, isPending } =
-    useOnboarding();
+  const { onboarding, isError, error, isPending } = useOnboarding()
 
-  if (!isClient) return null;
+  if (!isClient) return null
 
   if (isPending) {
     return (
       <div>
         <ChartSkeleton />
       </div>
-    );
+    )
   }
 
   if (isError) {
-    throw error;
+    throw error
   }
 
   if (
@@ -38,7 +37,7 @@ export const Dashboard = () => {
         store_information={onboarding?.store_information}
         stripe_connect={onboarding?.stripe_connect}
       />
-    );
+    )
 
-  return <DashboardCharts />;
-};
+  return <DashboardCharts />
+}

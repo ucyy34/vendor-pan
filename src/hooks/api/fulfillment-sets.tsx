@@ -1,23 +1,22 @@
-import { FetchError } from '@medusajs/js-sdk';
-import { HttpTypes } from '@medusajs/types';
+import { FetchError } from "@medusajs/js-sdk"
+import { HttpTypes } from "@medusajs/types"
 import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
-} from '@tanstack/react-query';
-import { fetchQuery, sdk } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import { shippingOptionsQueryKeys } from './shipping-options';
-import { stockLocationsQueryKeys } from './stock-locations';
+} from "@tanstack/react-query"
+import { fetchQuery, sdk } from "../../lib/client"
+import { queryClient } from "../../lib/query-client"
+import { queryKeysFactory } from "../../lib/query-key-factory"
+import { shippingOptionsQueryKeys } from "./shipping-options"
+import { stockLocationsQueryKeys } from "./stock-locations"
 
-const FULFILLMENT_SETS_QUERY_KEY =
-  'fulfillment_sets' as const;
+const FULFILLMENT_SETS_QUERY_KEY = "fulfillment_sets" as const
 export const fulfillmentSetsQueryKeys = queryKeysFactory(
   FULFILLMENT_SETS_QUERY_KEY
-);
+)
 
 export const useDeleteFulfillmentSet = (
   id: string,
@@ -27,35 +26,35 @@ export const useDeleteFulfillmentSet = (
       FetchError,
       void
     >,
-    'mutationFn'
+    "mutationFn"
   >
 ) => {
   return useMutation({
     mutationFn: () =>
       fetchQuery(`/vendor/fulfillment-sets/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       }),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: fulfillmentSetsQueryKeys.detail(id),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: fulfillmentSetsQueryKeys.lists(),
-      });
+      })
 
       // We need to invalidate all related entities. We invalidate using `all` keys to ensure that all relevant entities are invalidated.
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.all,
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: shippingOptionsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useFulfillmentSetServiceZone = (
   fulfillmentSetId: string,
@@ -68,7 +67,7 @@ export const useFulfillmentSetServiceZone = (
       HttpTypes.AdminServiceZoneResponse,
       QueryKey
     >,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >
 ) => {
   const { data, ...rest } = useQuery({
@@ -78,15 +77,12 @@ export const useFulfillmentSetServiceZone = (
         serviceZoneId,
         query
       ),
-    queryKey: fulfillmentSetsQueryKeys.detail(
-      fulfillmentSetId,
-      query
-    ),
+    queryKey: fulfillmentSetsQueryKeys.detail(fulfillmentSetId, query),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useCreateFulfillmentSetServiceZone = (
   fulfillmentSetId: string,
@@ -97,28 +93,28 @@ export const useCreateFulfillmentSetServiceZone = (
       HttpTypes.AdminCreateFulfillmentSetServiceZone,
       QueryKey
     >,
-    'mutationFn'
+    "mutationFn"
   >
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      fetchQuery(
-        `/vendor/fulfillment-sets/${fulfillmentSetId}/service-zones`,
-        { method: 'POST', body: payload }
-      ),
+      fetchQuery(`/vendor/fulfillment-sets/${fulfillmentSetId}/service-zones`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: fulfillmentSetsQueryKeys.lists(),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useUpdateFulfillmentSetServiceZone = (
   fulfillmentSetId: string,
@@ -130,28 +126,28 @@ export const useUpdateFulfillmentSetServiceZone = (
       HttpTypes.AdminUpdateFulfillmentSetServiceZone,
       QueryKey
     >,
-    'mutationFn'
+    "mutationFn"
   >
 ) => {
   return useMutation({
     mutationFn: (payload) =>
       fetchQuery(
         `/vendor/fulfillment-sets/${fulfillmentSetId}/service-zones/${serviceZoneId}`,
-        { method: 'POST', body: payload }
+        { method: "POST", body: payload }
       ),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: fulfillmentSetsQueryKeys.lists(),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useDeleteFulfillmentServiceZone = (
   fulfillmentSetId: string,
@@ -162,28 +158,28 @@ export const useDeleteFulfillmentServiceZone = (
       FetchError,
       void
     >,
-    'mutationFn'
+    "mutationFn"
   >
 ) => {
   return useMutation({
     mutationFn: () =>
       fetchQuery(
         `/vendor/fulfillment-sets/${fulfillmentSetId}/service-zones/${serviceZoneId}`,
-        { method: 'DELETE' }
+        { method: "DELETE" }
       ),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: fulfillmentSetsQueryKeys.lists(),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: shippingOptionsQueryKeys.lists(),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}

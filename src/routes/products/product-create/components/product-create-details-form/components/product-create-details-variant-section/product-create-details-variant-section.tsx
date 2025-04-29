@@ -113,19 +113,22 @@ export const ProductCreateVariantsSection = ({
       )
     }
 
-    const newVariants = oldVariants.reduce((variants, variant) => {
-      const match = findMatchingPermutation(variant.options)
+    const newVariants = oldVariants.reduce(
+      (variants, variant) => {
+        const match = findMatchingPermutation(variant.options)
 
-      if (match) {
-        variants.push({
-          ...variant,
-          title: getVariantName(match),
-          options: match,
-        })
-      }
+        if (match) {
+          variants.push({
+            ...variant,
+            title: getVariantName(match),
+            options: match,
+          })
+        }
 
-      return variants
-    }, [] as typeof oldVariants)
+        return variants
+      },
+      [] as typeof oldVariants
+    )
 
     const usedPermutations = new Set(
       newVariants.map((variant) => variant.options)
@@ -167,19 +170,22 @@ export const ProductCreateVariantsSection = ({
       )
     }
 
-    const newVariants = oldVariants.reduce((variants, variant) => {
-      const match = findMatchingPermutation(variant.options)
+    const newVariants = oldVariants.reduce(
+      (variants, variant) => {
+        const match = findMatchingPermutation(variant.options)
 
-      if (match) {
-        variants.push({
-          ...variant,
-          title: getVariantName(match),
-          options: match,
-        })
-      }
+        if (match) {
+          variants.push({
+            ...variant,
+            title: getVariantName(match),
+            options: match,
+          })
+        }
 
-      return variants
-    }, [] as typeof oldVariants)
+        return variants
+      },
+      [] as typeof oldVariants
+    )
 
     const usedPermutations = new Set(
       newVariants.map((variant) => variant.options)
