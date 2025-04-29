@@ -11,9 +11,13 @@ export const InventoryStock = () => {
   const inventoryItemIds =
     searchParams.get(INVENTORY_ITEM_IDS_KEY)?.split(",") || undefined
 
-  const { inventory_items, isPending, isError, error } = useInventoryItems({
-    id: inventoryItemIds,
-  })
+  const { inventory_items, isPending, isError, error } = useInventoryItems(
+    undefined,
+    undefined,
+    {
+      id: inventoryItemIds!,
+    }
+  )
 
   const {
     stock_locations,

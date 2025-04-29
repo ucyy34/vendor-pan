@@ -33,7 +33,8 @@ export const useInventoryItems = (
       QueryKey
     >,
     "queryKey" | "queryFn"
-  >
+  >,
+  filters?: { id: string[] }
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -45,7 +46,17 @@ export const useInventoryItems = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  if (!filters) {
+    return { ...data, ...rest }
+  }
+
+  const inventory_items = data?.inventory_items?.filter((item) =>
+    filters.id.includes(item.id)
+  )
+
+  const count = inventory_items?.length || 0
+
+  return { inventory_items, count, ...rest }
 }
 
 export const useInventoryItem = (
