@@ -41,9 +41,7 @@ export const useRegions = (
   query?: Record<string, any>,
   options?: Omit<
     UseQueryOptions<
-      PaginatedResponse<{
-        regions: HttpTypes.AdminRegion[]
-      }>,
+      null,
       FetchError,
       PaginatedResponse<{
         regions: HttpTypes.AdminRegion[]
@@ -54,12 +52,12 @@ export const useRegions = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.store.region.list(query),
+    queryFn: () => null,
     queryKey: regionsQueryKeys.list(query),
     ...options,
   })
 
-  return { ...data, ...rest }
+  return { regions: [], ...rest }
 }
 
 export const useCreateRegion = (

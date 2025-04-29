@@ -14,19 +14,19 @@ export const LocationServiceZoneShippingOptionEdit = () => {
 
   const { shipping_options, isPending, isFetching, isError, error } =
     useShippingOptions({
-      // fields: '+service_zone.fulfillment_set.type',
+      fields: "+service_zone.fulfillment_set.type",
     })
 
-  const shippingOption = shipping_options?.find((so) => so.id === so_id)
+  const shippingOption = shipping_options?.find((so) => so?.id === so_id)
 
-  // if (!isPending && !isFetching && !shippingOption) {
-  //   throw json(
-  //     {
-  //       message: `Shipping option with ID ${so_id} was not found`,
-  //     },
-  //     404
-  //   );
-  // }
+  if (!isPending && !isFetching && !shippingOption) {
+    throw json(
+      {
+        message: `Shipping option with ID ${so_id} was not found`,
+      },
+      404
+    )
+  }
 
   if (isError) {
     throw error

@@ -16,7 +16,6 @@ import {
 } from "../../../../../components/modals/index"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
-import { useRegions } from "../../../../../hooks/api/regions"
 import { useUpdateShippingOptions } from "../../../../../hooks/api/shipping-options"
 import { useStore } from "../../../../../hooks/api/store"
 import { castNumber } from "../../../../../lib/cast-number"
@@ -103,16 +102,6 @@ export function EditShippingOptionsPricingForm({
     [store]
   )
 
-  const {
-    regions,
-    isLoading: isRegionsLoading,
-    isError: isRegionsError,
-    error: regionsError,
-  } = useRegions({
-    fields: "id,name,currency_code",
-    limit: 999,
-  })
-
   const { price_preferences: pricePreferences } = usePricePreferences({})
 
   const { setCloseOnEscape } = useRouteModal()
@@ -120,14 +109,10 @@ export function EditShippingOptionsPricingForm({
   const columns = useShippingOptionPriceColumns({
     name: shippingOption.name,
     currencies,
-    regions,
     pricePreferences,
   })
 
-  const data = useMemo(
-    () => [[...(currencies || []), ...(regions || [])]],
-    [currencies, regions]
-  )
+  const data = useMemo(() => [[...(currencies || [])]], [currencies])
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const currencyPrices = Object.entries(data.currency_prices)
@@ -173,13 +158,9 @@ export function EditShippingOptionsPricingForm({
      */
     const regionPrices = Object.entries(data.region_prices)
       .map(([region_id, value]) => {
-        if (!value || !regions?.some((region) => region.id === region_id)) {
-          return undefined
-        }
-
         const priceRecord: PriceRecord = {
           region_id,
-          amount: castNumber(value),
+          amount: castNumber(value || 0),
         }
 
         return priceRecord
@@ -218,15 +199,10 @@ export function EditShippingOptionsPricingForm({
     )
   })
 
-  const isLoading =
-    isStoreLoading || isRegionsLoading || !currencies || !regions
+  const isLoading = isStoreLoading || !currencies
 
   if (isStoreError) {
     throw storeError
-  }
-
-  if (isRegionsError) {
-    throw regionsError
   }
 
   return (
@@ -352,26 +328,6 @@ const getDefaultValues = (prices: HttpTypes.AdminShippingOptionPrice[]) => {
       }
       conditional_currency_prices[code].push(mapToConditionalPrice(price))
       return
-    }
-
-    if (hasAttributes(price, [REGION_ID_ATTRIBUTE], [ITEM_TOTAL_ATTRIBUTE])) {
-      const regionId = price.price_rules.find(
-        (r) => r.attribute === REGION_ID_ATTRIBUTE
-      )?.value
-
-      region_prices[regionId] = price.amount
-      return
-    }
-
-    if (hasAttributes(price, [REGION_ID_ATTRIBUTE, ITEM_TOTAL_ATTRIBUTE])) {
-      const regionId = price.price_rules.find(
-        (r) => r.attribute === REGION_ID_ATTRIBUTE
-      )?.value
-
-      if (!conditional_region_prices[regionId]) {
-        conditional_region_prices[regionId] = []
-      }
-      conditional_region_prices[regionId].push(mapToConditionalPrice(price))
     }
   })
 

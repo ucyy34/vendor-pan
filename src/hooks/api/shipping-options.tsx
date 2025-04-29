@@ -101,11 +101,24 @@ export const useUpdateShippingOptions = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      fetchQuery(`/vendor/shipping-options/${id}`, {
+    mutationFn: (payload) => {
+      if (payload.name) {
+        return fetchQuery(`/vendor/shipping-options/${id}`, {
+          method: "POST",
+          body: payload,
+        })
+      }
+
+      return fetchQuery(`/vendor/shipping-options/${id}`, {
         method: "POST",
-        body: payload,
-      }),
+        body: {
+          prices: payload.prices?.map((item) => ({
+            amount: item.amount,
+            currency_code: item.currency_code,
+          })),
+        },
+      })
+    },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.all,
