@@ -26,7 +26,6 @@ export const EditCategoryRequestForm = ({ request }: { request: any }) => {
     resolver: zodResolver(EditCategorySchema),
   })
 
-  console.log({ request })
   const { mutateAsync, isPending } = useUpdateVendorRequest(request.id!)
 
   const handleSubmit = form.handleSubmit(async (data) => {
