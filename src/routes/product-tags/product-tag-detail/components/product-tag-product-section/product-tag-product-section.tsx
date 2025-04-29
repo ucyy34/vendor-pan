@@ -25,10 +25,17 @@ export const ProductTagProductSection = ({
     prefix: PREFIX,
   })
 
-  const { products, count, isPending, isError, error } = useProducts({
-    ...searchParams,
-    tag_id: productTag.id,
-  })
+  const { products, count, isPending, isError, error } = useProducts(
+    {
+      ...searchParams,
+      fields: "*tags",
+      limit: 9999,
+    },
+    undefined,
+    {
+      tagId: productTag.id!,
+    }
+  )
 
   const filters = useProductTableFilters(["product_tags"])
   const columns = useProductTableColumns()

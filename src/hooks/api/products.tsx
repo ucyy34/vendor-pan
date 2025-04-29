@@ -381,6 +381,7 @@ export const useProducts = (
       (item) =>
         (item?.categories?.find(({ id }) => id === filter.categoryId) &&
           item) ||
+        (item?.tags?.find(({ id }) => id === filter.tagId) && item) ||
         (item?.collection?.id === filter.collectionId && item)
     ),
     ...rest,

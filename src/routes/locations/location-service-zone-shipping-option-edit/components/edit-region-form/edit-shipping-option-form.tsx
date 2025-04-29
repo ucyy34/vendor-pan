@@ -12,8 +12,7 @@ import { RouteDrawer, useRouteModal } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { useUpdateShippingOptions } from "../../../../../hooks/api/shipping-options"
 import { useComboboxData } from "../../../../../hooks/use-combobox-data"
-import { sdk } from "../../../../../lib/client"
-import { pick } from "../../../../../lib/common"
+import { fetchQuery } from "../../../../../lib/client"
 import { isOptionEnabledInStore } from "../../../../../lib/shipping-options"
 import {
   FulfillmentSetType,
@@ -44,12 +43,20 @@ export const EditShippingOptionForm = ({
   const isPickup = type === FulfillmentSetType.Pickup
 
   const shippingProfiles = useComboboxData({
-    queryFn: (params) => sdk.admin.shippingProfile.list(params),
+    queryFn: async () => {
+      const { shipping_profiles } = await fetchQuery(
+        "/vendor/shipping-profiles",
+        {
+          method: "GET",
+        }
+      )
+      return shipping_profiles
+    },
     queryKey: ["shipping_profiles"],
     getOptions: (data) =>
-      data.shipping_profiles.map((profile) => ({
-        label: profile.name,
-        value: profile.id,
+      data.map((profile: any) => ({
+        label: profile.shipping_profile.name,
+        value: profile.shipping_profile.id,
       })),
     defaultValue: shippingOption.shipping_profile_id,
   })
@@ -69,29 +76,11 @@ export const EditShippingOptionForm = ({
   )
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    const rules = shippingOption.rules.map((r) => ({
-      ...pick(r, ["id", "attribute", "operator", "value"]),
-    })) as HttpTypes.AdminUpdateShippingOptionRule[]
-
-    const storeRule = rules.find((r) => r.attribute === "enabled_in_store")
-
-    if (!storeRule) {
-      // NOTE: should always exist since we always create this rule when we create a shipping option
-      rules.push({
-        value: values.enabled_in_store ? "true" : "false",
-        attribute: "enabled_in_store",
-        operator: "eq",
-      })
-    } else {
-      storeRule.value = values.enabled_in_store ? "true" : "false"
-    }
-
     await mutateAsync(
       {
         name: values.name,
-        price_type: values.price_type,
         shipping_profile_id: values.shipping_profile_id,
-        rules,
+        provider_id: shippingOption.provider_id,
       },
       {
         onSuccess: ({ shipping_option }) => {
