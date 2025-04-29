@@ -50,7 +50,7 @@ import { isCellMatch, isSpecialFocusKey } from "../utils"
 import { DataGridKeyboardShortcutModal } from "./data-grid-keyboard-shortcut-modal"
 export interface DataGridRootProps<
   TData,
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 > {
   data?: TData[]
   columns: ColumnDef<TData>[]
@@ -96,7 +96,7 @@ const getCommonPinningStyles = <TData,>(
 
 export const DataGridRoot = <
   TData,
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 >({
   data = [],
   columns,

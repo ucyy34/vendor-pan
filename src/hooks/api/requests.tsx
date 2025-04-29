@@ -1,20 +1,18 @@
-import { FetchError } from '@medusajs/js-sdk';
-import { PaginatedResponse } from '@medusajs/types';
+import { FetchError } from "@medusajs/js-sdk"
+import { PaginatedResponse } from "@medusajs/types"
 import {
   QueryKey,
   useMutation,
   UseMutationOptions,
   useQuery,
   UseQueryOptions,
-} from '@tanstack/react-query';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import { fetchQuery } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
+} from "@tanstack/react-query"
+import { queryKeysFactory } from "../../lib/query-key-factory"
+import { fetchQuery } from "../../lib/client"
+import { queryClient } from "../../lib/query-client"
 
-const REQUESTS_QUERY_KEY = 'requests' as const;
-export const requestsQueryKeys = queryKeysFactory(
-  REQUESTS_QUERY_KEY
-);
+const REQUESTS_QUERY_KEY = "requests" as const
+export const requestsQueryKeys = queryKeysFactory(REQUESTS_QUERY_KEY)
 
 export const useRequest = (
   id: string,
@@ -22,76 +20,76 @@ export const useRequest = (
   options?: Omit<
     UseQueryOptions<
       {
-        request: any;
+        request: any
       },
       FetchError,
       {
-        request: any;
+        request: any
       },
       QueryKey
     >,
-    'queryFn' | 'queryKey'
+    "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: requestsQueryKeys.detail(id),
     queryFn: async () =>
       fetchQuery(`/vendor/requests/${id}`, {
-        method: 'GET',
+        method: "GET",
         query: query as { [key: string]: string | number },
       }),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useRequests = (
   query?: Record<string, any>,
   options?: Omit<
     UseQueryOptions<
       PaginatedResponse<{
-        requests: any;
+        requests: any
       }>,
       FetchError,
       PaginatedResponse<{
-        requests: any;
+        requests: any
       }>,
       QueryKey
     >,
-    'queryFn' | 'queryKey'
+    "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      fetchQuery('/vendor/requests', {
-        method: 'GET',
+      fetchQuery("/vendor/requests", {
+        method: "GET",
         query: query as { [key: string]: string | number },
       }),
 
     queryKey: requestsQueryKeys.list(query),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useCreateVendorRequest = (
   options?: UseMutationOptions<any, FetchError, any>
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      fetchQuery('/vendor/requests', {
-        method: 'POST',
+      fetchQuery("/vendor/requests", {
+        method: "POST",
         body: payload,
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: requestsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}

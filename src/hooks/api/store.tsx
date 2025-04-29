@@ -4,18 +4,17 @@ import {
   UseQueryOptions,
   useMutation,
   useQuery,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query"
 
-import { FetchError } from '@medusajs/js-sdk';
-import { HttpTypes } from '@medusajs/types';
-import { fetchQuery, sdk } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import { pricePreferencesQueryKeys } from './price-preferences';
+import { FetchError } from "@medusajs/js-sdk"
+import { HttpTypes } from "@medusajs/types"
+import { fetchQuery, sdk } from "../../lib/client"
+import { queryClient } from "../../lib/query-client"
+import { queryKeysFactory } from "../../lib/query-key-factory"
+import { pricePreferencesQueryKeys } from "./price-preferences"
 
-const STORE_QUERY_KEY = 'store' as const;
-export const storeQueryKeys =
-  queryKeysFactory(STORE_QUERY_KEY);
+const STORE_QUERY_KEY = "store" as const
+export const storeQueryKeys = queryKeysFactory(STORE_QUERY_KEY)
 
 /**
  * Workaround to keep the V1 version of retrieving the store.
@@ -23,22 +22,18 @@ export const storeQueryKeys =
 export async function retrieveActiveStore(
   query?: HttpTypes.AdminStoreParams
 ): Promise<HttpTypes.AdminStoreResponse> {
-  const response = await fetchQuery('/vendor/stores', {
-    method: 'GET',
+  const response = await fetchQuery("/vendor/stores", {
+    method: "GET",
     query: query as { [key: string]: string | number },
-  });
+  })
 
-  const activeStore = response.stores?.[0];
+  const activeStore = response.stores?.[0]
 
   if (!activeStore) {
-    throw new FetchError(
-      'No active store found',
-      'Not Found',
-      404
-    );
+    throw new FetchError("No active store found", "Not Found", 404)
   }
 
-  return { store: activeStore };
+  return { store: activeStore }
 }
 
 export const useStore = (
@@ -50,20 +45,20 @@ export const useStore = (
       HttpTypes.AdminStoreResponse,
       QueryKey
     >,
-    'queryFn' | 'queryKey'
+    "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () => retrieveActiveStore(query),
     queryKey: storeQueryKeys.details(),
     ...options,
-  });
+  })
 
   return {
     ...data,
     ...rest,
-  };
-};
+  }
+}
 
 export const useUpdateStore = (
   id: string,
@@ -74,21 +69,20 @@ export const useUpdateStore = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.store.update(id, payload),
+    mutationFn: (payload) => sdk.admin.store.update(id, payload),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: pricePreferencesQueryKeys.list(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: pricePreferencesQueryKeys.details(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: storeQueryKeys.details(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}

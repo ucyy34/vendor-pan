@@ -1,5 +1,5 @@
-import { HttpTypes } from '@medusajs/types';
-import { FetchError } from '@medusajs/js-sdk';
+import { HttpTypes } from "@medusajs/types"
+import { FetchError } from "@medusajs/js-sdk"
 import {
   MutationOptions,
   QueryKey,
@@ -7,16 +7,14 @@ import {
   UseQueryOptions,
   useMutation,
   useQuery,
-} from '@tanstack/react-query';
-import { fetchQuery, sdk } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import { salesChannelsQueryKeys } from './sales-channels';
+} from "@tanstack/react-query"
+import { fetchQuery, sdk } from "../../lib/client"
+import { queryClient } from "../../lib/query-client"
+import { queryKeysFactory } from "../../lib/query-key-factory"
+import { salesChannelsQueryKeys } from "./sales-channels"
 
-const API_KEYS_QUERY_KEY = 'api_keys' as const;
-export const apiKeysQueryKeys = queryKeysFactory(
-  API_KEYS_QUERY_KEY
-);
+const API_KEYS_QUERY_KEY = "api_keys" as const
+export const apiKeysQueryKeys = queryKeysFactory(API_KEYS_QUERY_KEY)
 
 export const useApiKey = (
   id: string,
@@ -27,20 +25,20 @@ export const useApiKey = (
       HttpTypes.AdminApiKeyResponse,
       QueryKey
     >,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery(`/vendor/api-keys/${id}`, {
-        method: 'GET',
+        method: "GET",
       }),
     queryKey: apiKeysQueryKeys.detail(id),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useApiKeys = (
   query?: HttpTypes.AdminGetApiKeysParams,
@@ -51,18 +49,17 @@ export const useApiKeys = (
       HttpTypes.AdminApiKeyListResponse,
       QueryKey
     >,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () =>
-      fetchQuery('/vendor/api-keys', { method: 'GET' }),
+    queryFn: () => fetchQuery("/vendor/api-keys", { method: "GET" }),
     queryKey: apiKeysQueryKeys.list(query),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useCreateApiKey = (
   options?: UseMutationOptions<
@@ -73,20 +70,20 @@ export const useCreateApiKey = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      fetchQuery('/vendor/api-keys', {
-        method: 'POST',
+      fetchQuery("/vendor/api-keys", {
+        method: "POST",
         body: payload,
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useUpdateApiKey = (
   id: string,
@@ -97,44 +94,39 @@ export const useUpdateApiKey = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.apiKey.update(id, payload),
+    mutationFn: (payload) => sdk.admin.apiKey.update(id, payload),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.detail(id),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useRevokeApiKey = (
   id: string,
-  options?: UseMutationOptions<
-    HttpTypes.AdminApiKeyResponse,
-    FetchError,
-    void
-  >
+  options?: UseMutationOptions<HttpTypes.AdminApiKeyResponse, FetchError, void>
 ) => {
   return useMutation({
     mutationFn: () => sdk.admin.apiKey.revoke(id),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.detail(id),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
-  });
-};
+  })
+}
 
 export const useDeleteApiKey = (
   id: string,
@@ -147,28 +139,28 @@ export const useDeleteApiKey = (
   return useMutation({
     mutationFn: () =>
       fetchQuery(`/vendor/api-keys/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       }),
     // mutationFn: () => sdk.admin.apiKey.delete(id),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.detail(id),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
-  });
-};
+  })
+}
 
 export const useBatchRemoveSalesChannelsFromApiKey = (
   id: string,
   options?: UseMutationOptions<
     HttpTypes.AdminApiKeyResponse,
     FetchError,
-    HttpTypes.AdminBatchLink['remove']
+    HttpTypes.AdminBatchLink["remove"]
   >
 ) => {
   return useMutation({
@@ -179,26 +171,26 @@ export const useBatchRemoveSalesChannelsFromApiKey = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.detail(id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: salesChannelsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useBatchAddSalesChannelsToApiKey = (
   id: string,
   options?: UseMutationOptions<
     HttpTypes.AdminApiKeyResponse,
     FetchError,
-    HttpTypes.AdminBatchLink['add']
+    HttpTypes.AdminBatchLink["add"]
   >
 ) => {
   return useMutation({
@@ -209,16 +201,16 @@ export const useBatchAddSalesChannelsToApiKey = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: apiKeysQueryKeys.detail(id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: salesChannelsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}

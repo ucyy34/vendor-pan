@@ -1,22 +1,20 @@
-import { FetchError } from '@medusajs/js-sdk';
-import { HttpTypes } from '@medusajs/types';
+import { FetchError } from "@medusajs/js-sdk"
+import { HttpTypes } from "@medusajs/types"
 import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
-} from '@tanstack/react-query';
-import { fetchQuery, sdk } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import { customerGroupsQueryKeys } from './customer-groups';
-import { productsQueryKeys } from './products';
+} from "@tanstack/react-query"
+import { fetchQuery, sdk } from "../../lib/client"
+import { queryClient } from "../../lib/query-client"
+import { queryKeysFactory } from "../../lib/query-key-factory"
+import { customerGroupsQueryKeys } from "./customer-groups"
+import { productsQueryKeys } from "./products"
 
-const PRICE_LISTS_QUERY_KEY = 'price-lists' as const;
-export const priceListsQueryKeys = queryKeysFactory(
-  PRICE_LISTS_QUERY_KEY
-);
+const PRICE_LISTS_QUERY_KEY = "price-lists" as const
+export const priceListsQueryKeys = queryKeysFactory(PRICE_LISTS_QUERY_KEY)
 
 export const usePriceList = (
   id: string,
@@ -28,21 +26,21 @@ export const usePriceList = (
       any,
       QueryKey
     >,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery(`/vendor/price-lists/${id}`, {
-        method: 'GET',
+        method: "GET",
         query,
       }),
     queryKey: priceListsQueryKeys.detail(id),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const usePriceLists = (
   query?: HttpTypes.AdminPriceListListParams,
@@ -53,21 +51,21 @@ export const usePriceLists = (
       HttpTypes.AdminPriceListListResponse,
       QueryKey
     >,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      fetchQuery('/vendor/price-lists', {
-        method: 'GET',
+      fetchQuery("/vendor/price-lists", {
+        method: "GET",
         query: query as { [key: string]: string | number },
       }),
     queryKey: priceListsQueryKeys.list(query),
     ...options,
-  });
+  })
 
-  return { ...data, ...rest };
-};
+  return { ...data, ...rest }
+}
 
 export const useCreatePriceList = (
   options?: UseMutationOptions<
@@ -78,24 +76,24 @@ export const useCreatePriceList = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      fetchQuery('/vendor/price-lists', {
-        method: 'POST',
+      fetchQuery("/vendor/price-lists", {
+        method: "POST",
         body: payload,
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
-      });
+      })
 
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useUpdatePriceList = (
   id: string,
@@ -108,26 +106,26 @@ export const useUpdatePriceList = (
   return useMutation({
     mutationFn: (payload) =>
       fetchQuery(`/vendor/price-lists/${id}`, {
-        method: 'POST',
+        method: "POST",
         body: payload,
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.details(),
-      });
+      })
 
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.all,
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useDeletePriceList = (
   id: string,
@@ -140,18 +138,18 @@ export const useDeletePriceList = (
   return useMutation({
     mutationFn: () =>
       fetchQuery(`/vendor/price-lists/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const useBatchPriceListPrices = (
   id: string,
@@ -168,16 +166,16 @@ export const useBatchPriceListPrices = (
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.detail(id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}
 
 export const usePriceListLinkProducts = (
   id: string,
@@ -188,21 +186,20 @@ export const usePriceListLinkProducts = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) =>
-      sdk.admin.priceList.linkProducts(id, payload),
+    mutationFn: (payload) => sdk.admin.priceList.linkProducts(id, payload),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.detail(id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.lists(),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),
-      });
+      })
 
-      options?.onSuccess?.(data, variables, context);
+      options?.onSuccess?.(data, variables, context)
     },
     ...options,
-  });
-};
+  })
+}

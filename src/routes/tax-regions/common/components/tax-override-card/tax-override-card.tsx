@@ -241,9 +241,7 @@ const ReferenceValues = ({
     <Tooltip
       content={
         <ul>
-          {labels?.map((label: string, index) => (
-            <li key={index}>{label}</li>
-          ))}
+          {labels?.map((label: string, index) => <li key={index}>{label}</li>)}
           {additional > 0 && (
             <li>
               {t("taxRegions.fields.targets.additionalValues", {

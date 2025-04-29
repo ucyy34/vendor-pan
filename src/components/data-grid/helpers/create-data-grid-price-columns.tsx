@@ -10,7 +10,7 @@ import { createDataGridHelper } from "./create-data-grid-column-helper"
 
 type CreateDataGridPriceColumnsProps<
   TData,
-  TFieldValues extends FieldValues
+  TFieldValues extends FieldValues,
 > = {
   currencies?: string[]
   regions?: HttpTypes.AdminRegion[]
@@ -25,7 +25,7 @@ type CreateDataGridPriceColumnsProps<
 
 export const createDataGridPriceColumns = <
   TData,
-  TFieldValues extends FieldValues
+  TFieldValues extends FieldValues,
 >({
   currencies,
   regions,
