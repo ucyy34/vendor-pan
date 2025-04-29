@@ -6,12 +6,8 @@ import { Form } from '../../../../../../../components/common/form';
 import { SwitchBox } from '../../../../../../../components/common/switch-box';
 import { Combobox } from '../../../../../../../components/inputs/combobox';
 import { useComboboxData } from '../../../../../../../hooks/use-combobox-data';
-import {
-  fetchQuery,
-  sdk,
-} from '../../../../../../../lib/client';
+import { fetchQuery } from '../../../../../../../lib/client';
 import { ProductCreateSchemaType } from '../../../../types';
-import { CategorySelect } from '../../../../../common/components/category-combobox/category-select';
 import { CategoryCombobox } from '../../../../../common/components/category-combobox';
 
 type ProductCreateOrganizationSectionProps = {
@@ -25,9 +21,13 @@ export const ProductCreateOrganizationSection = ({
 
   const collections = useComboboxData({
     queryKey: ['product_collections'],
-    queryFn: (params) => sdk.store.collection.list(params),
+    queryFn: (params) =>
+      fetchQuery('/vendor/product-collections', {
+        method: 'GET',
+        query: params,
+      }),
     getOptions: (data) =>
-      data.collections.map((collection) => ({
+      data.product_collections.map((collection: any) => ({
         label: collection.title!,
         value: collection.id!,
       })),
@@ -36,7 +36,7 @@ export const ProductCreateOrganizationSection = ({
   const types = useComboboxData({
     queryKey: ['product_types', 'creating'],
     queryFn: (params) =>
-      fetchQuery('/store/product-types', {
+      fetchQuery('/vendor/product-types', {
         method: 'GET',
         query: params,
       }),
@@ -50,7 +50,7 @@ export const ProductCreateOrganizationSection = ({
   const tags = useComboboxData({
     queryKey: ['product_tags', 'creating'],
     queryFn: (params) =>
-      fetchQuery('/store/product-tags', {
+      fetchQuery('/vendor/product-tags', {
         method: 'GET',
         query: params,
       }),

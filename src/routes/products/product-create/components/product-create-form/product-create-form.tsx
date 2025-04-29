@@ -169,8 +169,12 @@ export const ProductCreateForm = ({
           height:
             parseInt(payload.height || '') || undefined,
           width: parseInt(payload.width || '') || undefined,
-          type_id: undefined,
-          collection_id: undefined,
+          type_id: payload.type_id,
+          tags:
+            payload.tags?.map((tag) => ({
+              id: tag,
+            })) || [],
+          collection_id: payload.collection_id,
           shipping_profile_id: undefined,
           enable_variants: undefined,
           additional_data: undefined,
