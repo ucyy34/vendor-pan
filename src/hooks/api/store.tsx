@@ -86,3 +86,15 @@ export const useUpdateStore = (
     ...options,
   })
 }
+
+export const useConfiguration = () => {
+  const { data, ...rest } = useQuery({
+    queryFn: async () =>
+      await fetchQuery("/vendor/configuration", {
+        method: "GET",
+      }),
+    queryKey: ["configuration"],
+  })
+
+  return { ...data, ...rest }
+}

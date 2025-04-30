@@ -140,7 +140,8 @@ export const DashboardCharts = () => {
           </div>
         </div>
         <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          <Link to="/orders">
+          {/* <Link to="/orders"> */}
+          <Link to="/orders?order_status=not_fulfilled">
             <Button variant="secondary" className="w-full justify-between py-4">
               <div className="flex gap-4 items-center">
                 <Badge>0</Badge>
@@ -149,7 +150,8 @@ export const DashboardCharts = () => {
               <TriangleRightMini color="grey" />
             </Button>
           </Link>
-          <Link to="/orders">
+          {/* <Link to="/orders"> */}
+          <Link to="/orders?order_status=fulfilled">
             <Button variant="secondary" className="w-full justify-between py-4">
               <div className="flex gap-4 items-center">
                 <Badge>0</Badge>

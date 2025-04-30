@@ -122,7 +122,8 @@ export const useOrders = (
       QueryKey
     >,
     "queryFn" | "queryKey"
-  >
+  >,
+  filters?: Record<string, string | number>
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -134,7 +135,18 @@ export const useOrders = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  if (!filters?.order_status) {
+    return { ...data, ...rest }
+  }
+
+  const filtered =
+    data?.orders.filter(
+      (order) => order.fulfillment_status === filters.order_status
+    ) || []
+
+  const count = filtered.length || 0
+
+  return { count, orders: filtered, ...rest }
 }
 
 export const useOrderChanges = (

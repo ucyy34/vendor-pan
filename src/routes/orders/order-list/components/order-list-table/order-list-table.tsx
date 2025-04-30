@@ -7,6 +7,7 @@ import { useOrderTableColumns } from "../../../../../hooks/table/columns/use-ord
 import { useOrderTableFilters } from "../../../../../hooks/table/filters/use-order-table-filters"
 import { useOrderTableQuery } from "../../../../../hooks/table/query/use-order-table-query"
 import { useDataTable } from "../../../../../hooks/use-data-table"
+import { useSearchParams } from "react-router-dom"
 
 const PAGE_SIZE = 20
 
@@ -16,12 +17,21 @@ export const OrderListTable = () => {
     pageSize: PAGE_SIZE,
   })
 
-  const { orders, count, isError, error, isLoading } = useOrders({
-    limit: 1000,
-    offset: 0,
-    fields: "*customer",
-    ...searchParams,
-  })
+  const [params] = useSearchParams()
+  const order_status = params.get("order_status") || ""
+
+  const { orders, count, isError, error, isLoading } = useOrders(
+    {
+      limit: 1000,
+      offset: 0,
+      fields: "*customer",
+      ...searchParams,
+    },
+    undefined,
+    {
+      order_status,
+    }
+  )
 
   const filters = useOrderTableFilters()
   const columns = useOrderTableColumns({})

@@ -131,6 +131,7 @@ const AreaStackedModal = <TForm extends UseFormReturn<any>>({
     pageSize: PAGE_SIZE,
     prefix: PREFIX,
   })
+
   const { countries, count } = useCountries({
     countries: staticCountries.map((c) => ({
       display_name: c.display_name,
