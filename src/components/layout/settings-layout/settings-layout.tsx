@@ -116,10 +116,11 @@ const SettingsSidebar = () => {
           <div className="flex items-center justify-center px-3">
             <Divider variant="dashed" />
           </div>
-          <RadixCollapsibleSection
-            label={t("app.nav.settings.developer")}
-            items={developerRoutes}
-          />
+          {/* TODO: Secret API Keys logic on Mercur API
+            <RadixCollapsibleSection
+              label={t("app.nav.settings.developer")}
+              items={developerRoutes}
+            /> */}
           <div className="flex items-center justify-center px-3">
             <Divider variant="dashed" />
           </div>
