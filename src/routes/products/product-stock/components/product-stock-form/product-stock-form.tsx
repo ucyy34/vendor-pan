@@ -185,7 +185,7 @@ function getDefaultValue(
   locations: HttpTypes.AdminStockLocation[]
 ): DefaultValues<ProductStockSchema> {
   return {
-    variants: variants.reduce(
+    variants: variants?.reduce(
       (variantAcc, variant) => {
         const inventoryItems = variant.inventory_items?.reduce(
           (itemAcc, item) => {

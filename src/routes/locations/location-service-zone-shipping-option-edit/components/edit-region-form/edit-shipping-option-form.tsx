@@ -54,7 +54,7 @@ export const EditShippingOptionForm = ({
     },
     queryKey: ["shipping_profiles"],
     getOptions: (data) =>
-      data.map((profile: any) => ({
+      data?.map((profile: any) => ({
         label: profile.shipping_profile.name,
         value: profile.shipping_profile.id,
       })),

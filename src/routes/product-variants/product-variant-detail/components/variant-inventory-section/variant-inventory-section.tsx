@@ -1,9 +1,7 @@
 import { useTranslation } from "react-i18next"
 
-import { Buildings, Component } from "@medusajs/icons"
 import { Container, Heading } from "@medusajs/ui"
 
-import { ActionMenu } from "../../../../../components/common/action-menu"
 import { _DataTable } from "../../../../../components/table/data-table"
 
 import { LinkButton } from "../../../../../components/common/link-button"
@@ -31,36 +29,15 @@ export function VariantInventorySection({
     columns,
     count: inventoryItems.length,
     enablePagination: true,
-    getRowId: (row) => row.id,
+    getRowId: (row) => row?.variant?.id,
     pageSize: PAGE_SIZE,
   })
-
-  const hasKit = inventoryItems.length > 1
 
   return (
     <Container className="divide-y p-0">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2">
           <Heading level="h2">{t("fields.inventoryItems")}</Heading>
-        </div>
-        <div className="flex items-center gap-x-4">
-          <ActionMenu
-            groups={[
-              {
-                actions: [
-                  {
-                    label: t(
-                      hasKit
-                        ? "products.variant.inventory.manageKit"
-                        : "products.variant.inventory.manageItems"
-                    ),
-                    to: "manage-items",
-                    icon: hasKit ? <Component /> : <Buildings />,
-                  },
-                ],
-              },
-            ]}
-          />
         </div>
       </div>
 

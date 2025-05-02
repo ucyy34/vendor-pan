@@ -25,7 +25,7 @@ export function getDisabledInventoryRows(
   const disabled: Record<string, { id: string; title: string; sku: string }> =
     {}
 
-  variants.forEach((variant) => {
+  variants?.forEach((variant) => {
     const inventoryItems = variant.inventory_items
 
     if (!inventoryItems) {

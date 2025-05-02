@@ -80,10 +80,10 @@ export function OrderCreateFulfillmentForm({
 
   const { shipping_options = [], isLoading: isShippingOptionsLoading } =
     useShippingOptions({
-      // stock_location_id: selectedLocationId,
-      // is_return: false, // TODO: 500 when enabled
       fields: "+service_zone.fulfillment_set.location.id",
     })
+
+  const filteredShippingOptions = shipping_options.filter((o) => o !== null)
 
   const shippingOptionId = useWatch({
     name: "shipping_option_id",
@@ -155,7 +155,7 @@ export function OrderCreateFulfillmentForm({
 
       if (initialShippingOptionId) {
         const shippingOption = shipping_options.find(
-          (o) => o.id === initialShippingOptionId
+          (o) => o?.id === initialShippingOptionId
         )
 
         if (shippingOption) {
@@ -302,9 +302,9 @@ export function OrderCreateFulfillmentForm({
                                     )}
                                   </Select.Trigger>
                                   <Select.Content>
-                                    {shipping_options.map((o) => (
-                                      <Select.Item key={o.id} value={o.id}>
-                                        {o.name}
+                                    {filteredShippingOptions.map((o) => (
+                                      <Select.Item key={o?.id} value={o?.id}>
+                                        {o?.name}
                                       </Select.Item>
                                     ))}
                                   </Select.Content>
@@ -342,7 +342,7 @@ export function OrderCreateFulfillmentForm({
                       {fulfillableItems.map((item) => {
                         const isShippingProfileMatching =
                           shipping_options.find(
-                            (o) => o.id === shippingOptionId
+                            (o) => o?.id === shippingOptionId
                           )?.shipping_profile_id ===
                           item.variant?.product?.shipping_profile?.id
 

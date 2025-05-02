@@ -67,24 +67,24 @@ export const ProductVariantSection = ({
           label: t("actions.create"),
           to: `variants/create`,
         }}
-        actionMenu={{
-          groups: [
-            {
-              actions: [
-                {
-                  label: t("products.editPrices"),
-                  to: `prices`,
-                  icon: <PencilSquare />,
-                },
-                {
-                  label: t("inventory.stock.action"),
-                  to: `stock`,
-                  icon: <Buildings />,
-                },
-              ],
-            },
-          ],
-        }}
+        // actionMenu={{
+        //   groups: [
+        //     {
+        //       actions: [
+        //         {
+        //           label: t("products.editPrices"),
+        //           to: `prices`,
+        //           icon: <PencilSquare />,
+        //         },
+        //         {
+        //           label: t("inventory.stock.action"),
+        //           to: `stock`,
+        //           icon: <Buildings />,
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // }}
         commands={commands}
       />
     </Container>

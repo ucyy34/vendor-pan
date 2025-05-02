@@ -56,19 +56,34 @@ export const useReservationItems = (
       QueryKey
     >,
     "queryKey" | "queryFn"
-  >
+  >,
+  filters?: { inventory_item_id: string[] }
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery("/vendor/reservations", {
         method: "GET",
-        // query: query as { [key: string]: string | number },
+        query: query as { [key: string]: string | number },
       }),
     queryKey: reservationItemsQueryKeys.list(query),
     ...options,
   })
 
-  return { ...data, ...rest }
+  if (!filters) {
+    return { ...data, ...rest }
+  }
+  const reservations =
+    data?.reservations.filter((r) =>
+      filters.inventory_item_id.includes(r.inventory_item_id)
+    ) || []
+
+  const count = reservations.length || 0
+
+  return {
+    reservations,
+    count,
+    ...rest,
+  }
 }
 
 export const useUpdateReservationItem = (
@@ -81,7 +96,10 @@ export const useUpdateReservationItem = (
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminUpdateReservation) =>
-      sdk.admin.reservation.update(id, payload),
+      fetchQuery(`/vendor/reservations/${id}`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: reservationItemsQueryKeys.detail(id),
@@ -136,7 +154,8 @@ export const useDeleteReservationItem = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.reservation.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/reservations/${id}`, { method: "DELETE" }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: reservationItemsQueryKeys.lists(),
