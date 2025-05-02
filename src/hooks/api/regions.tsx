@@ -57,7 +57,7 @@ export const useRegions = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  return { regions: [], ...rest }
 }
 
 export const useCreateRegion = (
