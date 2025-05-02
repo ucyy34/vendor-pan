@@ -30,7 +30,7 @@ export const useCollection = (
   const { data, ...rest } = useQuery({
     queryKey: collectionsQueryKeys.detail(id),
     queryFn: async () =>
-      fetchQuery(`/vendor/product-collections/${id}`, {
+      await fetchQuery(`/vendor/product-collections/${id}`, {
         method: "GET",
       }),
     ...options,

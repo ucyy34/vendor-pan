@@ -97,6 +97,18 @@ export const RouteMap: RouteObject[] = [
                     Component: RequestsCollectionsList,
                   }
                 },
+                children: [
+                  {
+                    path: "create",
+                    lazy: () =>
+                      import("../../routes/collections/collection-create"),
+                  },
+                  {
+                    path: ":id/edit",
+                    lazy: () =>
+                      import("../../routes/collections/collection-edit"),
+                  },
+                ],
               },
               {
                 path: "reviews",

@@ -14,11 +14,11 @@ export const useRequestsTableColumns = () => {
     () => [
       columnHelper.accessor("data.name", {
         header: "Title",
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => row.original.data.title || row.original.data.name,
       }),
       columnHelper.accessor("data.handle", {
         header: "Handle",
-        cell: ({ getValue }) => getValue(),
+        cell: ({ row }) => row.original.data.handle,
       }),
       columnHelper.accessor("created_at", {
         header: "Date",

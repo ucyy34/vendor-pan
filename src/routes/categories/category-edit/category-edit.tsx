@@ -28,7 +28,7 @@ export const CategoryEdit = () => {
           {t("categories.edit.description")}
         </RouteDrawer.Description>
       </RouteDrawer.Header>
-      {ready && <EditCategoryForm category={request.data} />}
+      {ready && <EditCategoryForm category={request.data} requestId={id!} />}
     </RouteDrawer>
   )
 }

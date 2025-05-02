@@ -1,26 +1,25 @@
 import { Heading } from "@medusajs/ui"
-import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import { RouteDrawer } from "../../../components/modals"
-import { useCollection } from "../../../hooks/api/collections"
 import { EditCollectionForm } from "./components/edit-collection-form"
+import { useRequest } from "../../../hooks/api"
 
 export const CollectionEdit = () => {
   const { id } = useParams()
-  const { t } = useTranslation()
-  const { collection, isLoading, isError, error } = useCollection(id!)
+  const { request, isPending, isError, error } = useRequest(id!)
+
+  const ready = !isPending && !!request
 
   if (isError) {
     throw error
   }
-
   return (
     <RouteDrawer>
       <RouteDrawer.Header>
-        <Heading>{t("collections.editCollection")}</Heading>
+        <Heading>Edit Product Collection Request</Heading>
       </RouteDrawer.Header>
-      {!isLoading && collection && (
-        <EditCollectionForm collection={collection} />
+      {ready && (
+        <EditCollectionForm collection={request.data} requestId={id!} />
       )}
     </RouteDrawer>
   )

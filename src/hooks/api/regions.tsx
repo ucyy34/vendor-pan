@@ -6,7 +6,7 @@ import {
   useMutation,
   useQuery,
 } from "@tanstack/react-query"
-import { sdk } from "../../lib/client"
+import { fetchQuery, sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { pricePreferencesQueryKeys } from "./price-preferences"
@@ -52,12 +52,12 @@ export const useRegions = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => null,
+    queryFn: () => fetchQuery("/vendor/regions", { method: "GET", query }),
     queryKey: regionsQueryKeys.list(query),
     ...options,
   })
 
-  return { regions: [], ...rest }
+  return { ...data, ...rest }
 }
 
 export const useCreateRegion = (

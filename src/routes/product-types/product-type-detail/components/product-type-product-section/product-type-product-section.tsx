@@ -23,10 +23,17 @@ export const ProductTypeProductSection = ({
   const { searchParams, raw } = useProductTableQuery({
     pageSize: PAGE_SIZE,
   })
-  const { products, count, isPending, isError, error } = useProducts({
-    ...searchParams,
-    type_id: [productType.id],
-  })
+  const { products, count, isPending, isError, error } = useProducts(
+    {
+      ...searchParams,
+      fields: "+type_id",
+      limit: 9999,
+    },
+    undefined,
+    {
+      typeId: productType.id,
+    }
+  )
 
   const filters = useProductTableFilters(["product_types"])
   const columns = useProductTableColumns()
