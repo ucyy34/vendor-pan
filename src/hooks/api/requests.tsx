@@ -67,7 +67,7 @@ export const useRequests = (
         query: query as { [key: string]: string | number },
       }),
 
-    queryKey: requestsQueryKeys.list(query),
+    queryKey: [REQUESTS_QUERY_KEY, "list"],
     ...options,
   })
 
@@ -85,7 +85,28 @@ export const useCreateVendorRequest = (
       }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: requestsQueryKeys.lists(),
+        queryKey: [REQUESTS_QUERY_KEY, "list"],
+      })
+
+      options?.onSuccess?.(data, variables, context)
+    },
+    ...options,
+  })
+}
+
+export const useUpdateRequest = (
+  id: string,
+  options?: UseMutationOptions<any, FetchError, any>
+) => {
+  return useMutation({
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/requests/${id}`, {
+        method: "POST",
+        body: payload,
+      }),
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [REQUESTS_QUERY_KEY, "list"],
       })
 
       options?.onSuccess?.(data, variables, context)

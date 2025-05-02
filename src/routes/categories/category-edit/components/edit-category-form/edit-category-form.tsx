@@ -10,6 +10,7 @@ import { HandleInput } from "../../../../../components/inputs/handle-input"
 import { RouteDrawer, useRouteModal } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { useUpdateProductCategory } from "../../../../../hooks/api/categories"
+import { useUpdateRequest } from "../../../../../hooks/api"
 
 const EditCategorySchema = z.object({
   name: z.string().min(1),
@@ -21,9 +22,13 @@ const EditCategorySchema = z.object({
 
 type EditCategoryFormProps = {
   category: HttpTypes.AdminProductCategory
+  requestId: string
 }
 
-export const EditCategoryForm = ({ category }: EditCategoryFormProps) => {
+export const EditCategoryForm = ({
+  category,
+  requestId,
+}: EditCategoryFormProps) => {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()
 
@@ -38,15 +43,17 @@ export const EditCategoryForm = ({ category }: EditCategoryFormProps) => {
     resolver: zodResolver(EditCategorySchema),
   })
 
-  const { mutateAsync, isPending } = useUpdateProductCategory(category.id)
+  const { mutateAsync, isPending } = useUpdateRequest(requestId)
   const handleSubmit = form.handleSubmit(async (data) => {
     await mutateAsync(
       {
-        name: data.name,
-        description: data.description,
-        handle: data.handle,
-        is_active: data.status === "active",
-        is_internal: data.visibility === "internal",
+        request: {
+          type: "product_category",
+          data: {
+            name: data.name,
+            handle: data.handle,
+          },
+        },
       },
       {
         onSuccess: () => {

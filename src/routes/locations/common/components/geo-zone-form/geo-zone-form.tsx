@@ -19,12 +19,13 @@ import { _DataTable } from "../../../../../components/table/data-table"
 import { useDataTable } from "../../../../../hooks/use-data-table"
 import {
   StaticCountry,
-  countries as staticCountries,
+  // countries as staticCountries,
 } from "../../../../../lib/data/countries"
 import { useCountries } from "../../../../regions/common/hooks/use-countries"
 import { useCountryTableColumns } from "../../../../regions/common/hooks/use-country-table-columns"
 import { useCountryTableQuery } from "../../../../regions/common/hooks/use-country-table-query"
 import { GEO_ZONE_STACKED_MODAL_ID } from "../../constants"
+import { useRegions } from "../../../../../hooks/api"
 
 const GeoZoneSchema = z.object({
   countries: z.array(
@@ -132,8 +133,13 @@ const AreaStackedModal = <TForm extends UseFormReturn<any>>({
     prefix: PREFIX,
   })
 
+  const { regions } = useRegions()
+
+  const staticCountries =
+    regions?.map((region) => region.countries).flat() || []
+
   const { countries, count } = useCountries({
-    countries: staticCountries.map((c) => ({
+    countries: staticCountries.map((c: any) => ({
       display_name: c.display_name,
       name: c.name,
       iso_2: c.iso_2,

@@ -375,15 +375,17 @@ export const useProducts = (
     return { ...data, ...rest }
   }
 
+  const products = data?.products.filter(
+    (item) =>
+      (item?.categories?.find(({ id }) => id === filter.categoryId) && item) ||
+      (item?.tags?.find(({ id }) => id === filter.tagId) && item) ||
+      (item?.collection?.id === filter.collectionId && item) ||
+      (item?.type_id === filter.typeId && item)
+  )
+
   return {
     ...data,
-    products: data?.products.filter(
-      (item) =>
-        (item?.categories?.find(({ id }) => id === filter.categoryId) &&
-          item) ||
-        (item?.tags?.find(({ id }) => id === filter.tagId) && item) ||
-        (item?.collection?.id === filter.collectionId && item)
-    ),
+    products,
     ...rest,
   }
 }

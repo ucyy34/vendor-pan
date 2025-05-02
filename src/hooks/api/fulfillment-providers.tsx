@@ -1,7 +1,7 @@
 import { FetchError } from "@medusajs/js-sdk"
 import { HttpTypes } from "@medusajs/types"
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query"
-import { fetchQuery, sdk } from "../../lib/client"
+import { fetchQuery } from "../../lib/client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 
 const FULFILLMENT_PROVIDERS_QUERY_KEY = "fulfillment_providers" as const
@@ -54,7 +54,9 @@ export const useFulfillmentProviderOptions = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      sdk.admin.fulfillmentProvider.listFulfillmentOptions(providerId),
+      fetchQuery(`/vendor/fulfillment-providers/${providerId}/options`, {
+        method: "GET",
+      }),
     queryKey: fulfillmentProviderOptionsQueryKeys.list(providerId),
     ...options,
   })

@@ -8,10 +8,11 @@ import { HttpTypes } from "@medusajs/types"
 import { Form } from "../../../../../components/common/form"
 import { RouteDrawer, useRouteModal } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
-import { useUpdateCollection } from "../../../../../hooks/api/collections"
+import { useUpdateRequest } from "../../../../../hooks/api"
 
 type EditCollectionFormProps = {
   collection: HttpTypes.AdminCollection
+  requestId: string
 }
 
 const EditCollectionSchema = zod.object({
@@ -19,7 +20,10 @@ const EditCollectionSchema = zod.object({
   handle: zod.string().min(1),
 })
 
-export const EditCollectionForm = ({ collection }: EditCollectionFormProps) => {
+export const EditCollectionForm = ({
+  collection,
+  requestId,
+}: EditCollectionFormProps) => {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()
 
@@ -31,14 +35,22 @@ export const EditCollectionForm = ({ collection }: EditCollectionFormProps) => {
     resolver: zodResolver(EditCollectionSchema),
   })
 
-  const { mutateAsync, isPending } = useUpdateCollection(collection.id)
+  const { mutateAsync, isPending } = useUpdateRequest(requestId)
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    await mutateAsync(data, {
-      onSuccess: () => {
-        handleSuccess()
+    await mutateAsync(
+      {
+        request: {
+          type: "product_collection",
+          data: { title: data.title, handle: data.handle },
+        },
       },
-    })
+      {
+        onSuccess: () => {
+          handleSuccess()
+        },
+      }
+    )
   })
 
   return (
