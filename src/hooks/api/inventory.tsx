@@ -289,7 +289,6 @@ export const useBatchInventoryItemsLocationLevels = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      // sdk.admin.inventoryItem.batchInventoryItemsLocationLevels(payload),
       fetchQuery("/vendor/inventory-items/location-levels/batch", {
         method: "POST",
         body: payload,
