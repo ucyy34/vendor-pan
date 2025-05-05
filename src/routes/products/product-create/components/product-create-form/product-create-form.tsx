@@ -141,18 +141,18 @@ export const ProductCreateForm = ({
     await mutateAsync(
       {
         ...payload,
-        status: isDraftSubmission ? "draft" : "published",
+        status: isDraftSubmission ? "draft" : "proposed",
         images: uploadedMedia,
         weight: parseInt(payload.weight || "") || undefined,
         length: parseInt(payload.length || "") || undefined,
         height: parseInt(payload.height || "") || undefined,
         width: parseInt(payload.width || "") || undefined,
-        type_id: payload.type_id,
+        type_id: payload.type_id || undefined,
         tags:
           payload.tags?.map((tag) => ({
             id: tag,
           })) || [],
-        collection_id: payload.collection_id,
+        collection_id: payload.collection_id || undefined,
         shipping_profile_id: undefined,
         enable_variants: undefined,
         additional_data: undefined,
@@ -364,7 +364,7 @@ export const ProductCreateForm = ({
               isLoading={isPending}
               className="whitespace-nowrap"
             >
-              {t("actions.saveAsDraft")}
+              Draft
             </Button>
             <PrimaryButton
               tab={tab}
@@ -407,7 +407,7 @@ const PrimaryButton = ({
         size="small"
         isLoading={isLoading}
       >
-        {t("actions.publish")}
+        Request Product
       </Button>
     )
   }
