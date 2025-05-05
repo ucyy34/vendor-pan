@@ -1,6 +1,5 @@
 import { ProductVariantDTO } from "@medusajs/types"
 
-import { InventoryActions } from "./inventory-actions"
 import { PlaceholderCell } from "../../../../../components/table/table-cells/common/placeholder-cell"
 import { createColumnHelper } from "@tanstack/react-table"
 import { useMemo } from "react"
@@ -52,10 +51,6 @@ export const useInventoryTableColumns = () => {
             </div>
           )
         },
-      }),
-      columnHelper.display({
-        id: "actions",
-        cell: ({ row }) => <InventoryActions item={row.original.variant.id} />,
       }),
     ],
     [t]
