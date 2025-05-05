@@ -1,9 +1,7 @@
 import { useTranslation } from "react-i18next"
 
-import { Buildings, Component } from "@medusajs/icons"
 import { Container, Heading } from "@medusajs/ui"
 
-import { ActionMenu } from "../../../../../components/common/action-menu"
 import { _DataTable } from "../../../../../components/table/data-table"
 
 import { LinkButton } from "../../../../../components/common/link-button"
@@ -34,8 +32,6 @@ export function VariantInventorySection({
     getRowId: (row) => row.id,
     pageSize: PAGE_SIZE,
   })
-
-  const hasKit = inventoryItems.length > 1
 
   return (
     <Container className="divide-y p-0">
