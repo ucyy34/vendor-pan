@@ -29,7 +29,7 @@ export function VariantInventorySection({
     columns,
     count: inventoryItems.length,
     enablePagination: true,
-    getRowId: (row) => row.id,
+    getRowId: (row) => row?.variant?.id,
     pageSize: PAGE_SIZE,
   })
 

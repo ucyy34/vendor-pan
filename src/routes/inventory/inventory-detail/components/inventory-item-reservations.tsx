@@ -1,7 +1,7 @@
 import { HttpTypes } from "@medusajs/types"
-import { Button, Container, Heading } from "@medusajs/ui"
+import { Container, Heading } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
+
 import { ReservationItemTable } from "./reservations-table/reservation-list-table"
 
 type InventoryItemLocationLevelsSectionProps = {
@@ -16,11 +16,6 @@ export const InventoryItemReservationsSection = ({
     <Container className="divide-y p-0">
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>{t("reservations.domain")}</Heading>
-        <Button size="small" variant="secondary" asChild>
-          <Link to={`/reservations/create?item_id=${inventoryItem.id}`}>
-            {t("actions.create")}
-          </Link>
-        </Button>
       </div>
       <ReservationItemTable inventoryItem={inventoryItem} />
     </Container>

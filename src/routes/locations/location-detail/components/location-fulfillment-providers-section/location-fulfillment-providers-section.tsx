@@ -6,14 +6,15 @@ import { useTranslation } from "react-i18next"
 import { ActionMenu } from "../../../../../components/common/action-menu"
 import { NoRecords } from "../../../../../components/common/empty-table-content"
 import { IconAvatar } from "../../../../../components/common/icon-avatar"
-import { useFulfillmentProviders } from "../../../../../hooks/api"
 import { formatProvider } from "../../../../../lib/format-provider"
+import { HttpTypes } from "@medusajs/types"
 
-function LocationsFulfillmentProvidersSection() {
+function LocationsFulfillmentProvidersSection({
+  location,
+}: {
+  location: HttpTypes.AdminStockLocation
+}) {
   const { t } = useTranslation()
-  const { fulfillment_providers } = useFulfillmentProviders({
-    fields: "id",
-  })
 
   return (
     <Container className="flex flex-col px-6 py-4">
@@ -37,10 +38,10 @@ function LocationsFulfillmentProvidersSection() {
         />
       </div>
 
-      {fulfillment_providers?.length ? (
+      {location.fulfillment_providers?.length ? (
         <div className="flex flex-col gap-y-4 pt-4">
           <div className="grid grid-cols-[28px_1fr] items-center gap-x-3 gap-y-3">
-            {fulfillment_providers?.map((fulfillmentProvider) => {
+            {location.fulfillment_providers?.map((fulfillmentProvider) => {
               return (
                 <Fragment key={fulfillmentProvider.id}>
                   <IconAvatar>

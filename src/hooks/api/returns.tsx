@@ -8,11 +8,10 @@ import {
 } from "@tanstack/react-query"
 
 import { FetchError } from "@medusajs/js-sdk"
-import { sdk } from "../../lib/client"
+import { fetchQuery, sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { ordersQueryKeys } from "./orders"
-
 const RETURNS_QUERY_KEY = "returns" as const
 export const returnsQueryKeys = queryKeysFactory(RETURNS_QUERY_KEY)
 
@@ -25,7 +24,11 @@ export const useReturn = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.return.retrieve(id, query),
+    queryFn: async () =>
+      fetchQuery(`/vendor/returns/${id}`, {
+        method: "GET",
+        query,
+      }),
     queryKey: returnsQueryKeys.detail(id, query),
     ...options,
   })
@@ -46,7 +49,10 @@ export const useReturns = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.return.list(query),
+    queryFn: async () =>
+      fetchQuery(`/vendor/returns`, {
+        method: "GET",
+      }),
     queryKey: returnsQueryKeys.list(query),
     ...options,
   })

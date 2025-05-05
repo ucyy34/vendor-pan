@@ -272,22 +272,22 @@ export const useGlobalShortcuts = () => {
       type: "settingShortcut",
       to: "/settings/return-reasons",
     },
-    {
-      keys: {
-        Mac: ["G", ",", "J"],
-      },
-      label: t("app.keyboardShortcuts.settings.goToPublishableApiKeys"),
-      type: "settingShortcut",
-      to: "/settings/publishable-api-keys",
-    },
-    {
-      keys: {
-        Mac: ["G", ",", "K"],
-      },
-      label: t("app.keyboardShortcuts.settings.goToSecretApiKeys"),
-      type: "settingShortcut",
-      to: "/settings/secret-api-keys",
-    },
+    // {
+    //   keys: {
+    //     Mac: ["G", ",", "J"],
+    //   },
+    //   label: t("app.keyboardShortcuts.settings.goToPublishableApiKeys"),
+    //   type: "settingShortcut",
+    //   to: "/settings/publishable-api-keys",
+    // },
+    // {
+    //   keys: {
+    //     Mac: ["G", ",", "K"],
+    //   },
+    //   label: t("app.keyboardShortcuts.settings.goToSecretApiKeys"),
+    //   type: "settingShortcut",
+    //   to: "/settings/secret-api-keys",
+    // },
     {
       keys: {
         Mac: ["G", ",", "W"],

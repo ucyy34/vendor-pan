@@ -4,47 +4,47 @@ import { Container, StatusBadge, Text, toast, usePrompt } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 
 import { ActionMenu } from "../../../../../components/common/action-menu"
-import { BadgeListSummary } from "../../../../../components/common/badge-list-summary"
+// import { BadgeListSummary } from "../../../../../components/common/badge-list-summary"
 import { LinkButton } from "../../../../../components/common/link-button"
 import { useDeleteStockLocation } from "../../../../../hooks/api/stock-locations"
 import { getFormattedAddress } from "../../../../../lib/addresses"
 import { FulfillmentSetType } from "../../../common/constants"
 
-type SalesChannelsProps = {
-  salesChannels?: HttpTypes.AdminSalesChannel[] | null
-}
+// type SalesChannelsProps = {
+//   salesChannels?: HttpTypes.AdminSalesChannel[] | null
+// }
 
-function SalesChannels(props: SalesChannelsProps) {
-  const { t } = useTranslation()
-  const { salesChannels } = props
+// function SalesChannels(props: SalesChannelsProps) {
+//   const { t } = useTranslation()
+//   const { salesChannels } = props
 
-  return (
-    <div className="flex flex-col px-6 py-4">
-      <div className="flex items-center justify-between">
-        <Text
-          size="small"
-          weight="plus"
-          className="text-ui-fg-subtle flex-1"
-          as="div"
-        >
-          {t(`stockLocations.salesChannels.label`)}
-        </Text>
-        <div className="flex-1 text-left">
-          {salesChannels?.length ? (
-            <BadgeListSummary
-              rounded
-              inline
-              n={3}
-              list={salesChannels.map((s) => s.name)}
-            />
-          ) : (
-            "-"
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
+//   return (
+//     <div className="flex flex-col px-6 py-4">
+//       <div className="flex items-center justify-between">
+//         <Text
+//           size="small"
+//           weight="plus"
+//           className="text-ui-fg-subtle flex-1"
+//           as="div"
+//         >
+//           {t(`stockLocations.salesChannels.label`)}
+//         </Text>
+//         <div className="flex-1 text-left">
+//           {salesChannels?.length ? (
+//             <BadgeListSummary
+//               rounded
+//               inline
+//               n={3}
+//               list={salesChannels.map((s) => s.name)}
+//             />
+//           ) : (
+//             "-"
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
 type FulfillmentSetProps = {
   fulfillmentSet?: HttpTypes.AdminFulfillmentSet
@@ -167,7 +167,7 @@ function LocationListItem(props: LocationProps) {
         </div>
       </div>
 
-      <SalesChannels salesChannels={location.sales_channels} />
+      {/* <SalesChannels salesChannels={location.sales_channels} /> */}
 
       <FulfillmentSet
         type={FulfillmentSetType.Pickup}

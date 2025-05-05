@@ -152,14 +152,6 @@ function ShippingOption({
           {formatProvider(option.provider_id)})
         </Text>
       </div>
-      <Badge
-        className="mr-4"
-        color={isStoreOption ? "grey" : "purple"}
-        size="2xsmall"
-        rounded="full"
-      >
-        {isStoreOption ? t("general.store") : t("general.admin")}
-      </Badge>
       <ActionMenu
         groups={[
           {

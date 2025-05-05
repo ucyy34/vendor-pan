@@ -55,7 +55,7 @@ const getDefaultValues = (
 export const EditReservationForm = ({
   reservation,
   item,
-  locations,
+  locations = [],
 }: EditReservationFormProps) => {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()

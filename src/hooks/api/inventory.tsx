@@ -200,12 +200,15 @@ export const useInventoryItemLevels = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      fetchQuery(`/vendor/inventory-items/${inventoryItemId}/location-levels`, {
-        method: "GET",
-        query: query as {
-          [key: string]: string | number
-        },
-      }),
+      fetchQuery(
+        `/vendor/inventory-items/${inventoryItemId!}/location-levels`,
+        {
+          method: "GET",
+          query: query as {
+            [key: string]: string | number
+          },
+        }
+      ),
     queryKey: inventoryItemLevelsQueryKeys.detail(inventoryItemId),
     ...options,
   })

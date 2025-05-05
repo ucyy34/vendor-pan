@@ -54,7 +54,8 @@ export const useStockLocations = (
       QueryKey
     >,
     "queryKey" | "queryFn"
-  >
+  >,
+  filters?: { id?: string[] }
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -65,7 +66,16 @@ export const useStockLocations = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  if (!filters) {
+    return { ...data, ...rest }
+  }
+
+  const stock_locations = data?.stock_locations.filter((location) =>
+    filters.id?.includes(location.id)
+  )
+
+  const count = stock_locations?.length || 0
+  return { count, stock_locations, ...rest }
 }
 
 export const useCreateStockLocation = (
