@@ -1,25 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
+import { fetchQuery } from "../../lib/client"
 
 export const useConversationIds = (sellerId: string) => {
-  //   const { data, ...rest } = useQuery({
-  //     queryKey: ["conversationIds"],
-  //     queryFn: async () =>
-  //       await fetch(
-  //         `https://api.talkjs.com/v1/${process.env.VITE_TALK_JS_APP_ID}/conversations`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${process.env.VITE_TALKJS_SECRET_KEY}`,
-  //           },
-  //         }
-  //       ),
-  //   })
+  const { data, ...rest } = useQuery({
+    queryKey: ["conversations", sellerId],
+    queryFn: async () => await fetchQuery(`/vendor/talkjs`, { method: "GET" }),
+  })
 
-  //   const allConversations = data?.data
-
-  //   const sellerConversations = allConversations.filter((conv: any) =>
-  //     conv.participants.includes(sellerId)
-  //   )
-
-  return { conversationIds: [] }
-  //   return { conversationIds: [], ...rest }
+  return { ...data, ...rest }
 }
