@@ -62,8 +62,8 @@ export const ProductEditVariantForm = ({
       ean: variant?.ean || "",
       upc: variant?.upc || "",
       barcode: variant?.barcode || "",
-      manage_inventory: variant?.manage_inventory || false,
-      allow_backorder: variant?.allow_backorder || false,
+      manage_inventory: true,
+      allow_backorder: true,
       weight: variant?.weight || "",
       height: variant?.height || "",
       width: variant?.width || "",
@@ -256,62 +256,6 @@ export const ProductEditVariantForm = ({
                 }}
               />
             </div>
-            <Form.Field
-              control={form.control}
-              name="manage_inventory"
-              render={({ field: { value, onChange, ...field } }) => {
-                return (
-                  <Form.Item>
-                    <div className="flex flex-col gap-y-1">
-                      <div className="flex items-center justify-between">
-                        <Form.Label>
-                          {t("products.variant.inventory.manageInventoryLabel")}
-                        </Form.Label>
-                        <Form.Control>
-                          <Switch
-                            checked={value}
-                            onCheckedChange={(checked) => onChange(!!checked)}
-                            {...field}
-                          />
-                        </Form.Control>
-                      </div>
-                      <Form.Hint>
-                        {t("products.variant.inventory.manageInventoryHint")}
-                      </Form.Hint>
-                    </div>
-                    <Form.ErrorMessage />
-                  </Form.Item>
-                )
-              }}
-            />
-            <Form.Field
-              control={form.control}
-              name="allow_backorder"
-              render={({ field: { value, onChange, ...field } }) => {
-                return (
-                  <Form.Item>
-                    <div className="flex flex-col gap-y-1">
-                      <div className="flex items-center justify-between">
-                        <Form.Label>
-                          {t("products.variant.inventory.allowBackordersLabel")}
-                        </Form.Label>
-                        <Form.Control>
-                          <Switch
-                            checked={value}
-                            onCheckedChange={(checked) => onChange(!!checked)}
-                            {...field}
-                          />
-                        </Form.Control>
-                      </div>
-                      <Form.Hint>
-                        {t("products.variant.inventory.allowBackordersHint")}
-                      </Form.Hint>
-                    </div>
-                    <Form.ErrorMessage />
-                  </Form.Item>
-                )
-              }}
-            />
           </div>
           <Divider />
           <div className="flex flex-col gap-y-4">
