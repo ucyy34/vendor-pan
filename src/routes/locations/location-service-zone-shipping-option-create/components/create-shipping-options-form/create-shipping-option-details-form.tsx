@@ -46,7 +46,7 @@ export const CreateShippingOptionDetailsForm = ({
       }),
     queryKey: ["shipping_profiles"],
     getOptions: (data) =>
-      data.shipping_profiles.map((profile: any) => ({
+      (data.shipping_profiles || []).map((profile: any) => ({
         label: profile.shipping_profile.name,
         value: profile.shipping_profile.id,
       })),
@@ -265,7 +265,7 @@ export const CreateShippingOptionDetailsForm = ({
           />
         </div> */}
 
-        <Divider />
+        {/* <Divider />
         <SwitchBox
           control={form.control}
           name="enabled_in_store"
@@ -273,7 +273,7 @@ export const CreateShippingOptionDetailsForm = ({
           description={t(
             "stockLocations.shippingOptions.fields.enableInStore.hint"
           )}
-        />
+        /> */}
       </div>
     </div>
   )

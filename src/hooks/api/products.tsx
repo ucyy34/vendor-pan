@@ -383,8 +383,11 @@ export const useProducts = (
       (item?.type_id === filter.typeId && item)
   )
 
+  const count = products?.length || 0
+
   return {
     ...data,
+    count,
     products,
     ...rest,
   }
