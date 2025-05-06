@@ -46,7 +46,7 @@ export function VariantInventorySection({
         columns={columns}
         pageSize={PAGE_SIZE}
         count={inventoryItems.length}
-        navigateTo={(row) => `/inventory/${row.id}`}
+        navigateTo={(row) => `/inventory/${row.original.id}`}
       />
     </Container>
   )

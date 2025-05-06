@@ -9,7 +9,7 @@ import { z } from "zod"
 import { RouteDrawer, useRouteModal } from "../../../../../../components/modals"
 import { useBatchInventoryItemLocationLevels } from "../../../../../../hooks/api/inventory"
 
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { KeyboundForm } from "../../../../../../components/utilities/keybound-form"
 import { LocationItem } from "./location-item"
 
@@ -22,7 +22,7 @@ const EditInventoryItemAttributesSchema = z.object({
   locations: z.array(
     z.object({
       id: z.string(),
-      location_id: z.string(),
+      location_id: z.string().optional(),
       selected: z.boolean(),
     })
   ),

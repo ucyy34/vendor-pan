@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HttpTypes } from "@medusajs/types"
-import { Button, Divider, Input, RadioGroup, toast } from "@medusajs/ui"
+import { Button, Input, RadioGroup, toast } from "@medusajs/ui"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import * as zod from "zod"
 
 import { Form } from "../../../../../components/common/form"
-import { SwitchBox } from "../../../../../components/common/switch-box"
 import { Combobox } from "../../../../../components/inputs/combobox"
 import { RouteDrawer, useRouteModal } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
@@ -191,7 +190,7 @@ export const EditShippingOptionForm = ({
                 />
               </div>
 
-              <Divider />
+              {/* <Divider />
               <SwitchBox
                 control={form.control}
                 name="enabled_in_store"
@@ -201,7 +200,7 @@ export const EditShippingOptionForm = ({
                 description={t(
                   "stockLocations.shippingOptions.fields.enableInStore.hint"
                 )}
-              />
+              /> */}
             </div>
           </div>
         </RouteDrawer.Body>
