@@ -1,13 +1,15 @@
 import { Heading } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import { RouteDrawer } from "../../../components/modals"
 import { useProduct } from "../../../hooks/api/products"
 import { ProductEditVariantForm } from "./components/product-edit-variant-form"
 
 export const ProductVariantEdit = () => {
   const { t } = useTranslation()
-  const { id, variant_id } = useParams()
+  const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const variant_id = searchParams.get("variant_id")
 
   const {
     product,
@@ -21,7 +23,6 @@ export const ProductVariantEdit = () => {
   const variant = product?.variants?.find(
     (variant) => variant.id === variant_id
   )
-  console.log({ product, variant_id })
 
   const ready = !isProductPending && !!product
 
