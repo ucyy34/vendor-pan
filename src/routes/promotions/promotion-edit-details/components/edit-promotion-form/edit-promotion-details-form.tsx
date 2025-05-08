@@ -22,7 +22,7 @@ const EditPromotionSchema = zod.object({
   status: zod.enum(["active", "inactive", "draft"]),
   value_type: zod.enum(["fixed", "percentage"]),
   value: zod.number(),
-  allocation: zod.enum(["each", "across"]),
+  // allocation: zod.enum(["each", "across"]),
 })
 
 export const EditPromotionDetailsForm = ({
@@ -37,7 +37,7 @@ export const EditPromotionDetailsForm = ({
       code: promotion.code,
       status: promotion.status,
       value: promotion.application_method!.value,
-      allocation: promotion.application_method!.allocation,
+      // allocation: promotion.application_method!.allocation,
       value_type: promotion.application_method!.type,
     },
     resolver: zodResolver(EditPromotionSchema),
@@ -61,7 +61,7 @@ export const EditPromotionDetailsForm = ({
         application_method: {
           value: data.value,
           type: data.value_type as any,
-          allocation: data.allocation as any,
+          // allocation: data.allocation as any,
         },
       },
       {
@@ -278,7 +278,7 @@ export const EditPromotionDetailsForm = ({
               }}
             />
 
-            <Form.Field
+            {/* <Form.Field
               control={form.control}
               name="allocation"
               render={({ field }) => {
@@ -312,7 +312,7 @@ export const EditPromotionDetailsForm = ({
                   </Form.Item>
                 )
               }}
-            />
+            /> */}
           </div>
         </RouteDrawer.Body>
 

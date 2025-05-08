@@ -71,6 +71,13 @@ export const usePromotionRules = (
     "queryFn" | "queryKey"
   >
 ) => {
+  if (!id) {
+    return {
+      rules: [],
+      isLoading: false,
+    }
+  }
+
   const { data, ...rest } = useQuery({
     queryKey: promotionsQueryKeys.listRules(id, ruleType, query),
     queryFn: async () =>

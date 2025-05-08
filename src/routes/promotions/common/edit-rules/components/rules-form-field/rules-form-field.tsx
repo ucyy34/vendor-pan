@@ -69,7 +69,7 @@ export const RulesFormField = ({
     : {}
 
   const { rules, isLoading } = usePromotionRules(
-    promotion?.id || null,
+    promotion?.id!,
     ruleType,
     query,
     {

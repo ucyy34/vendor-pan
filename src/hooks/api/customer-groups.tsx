@@ -102,7 +102,11 @@ export const useUpdateCustomerGroup = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.customerGroup.update(id, payload),
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/customer-groups/${id}`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.lists(),
@@ -126,7 +130,10 @@ export const useDeleteCustomerGroup = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.customerGroup.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/customer-groups/${id}`, {
+        method: "DELETE",
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.lists(),
