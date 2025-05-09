@@ -92,6 +92,7 @@ export const ProductCreateForm = ({
 
   const handleSubmit = form.handleSubmit(async (values, e) => {
     let isDraftSubmission = false
+
     if (e?.nativeEvent instanceof SubmitEvent) {
       const submitter = e?.nativeEvent?.submitter as HTMLButtonElement
       isDraftSubmission = submitter.dataset.name === SAVE_DRAFT_BUTTON
@@ -168,9 +169,9 @@ export const ProductCreateForm = ({
           is_default: undefined,
           inventory_kit: undefined,
           inventory: undefined,
-          prices: Object.keys(variant.prices).map((key) => ({
+          prices: Object.keys(variant.prices || {}).map((key) => ({
             currency_code: key,
-            amount: parseFloat(variant.prices[key]),
+            amount: parseFloat(variant.prices?.[key] as string),
           })),
         })),
       },

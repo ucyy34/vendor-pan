@@ -32,6 +32,7 @@ export const useCollection = (
     queryFn: async () =>
       await fetchQuery(`/vendor/product-collections/${id}`, {
         method: "GET",
+        query: { fields: "*products" },
       }),
     ...options,
   })
@@ -53,7 +54,8 @@ export const useCollections = (
       QueryKey
     >,
     "queryFn" | "queryKey"
-  >
+  >,
+  id?: string
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: collectionsQueryKeys.list(query),
@@ -65,6 +67,15 @@ export const useCollections = (
     ...options,
   })
 
+  if (id) {
+    return {
+      ...rest,
+      ...data,
+      product_collections: data?.product_collections.find(
+        (item) => item.id === id
+      ),
+    }
+  }
   return { ...data, ...rest }
 }
 

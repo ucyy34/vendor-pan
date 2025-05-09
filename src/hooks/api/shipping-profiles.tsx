@@ -11,6 +11,7 @@ import { HttpTypes } from "@medusajs/types"
 import { fetchQuery } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
+import convertShippingProfileNames from "../../lib/convert-shipping-profile-names"
 
 const SHIPPING_PROFILE_QUERY_KEY = "shipping_profile" as const
 export const shippingProfileQueryKeys = queryKeysFactory(
@@ -64,7 +65,16 @@ export const useShippingProfile = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  return {
+    ...data,
+    shipping_profile: {
+      ...data?.shipping_profile,
+      name: data?.shipping_profile.name.includes(":")
+        ? data?.shipping_profile.name.split(":")[1]
+        : data?.shipping_profile.name,
+    },
+    ...rest,
+  }
 }
 
 export const useShippingProfiles = (
@@ -88,7 +98,11 @@ export const useShippingProfiles = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  const shipping_profiles = data?.shipping_profiles.map((sp) =>
+    convertShippingProfileNames(sp)
+  )
+
+  return { ...data, shipping_profiles, ...rest }
 }
 
 export const useUpdateShippingProfile = (

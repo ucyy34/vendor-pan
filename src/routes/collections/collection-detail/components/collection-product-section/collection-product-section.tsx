@@ -1,7 +1,6 @@
 import { PencilSquare, Trash } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { Checkbox, Container, Heading, toast, usePrompt } from "@medusajs/ui"
-import { keepPreviousData } from "@tanstack/react-query"
 import { createColumnHelper } from "@tanstack/react-table"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
@@ -30,13 +29,13 @@ export const CollectionProductSection = ({
   })
   const { products, count, isLoading, isError, error } = useProducts(
     {
-      limit: PAGE_SIZE,
       ...searchParams,
+      limit: 9999,
+      fields: "+thumbnail",
     },
+    undefined,
     {
-      placeholderData: keepPreviousData,
-    },
-    {
+      ...searchParams,
       collectionId: collection.id!,
     }
   )

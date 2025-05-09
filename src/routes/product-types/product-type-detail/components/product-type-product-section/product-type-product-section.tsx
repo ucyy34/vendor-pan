@@ -31,6 +31,7 @@ export const ProductTypeProductSection = ({
     },
     undefined,
     {
+      ...searchParams,
       typeId: productType.id,
     }
   )

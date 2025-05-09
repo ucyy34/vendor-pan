@@ -1,5 +1,5 @@
 import { FetchError } from "@medusajs/js-sdk"
-import { HttpTypes, LinkMethodRequest } from "@medusajs/types"
+import { AdminPromotion, HttpTypes, LinkMethodRequest } from "@medusajs/types"
 import {
   QueryKey,
   UseMutationOptions,
@@ -22,7 +22,7 @@ export const useCampaign = (
     UseQueryOptions<
       HttpTypes.AdminCampaignResponse,
       FetchError,
-      HttpTypes.AdminCampaignResponse,
+      HttpTypes.AdminCampaignResponse & { promotions?: AdminPromotion[] },
       QueryKey
     >,
     "queryFn" | "queryKey"

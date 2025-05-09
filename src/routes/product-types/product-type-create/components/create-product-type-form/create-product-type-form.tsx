@@ -62,14 +62,14 @@ export const CreateProductTypeForm = () => {
               type="submit"
               isLoading={isPending}
             >
-              {t("actions.create")}
+              Request
             </Button>
           </div>
         </RouteFocusModal.Header>
         <RouteFocusModal.Body className="flex flex-col items-center overflow-y-auto p-16">
           <div className="flex w-full max-w-[720px] flex-col gap-y-8">
             <div>
-              <Heading>{t("productTypes.create.header")}</Heading>
+              <Heading>Request Product Type</Heading>
               <Text size="small" className="text-ui-fg-subtle">
                 {t("productTypes.create.hint")}
               </Text>

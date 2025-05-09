@@ -33,6 +33,7 @@ export const ProductTagProductSection = ({
     },
     undefined,
     {
+      ...searchParams,
       tagId: productTag.id!,
     }
   )
