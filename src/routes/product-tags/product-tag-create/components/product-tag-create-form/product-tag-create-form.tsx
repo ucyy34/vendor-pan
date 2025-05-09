@@ -9,7 +9,7 @@ import {
   useRouteModal,
 } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
-import { useCreateProductTag } from "../../../../../hooks/api"
+import { useCreateVendorRequest } from "../../../../../hooks/api"
 
 const ProductTagCreateSchema = z.object({
   value: z.string().min(1),
@@ -26,18 +26,26 @@ export const ProductTagCreateForm = () => {
     resolver: zodResolver(ProductTagCreateSchema),
   })
 
-  const { mutateAsync, isPending } = useCreateProductTag()
+  const { mutateAsync, isPending } = useCreateVendorRequest()
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    await mutateAsync(data, {
-      onSuccess: () => {
-        toast.success("Product Tag Requested")
-        handleSuccess()
+    await mutateAsync(
+      {
+        request: {
+          type: "product_tag",
+          data,
+        },
       },
-      onError: (error) => {
-        toast.error(error.message)
-      },
-    })
+      {
+        onSuccess: () => {
+          toast.success("Product Tag Requested")
+          handleSuccess()
+        },
+        onError: (error) => {
+          toast.error(error.message)
+        },
+      }
+    )
   })
 
   return (
@@ -51,7 +59,7 @@ export const ProductTagCreateForm = () => {
           <div className="flex w-full max-w-[720px] flex-col gap-y-8">
             <div className="flex flex-col gap-y-1">
               <RouteFocusModal.Title asChild>
-                <Heading>{t("productTags.create.header")}</Heading>
+                <Heading>Request Product Tag</Heading>
               </RouteFocusModal.Title>
               <RouteFocusModal.Description asChild>
                 <Text size="small" className="text-ui-fg-subtle">

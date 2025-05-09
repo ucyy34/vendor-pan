@@ -43,11 +43,13 @@ export const CategoryProductSection = ({
     {
       ...searchParams,
       fields: "*categories.id",
+      limit: 9999,
     },
     {
       placeholderData: keepPreviousData,
     },
     {
+      ...searchParams,
       categoryId: category.id,
     }
   )

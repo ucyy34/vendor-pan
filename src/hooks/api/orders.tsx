@@ -209,7 +209,7 @@ export const useCreateOrderFulfillment = (
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminCreateOrderFulfillment) =>
-      fetchQuery(`/vendor/orders/${orderId}/fulfillment`, {
+      fetchQuery(`/vendor/orders/${orderId}/fulfillments`, {
         method: "POST",
         body: payload,
       }),

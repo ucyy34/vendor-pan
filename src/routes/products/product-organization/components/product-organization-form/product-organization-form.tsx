@@ -98,7 +98,7 @@ export const ProductOrganizationForm = ({
     defaultValues: {
       type_id: product.type_id ?? "",
       collection_id: product.collection_id ?? "",
-      category_ids: product.categories?.[0].id || "",
+      category_ids: product.categories?.[0]?.id || "",
       tag_ids: product.tags?.map((t) => t.id) || [],
     },
     schema: ProductOrganizationSchema,

@@ -22,7 +22,7 @@ export const CollectionListTable = () => {
     useCollections(
       {
         ...searchParams,
-        fields: "+products.id",
+        fields: "*products",
       },
       {
         placeholderData: keepPreviousData,
