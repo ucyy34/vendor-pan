@@ -35,8 +35,6 @@ export const CampaignPromotionSection = ({
   const promotions = campaign.promotions
   const count = promotions?.length ?? 0
 
-  console.log({ promotions })
-
   const { table } = useDataTable({
     data: promotions ?? [],
     columns,
