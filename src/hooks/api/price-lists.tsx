@@ -42,6 +42,32 @@ export const usePriceList = (
   return { ...data, ...rest }
 }
 
+export const usePriceListProducts = (
+  id: string,
+  query?: Record<string, string | number>,
+  options?: Omit<
+    UseQueryOptions<
+      HttpTypes.AdminPriceListResponse,
+      FetchError,
+      any,
+      QueryKey
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { data, ...rest } = useQuery({
+    queryFn: () =>
+      fetchQuery(`/vendor/price-lists/${id}/products`, {
+        method: "GET",
+        query,
+      }),
+    queryKey: [PRICE_LISTS_QUERY_KEY, id, "products"],
+    ...options,
+  })
+
+  return { ...data, ...rest }
+}
+
 export const usePriceLists = (
   query?: HttpTypes.AdminPriceListListParams,
   options?: Omit<
@@ -182,11 +208,15 @@ export const usePriceListLinkProducts = (
   options?: UseMutationOptions<
     HttpTypes.AdminPriceListResponse,
     FetchError,
-    HttpTypes.AdminLinkPriceListProducts
+    HttpTypes.AdminLinkPriceListProducts & { create?: any[]; update?: any[] }
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.priceList.linkProducts(id, payload),
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/price-lists/${id}/products`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: priceListsQueryKeys.detail(id),

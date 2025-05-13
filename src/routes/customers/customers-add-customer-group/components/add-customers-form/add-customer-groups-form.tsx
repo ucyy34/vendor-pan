@@ -87,6 +87,8 @@ export const AddCustomerGroupsForm = ({
 
     const ids = Object.keys(state)
 
+    console.log({ ids, state })
+
     setValue("customer_group_ids", ids, {
       shouldDirty: true,
       shouldTouch: true,
@@ -105,7 +107,7 @@ export const AddCustomerGroupsForm = ({
     enableRowSelection: (row) => {
       return !row.original.customers?.map((c) => c.id).includes(customerId)
     },
-    getRowId: (row) => row.id,
+    getRowId: (row) => row.customer_group_id,
     pageSize: PAGE_SIZE,
     rowSelection: {
       state: rowSelection,
@@ -116,19 +118,15 @@ export const AddCustomerGroupsForm = ({
   const handleSubmit = form.handleSubmit(async (data) => {
     setIsPending(true)
     try {
-      await batchCustomerCustomerGroups({ add: data.customer_group_ids })
+      await batchCustomerCustomerGroups({
+        add: data.customer_group_ids,
+        remove: [],
+      })
 
-      toast.success(
-        t("customers.groups.add.success", {
-          groups: data.customer_group_ids
-            .map((id) => customer_groups?.find((g) => g.id === id))
-            .filter(Boolean)
-            .map((cg) => cg?.name),
-        })
-      )
+      toast.success("Customer groups added successfully")
 
       handleSuccess(`/customers/${customerId}`)
-    } catch (e) {
+    } catch (e: any) {
       toast.error(e.message)
     } finally {
       setIsPending(false)

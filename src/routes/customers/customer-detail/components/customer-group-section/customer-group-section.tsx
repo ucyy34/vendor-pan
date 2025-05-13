@@ -58,10 +58,6 @@ export const CustomerGroupSection = ({
       }
     )
 
-  const filteredList = customer_groups?.filter(
-    (group) => group.customers && group.customers.length > 0
-  )
-
   const { mutateAsync: batchCustomerCustomerGroups } =
     useBatchCustomerCustomerGroups(customer.id)
 
@@ -69,10 +65,10 @@ export const CustomerGroupSection = ({
   const columns = useColumns(customer.id)
 
   const { table } = useDataTable({
-    data: filteredList ?? [],
+    data: customer_groups ?? [],
     columns,
     count,
-    getRowId: (row) => row.id,
+    getRowId: (row) => row.customer_group_id,
     enablePagination: true,
     enableRowSelection: true,
     pageSize: PAGE_SIZE,
@@ -89,7 +85,7 @@ export const CustomerGroupSection = ({
     const res = await prompt({
       title: t("general.areYouSure"),
       description: t("customers.groups.removeMany", {
-        groups: filteredList
+        groups: customer_groups
           ?.filter((g) => customerGroupIds.includes(g.id))
           .map((g) => g.name)
           .join(","),
@@ -108,7 +104,7 @@ export const CustomerGroupSection = ({
         onSuccess: () => {
           toast.success(
             t("customers.groups.removed.success", {
-              groups: filteredList!
+              groups: customer_groups!
                 .filter((cg) => customerGroupIds.includes(cg.id))
                 .map((cg) => cg?.name),
             })
@@ -183,7 +179,7 @@ const CustomerGroupRowActions = ({
   const prompt = usePrompt()
   const { t } = useTranslation()
 
-  const { mutateAsync } = useRemoveCustomersFromGroup(group.id)
+  const { mutateAsync } = useRemoveCustomersFromGroup(group.customer_group_id)
 
   const onRemove = async () => {
     const res = await prompt({
