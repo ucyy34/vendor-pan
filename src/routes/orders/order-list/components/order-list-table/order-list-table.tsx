@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { _DataTable } from "../../../../../components/table/data-table/data-table"
 import { useOrders } from "../../../../../hooks/api/orders"
 import { useOrderTableColumns } from "../../../../../hooks/table/columns/use-order-table-columns"
-import { useOrderTableFilters } from "../../../../../hooks/table/filters/use-order-table-filters"
 import { useOrderTableQuery } from "../../../../../hooks/table/query/use-order-table-query"
 import { useDataTable } from "../../../../../hooks/use-data-table"
 import { useSearchParams } from "react-router-dom"
@@ -33,7 +32,6 @@ export const OrderListTable = () => {
     }
   )
 
-  const filters = useOrderTableFilters()
   const columns = useOrderTableColumns({})
 
   const { table } = useDataTable({
@@ -58,7 +56,6 @@ export const OrderListTable = () => {
         table={table}
         pagination
         navigateTo={(row) => `/orders/${row.original.id}`}
-        filters={filters}
         count={count}
         search
         isLoading={isLoading}

@@ -270,7 +270,13 @@ export const useCreateOrderShipment = (
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminCreateOrderShipment) =>
-      sdk.admin.order.createShipment(orderId, fulfillmentId, payload),
+      fetchQuery(
+        `/vendor/orders/${orderId}/fulfillments/${fulfillmentId}/shipments`,
+        {
+          method: "POST",
+          body: payload,
+        }
+      ),
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: ordersQueryKeys.all,
@@ -296,7 +302,13 @@ export const useMarkOrderFulfillmentAsDelivered = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.order.markAsDelivered(orderId, fulfillmentId),
+    mutationFn: () =>
+      fetchQuery(
+        `/vendor/orders/${orderId}/fulfillments/${fulfillmentId}/mark-as-delivered`,
+        {
+          method: "POST",
+        }
+      ),
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: ordersQueryKeys.all,
