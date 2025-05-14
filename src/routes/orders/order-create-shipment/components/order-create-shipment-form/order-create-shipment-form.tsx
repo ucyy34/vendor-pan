@@ -31,9 +31,7 @@ export function OrderCreateShipmentForm({
     useCreateOrderShipment(order.id, fulfillment?.id)
 
   const form = useForm<zod.infer<typeof CreateShipmentSchema>>({
-    defaultValues: {
-      send_notification: !order.no_notification,
-    },
+    defaultValues: {},
     resolver: zodResolver(CreateShipmentSchema),
   })
 
@@ -56,7 +54,6 @@ export function OrderCreateShipmentForm({
             tracking_url: "#",
             label_url: "#",
           })),
-        no_notification: !data.send_notification,
       },
       {
         onSuccess: () => {
@@ -128,37 +125,6 @@ export function OrderCreateShipmentForm({
                   >
                     {t("orders.shipment.addTracking")}
                   </Button>
-                </div>
-
-                <div className="mt-8 pt-8 ">
-                  <Form.Field
-                    control={form.control}
-                    name="send_notification"
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Form.Item>
-                          <div className="flex items-center justify-between">
-                            <Form.Label>
-                              {t("orders.shipment.sendNotification")}
-                            </Form.Label>
-                            <Form.Control>
-                              <Form.Control>
-                                <Switch
-                                  checked={!!value}
-                                  onCheckedChange={onChange}
-                                  {...field}
-                                />
-                              </Form.Control>
-                            </Form.Control>
-                          </div>
-                          <Form.Hint className="!mt-1">
-                            {t("orders.shipment.sendNotificationHint")}
-                          </Form.Hint>
-                          <Form.ErrorMessage />
-                        </Form.Item>
-                      )
-                    }}
-                  />
                 </div>
               </div>
             </div>
