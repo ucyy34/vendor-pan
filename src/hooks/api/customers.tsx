@@ -147,7 +147,10 @@ export const useBatchCustomerCustomerGroups = (
 ) => {
   return useMutation({
     mutationFn: (payload) =>
-      sdk.admin.customer.batchCustomerGroups(id, payload),
+      fetchQuery(`/vendor/customers/${id}/customer-groups`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.details(),

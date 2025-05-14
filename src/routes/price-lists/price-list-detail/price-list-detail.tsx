@@ -18,9 +18,7 @@ export const PriceListDetails = () => {
 
   const { getWidgets } = useDashboardExtension()
 
-  const list = price_list[0]
-
-  if (isLoading || !list) {
+  if (isLoading || !price_list) {
     return (
       <TwoColumnPageSkeleton mainSections={2} sidebarSections={1} showJSON />
     )
@@ -41,11 +39,11 @@ export const PriceListDetails = () => {
       data={price_list}
     >
       <TwoColumnPage.Main>
-        <PriceListGeneralSection priceList={list} />
-        <PriceListProductSection priceList={list} />
+        <PriceListGeneralSection priceList={price_list} />
+        <PriceListProductSection priceList={price_list} />
       </TwoColumnPage.Main>
       <TwoColumnPage.Sidebar>
-        <PriceListConfigurationSection priceList={list} />
+        <PriceListConfigurationSection priceList={price_list} />
       </TwoColumnPage.Sidebar>
     </TwoColumnPage>
   )

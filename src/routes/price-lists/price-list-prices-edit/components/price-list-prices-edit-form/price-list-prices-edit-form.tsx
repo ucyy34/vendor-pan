@@ -12,7 +12,7 @@ import {
   useRouteModal,
 } from "../../../../../components/modals"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
-import { useBatchPriceListPrices } from "../../../../../hooks/api/price-lists"
+import { usePriceListLinkProducts } from "../../../../../hooks/api/price-lists"
 import { castNumber } from "../../../../../lib/cast-number"
 import { usePriceListGridColumns } from "../../../common/hooks/use-price-list-grid-columns"
 import {
@@ -52,7 +52,7 @@ export const PriceListPricesEditForm = ({
     resolver: zodResolver(PricingProductPricesSchema),
   })
 
-  const { mutateAsync, isPending } = useBatchPriceListPrices(priceList.id)
+  const { mutateAsync, isPending } = usePriceListLinkProducts(priceList.id)
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { products } = values
@@ -65,7 +65,7 @@ export const PriceListPricesEditForm = ({
 
     mutateAsync(
       {
-        delete: pricesToDelete,
+        remove: pricesToDelete,
         update: pricesToUpdate,
         create: pricesToCreate,
       },
@@ -131,10 +131,14 @@ function initRecord(
   const variantPrices = priceList.prices?.reduce((variants, price) => {
     const variantObject = variants[price.variant_id] || {}
 
-    const isRegionPrice = !!price.rules?.region_id
+    const isRegionPrice = !!price.price_rules.find(
+      (item) => item.attribute === "region_id"
+    )
 
     if (isRegionPrice) {
-      const regionId = price.rules.region_id as string
+      const regionId = price.price_rules.find(
+        (item) => item.attribute === "region_id"
+      ).value as string
 
       variantObject.region_prices = {
         ...variantObject.region_prices,
@@ -153,7 +157,10 @@ function initRecord(
       }
     }
 
-    variants[price.variant_id] = variantObject
+    const variantId = price.price_set.variant.id
+
+    variants[variantId] = variantObject
+
     return variants
   }, {} as PriceListUpdateProductVariantsSchema)
 
@@ -161,7 +168,7 @@ function initRecord(
     record[product.id] = {
       variants:
         product.variants?.reduce((variants, variant) => {
-          const prices = variantPrices[variant.id] || {}
+          const prices = variantPrices?.[variant.id] || {}
           variants[variant.id] = prices
 
           return variants
