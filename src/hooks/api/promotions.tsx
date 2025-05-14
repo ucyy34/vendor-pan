@@ -53,6 +53,7 @@ export const usePromotion = (
       }),
     ...options,
   })
+  console.log({ data })
 
   return { ...data, ...rest }
 }
