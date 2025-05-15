@@ -65,6 +65,8 @@ export const ManageLocationsForm = ({
 
   const { mutateAsync } = useBatchInventoryItemLocationLevels(item.id)
 
+  console.log({ locationFields })
+
   const handleSubmit = form.handleSubmit(async ({ locations }) => {
     // Changes in selected locations
 

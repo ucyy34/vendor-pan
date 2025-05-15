@@ -87,6 +87,8 @@ export const AddCustomerGroupsForm = ({
 
     const ids = Object.keys(state)
 
+    console.log({ ids, state })
+
     setValue("customer_group_ids", ids, {
       shouldDirty: true,
       shouldTouch: true,
