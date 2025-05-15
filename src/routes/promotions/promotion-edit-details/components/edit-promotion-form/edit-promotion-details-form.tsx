@@ -208,7 +208,7 @@ export const EditPromotionDetailsForm = ({
                   </Form.Item>
                 )
               }}
-            /> */}
+            />
           </div>
         </RouteDrawer.Body>
 
