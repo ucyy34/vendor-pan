@@ -92,7 +92,7 @@ export const CreatePromotionForm = () => {
         template_id: _templateId,
         application_method,
         rules,
-        status = null,
+        status,
         ...promotionData
       } = data
       const {
@@ -137,6 +137,7 @@ export const CreatePromotionForm = () => {
         {
           ...promotionData,
           rules: buildRulesData(rules),
+          status,
           application_method: {
             ...applicationMethodData,
             ...applicationMethodRuleData,
