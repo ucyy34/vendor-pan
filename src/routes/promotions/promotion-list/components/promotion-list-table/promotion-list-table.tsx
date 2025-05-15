@@ -25,7 +25,15 @@ export const PromotionListTable = () => {
   const { raw } = usePromotionTableQuery({
     pageSize: PAGE_SIZE,
   })
-  const { promotions: data, count, isLoading, isError, error } = usePromotions()
+  const {
+    promotions: data,
+    count,
+    isLoading,
+    isError,
+    error,
+  } = usePromotions({
+    fields: "+status",
+  })
 
   const promotions = data?.filter((item) => item !== null)
 
@@ -34,7 +42,7 @@ export const PromotionListTable = () => {
 
   const { table } = useDataTable({
     data: (promotions ?? []) as HttpTypes.AdminPromotion[],
-    columns,
+    columns: columns as any,
     count,
     enablePagination: true,
     pageSize: PAGE_SIZE,

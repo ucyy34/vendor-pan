@@ -11,7 +11,7 @@ import {
   TextCell,
   TextHeader,
 } from "../../../components/table/table-cells/common/text-cell"
-// import { StatusCell } from '../../../components/table/table-cells/promotion/status-cell';
+import { StatusCell } from "../../../components/table/table-cells/promotion/status-cell"
 
 const columnHelper = createColumnHelper<HttpTypes.AdminPromotion>()
 
@@ -38,13 +38,11 @@ export const usePromotionTableColumns = () => {
         },
       }),
 
-      // columnHelper.display({
-      //   id: 'status',
-      //   header: () => (
-      //     <TextHeader text={t('fields.status')} />
-      //   ),
-      //   cell: ({ row }) => <StatusCell promotion={row.original} />,
-      // }),
+      columnHelper.display({
+        id: "status",
+        header: () => <TextHeader text={t("fields.status")} />,
+        cell: ({ row }) => <StatusCell promotion={row.original} />,
+      }),
     ],
     [t]
   )

@@ -8,6 +8,7 @@ const promotionDetailQuery = (id: string) => ({
   queryFn: async () =>
     fetchQuery(`/vendor/promotions/${id}`, {
       method: "GET",
+      query: { fields: "+status" },
     }),
 })
 
