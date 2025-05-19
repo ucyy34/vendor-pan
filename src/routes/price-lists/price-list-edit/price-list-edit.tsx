@@ -22,7 +22,7 @@ export const PriceListEdit = () => {
       <RouteDrawer.Header>
         <Heading>{t("priceLists.edit.header")}</Heading>
       </RouteDrawer.Header>
-      {ready && <PriceListEditForm priceList={price_list[0]} />}
+      {ready && <PriceListEditForm priceList={price_list} />}
     </RouteDrawer>
   )
 }

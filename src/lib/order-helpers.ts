@@ -11,6 +11,19 @@ export const getCanceledOrderStatus = (
   return null
 }
 
+export const getOrderStatus = (
+  t: TFunction<"translation">,
+  status: string
+): { label: string; color: "red" | "orange" | "green" } => {
+  const [label = "-", color = "orange"] = {
+    canceled: [t("orders.status.canceled"), "red"],
+    pending: [t("orders.status.pending"), "orange"],
+    completed: [t("orders.status.completed"), "green"],
+  }[status] as [string, "red" | "orange" | "green"]
+
+  return { label, color }
+}
+
 export const getOrderPaymentStatus = (
   t: TFunction<"translation">,
   status: string
