@@ -85,7 +85,7 @@ export const OrderDetail = () => {
       </TwoColumnPage.Main>
       <TwoColumnPage.Sidebar>
         <OrderCustomerSection order={order} />
-        <OrderActivitySection order={order} />
+        {/* <OrderActivitySection order={order} /> */}
       </TwoColumnPage.Sidebar>
     </TwoColumnPage>
   )

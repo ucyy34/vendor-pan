@@ -1,10 +1,10 @@
-import { HttpTypes } from "@medusajs/types"
 import { useTranslation } from "react-i18next"
 import { getOrderPaymentStatus } from "../../../../../lib/order-helpers"
 import { StatusCell } from "../../common/status-cell"
+import { OrderPaymentStatus } from "../../../../../types/order"
 
 type PaymentStatusCellProps = {
-  status: HttpTypes.AdminOrder["payment_status"]
+  status: OrderPaymentStatus
 }
 
 export const PaymentStatusCell = ({ status }: PaymentStatusCellProps) => {

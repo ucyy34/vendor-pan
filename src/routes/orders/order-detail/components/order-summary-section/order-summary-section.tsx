@@ -14,6 +14,7 @@ import {
   AdminOrderPreview,
   AdminPaymentCollection,
   AdminRegion,
+  PaymentStatus,
 } from "@medusajs/types"
 import {
   Button,
@@ -45,7 +46,9 @@ type OrderSummarySectionProps = {
   order: AdminOrder
 }
 
-export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
+export const OrderSummarySection = ({
+  order,
+}: OrderSummarySectionProps & { payment_status?: PaymentStatus }) => {
   const { t } = useTranslation()
   const prompt = usePrompt()
 
@@ -99,9 +102,18 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
     return false
   }, [reservations])
 
-  const unpaidPaymentCollection = order.payment_collections.find(
-    (pc) => pc.status === "not_paid"
-  )
+  const unpaidPaymentCollection =
+    order.split_order_payment.status !== "captured"
+      ? {
+          id: order.split_order_payment.payment_collection_id,
+          amount: order.split_order_payment.authorized_amount,
+          currency_code: order.split_order_payment.currency_code,
+          authorized_amount: order.split_order_payment.authorized_amount,
+          captured_amount: order.split_order_payment.captured_amount,
+          refunded_amount: order.split_order_payment.refunded_amount,
+          status: order.split_order_payment.status,
+        }
+      : undefined
 
   const { mutateAsync: markAsPaid } = useMarkPaymentCollectionAsPaid(
     order.id,
@@ -120,7 +132,7 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
     unpaidPaymentCollection && pendingDifference < 0 && isAmountSignificant
 
   const handleMarkAsPaid = async (
-    paymentCollection: AdminPaymentCollection
+    paymentCollection: Partial<AdminPaymentCollection>
   ) => {
     const res = await prompt({
       title: t("orders.payment.markAsPaid"),
@@ -162,10 +174,6 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
   return (
     <Container className="divide-y divide-dashed p-0">
       <Header order={order} orderPreview={orderPreview} />
-      {/* <ItemBreakdown
-        order={order}
-        reservations={reservations!}
-      /> */}
       <CostBreakdown order={order} />
       <Total order={order} />
 
@@ -379,7 +387,7 @@ const CostBreakdown = ({
   }, [order])
 
   const taxCodes = useMemo(() => {
-    const taxCodeMap = {}
+    const taxCodeMap: Record<string, number> = {}
 
     order.items.forEach((item) => {
       item.tax_lines?.forEach((line) => {
