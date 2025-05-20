@@ -166,7 +166,10 @@ export const useDeleteInventoryItemLevel = (
 ) => {
   return useMutation({
     mutationFn: () =>
-      sdk.admin.inventoryItem.deleteLevel(inventoryItemId, locationId),
+      fetchQuery(
+        `/vendor/inventory-items/${inventoryItemId}/location-levels/${locationId}`,
+        { method: "DELETE" }
+      ),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: inventoryItemsQueryKeys.lists(),

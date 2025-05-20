@@ -12,7 +12,10 @@ import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import { useUpdateShippingOptions } from "../../../../../hooks/api/shipping-options"
 import { useComboboxData } from "../../../../../hooks/use-combobox-data"
 import { fetchQuery } from "../../../../../lib/client"
-import { isOptionEnabledInStore } from "../../../../../lib/shipping-options"
+import {
+  getShippingProfileName,
+  isOptionEnabledInStore,
+} from "../../../../../lib/shipping-options"
 import {
   FulfillmentSetType,
   ShippingOptionPriceType,
@@ -54,7 +57,7 @@ export const EditShippingOptionForm = ({
     queryKey: ["shipping_profiles"],
     getOptions: (data) =>
       data?.map((profile: any) => ({
-        label: profile.shipping_profile.name,
+        label: getShippingProfileName(profile.shipping_profile.name),
         value: profile.shipping_profile.id,
       })),
     defaultValue: shippingOption.shipping_profile_id,
