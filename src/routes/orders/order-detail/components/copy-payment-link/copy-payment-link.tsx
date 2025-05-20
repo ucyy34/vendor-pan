@@ -8,7 +8,7 @@ import { getStylizedAmount } from "../../../../../lib/money-amount-helpers"
 import { MEDUSA_STOREFRONT_URL } from "../../../../../lib/storefront"
 
 type CopyPaymentLinkProps = {
-  paymentCollection: AdminPaymentCollection
+  paymentCollection: Partial<AdminPaymentCollection>
   order: AdminOrder
 }
 
@@ -30,9 +30,7 @@ const CopyPaymentLink = React.forwardRef<any, CopyPaymentLinkProps>(
       e.stopPropagation()
 
       setDone(true)
-      copy(
-        `${MEDUSA_STOREFRONT_URL}/payment-collection/${paymentCollection.id}`
-      )
+      copy(`${MEDUSA_STOREFRONT_URL}/payment-collection/${paymentCollection}`)
 
       setTimeout(() => {
         setDone(false)

@@ -23,7 +23,7 @@ export const OrderListTable = () => {
     {
       limit: 1000,
       offset: 0,
-      fields: "*customer",
+      fields: "*customer,+payment_status,*split_order_payment",
       ...searchParams,
     },
     undefined,
