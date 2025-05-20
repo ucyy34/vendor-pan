@@ -16,7 +16,6 @@ function App() {
     menuItemModule,
     widgetModule,
   })
-
   return (
     <Providers api={manager.api}>
       <RouterProvider />
