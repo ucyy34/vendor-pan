@@ -27,6 +27,8 @@ export const LocationDetail = () => {
     { initialData }
   )
 
+  console.log({ location })
+
   const { getWidgets } = useDashboardExtension()
 
   if (isLoading || !location) {
