@@ -90,7 +90,9 @@ export const usePriceLists = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  const price_lists = data?.price_lists?.filter((item) => item.price_list)
+  const count = price_lists?.length || 0
+  return { ...data, price_lists, count, ...rest }
 }
 
 export const useCreatePriceList = (
