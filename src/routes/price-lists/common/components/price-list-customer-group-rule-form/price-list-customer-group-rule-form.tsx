@@ -58,12 +58,22 @@ export const PriceListCustomerGroupRuleForm = ({
     pageSize: PAGE_SIZE,
     prefix: PREFIX,
   })
+
+  // Get the sort parameter from the raw object
+  const sortParam = raw.order
+    ? raw.order.startsWith("-")
+      ? raw.order
+      : raw.order
+    : undefined
+
   const { customer_groups, count, isLoading, isError, error } =
     useCustomerGroups(
       { ...searchParams, fields: "id,name,customers.id" },
       {
         placeholderData: keepPreviousData,
-      }
+      },
+      undefined,
+      sortParam
     )
 
   const updater: OnChangeFn<RowSelectionState> = (value) => {
@@ -77,8 +87,11 @@ export const PriceListCustomerGroupRuleForm = ({
 
     const newCustomerGroups =
       customer_groups
-        ?.filter((cg) => newIds.includes(cg.id))
-        .map((cg) => ({ id: cg.id, name: cg.name! })) || []
+        ?.filter((cg) => newIds.includes(cg.customer_group.id))
+        .map((cg) => ({
+          id: cg.customer_group.id,
+          name: cg.customer_group.name!,
+        })) || []
 
     const filteredIntermediate = intermediate.filter(
       (cg) => !removedIds.includes(cg.id)
@@ -101,7 +114,7 @@ export const PriceListCustomerGroupRuleForm = ({
     count,
     enablePagination: true,
     enableRowSelection: true,
-    getRowId: (row) => row.id,
+    getRowId: (row) => row.customer_group_id,
     rowSelection: {
       state: rowSelection,
       updater,
