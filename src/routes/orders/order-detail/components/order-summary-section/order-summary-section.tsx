@@ -607,28 +607,6 @@ const Total = ({ order }: { order: AdminOrder }) => {
           )}
         </Text>
       </div>
-
-      <div className="text-ui-fg-base flex items-center justify-between">
-        <Text
-          className="text-ui-fg-subtle text-semibold"
-          size="small"
-          leading="compact"
-          weight="plus"
-        >
-          {t("orders.returns.outstandingAmount")}
-        </Text>
-        <Text
-          className="text-ui-fg-subtle text-bold"
-          size="small"
-          leading="compact"
-          weight="plus"
-        >
-          {getStylizedAmount(
-            order.summary.pending_difference || 0,
-            order.currency_code
-          )}
-        </Text>
-      </div>
     </div>
   )
 }

@@ -11,6 +11,7 @@ import { fetchQuery, sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { customerGroupsQueryKeys } from "./customer-groups"
+import { filterOrders } from "../../routes/orders/common/orderFiltering"
 
 const CUSTOMERS_QUERY_KEY = "customers" as const
 export const customersQueryKeys = queryKeysFactory(CUSTOMERS_QUERY_KEY)
@@ -67,7 +68,9 @@ export const useCustomers = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  const count = data?.customers.length || 0
+
+  return { ...data, count, ...rest }
 }
 
 export const useCreateCustomer = (
@@ -183,7 +186,8 @@ export const useCustomerOrders = (
       QueryKey
     >,
     "queryFn" | "queryKey"
-  >
+  >,
+  filters?: any
 ) => {
   const { data, ...rest } = useQuery({
     queryKey: [CUSTOMERS_QUERY_KEY, id, "orders"],
@@ -195,5 +199,7 @@ export const useCustomerOrders = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  const filteredOrders = filterOrders(data?.orders, filters, filters.sort)
+
+  return { ...data, orders: filteredOrders, ...rest }
 }

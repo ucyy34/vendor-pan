@@ -1,4 +1,4 @@
-import { Container, Heading, Text } from "@medusajs/ui"
+import { Button, Container, Heading, Text } from "@medusajs/ui"
 
 import { useTranslation } from "react-i18next"
 import { _DataTable } from "../../../../../components/table/data-table"
@@ -7,6 +7,7 @@ import { useDataTable } from "../../../../../hooks/use-data-table"
 import { useReservationTableColumns } from "./use-reservation-table-columns"
 import { useReservationTableFilters } from "./use-reservation-table-filters"
 import { useReservationTableQuery } from "./use-reservation-table-query"
+import { Link } from "react-router-dom"
 
 const PAGE_SIZE = 20
 
@@ -47,6 +48,9 @@ export const ReservationListTable = () => {
             {t("reservations.subtitle")}
           </Text>
         </div>
+        <Button variant="secondary" size="small" asChild>
+          <Link to="create">{t("actions.create")}</Link>
+        </Button>
       </div>
       <_DataTable
         table={table}

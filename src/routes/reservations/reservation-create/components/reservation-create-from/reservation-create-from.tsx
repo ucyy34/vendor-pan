@@ -62,6 +62,7 @@ export const ReservationCreateForm = (props: { inventoryItemId?: string }) => {
   })
 
   const { inventory_items } = useInventoryItems({
+    fields: "*location_levels",
     q: inventorySearch,
   })
 
