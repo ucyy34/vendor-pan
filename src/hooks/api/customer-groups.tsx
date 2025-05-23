@@ -57,8 +57,7 @@ export const useCustomerGroups = (
     >,
     "queryFn" | "queryKey"
   >,
-  filters?: any,
-  sort?: string
+  filters?: any
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -72,7 +71,7 @@ export const useCustomerGroups = (
   const filteredData = filterCustomerGroups(
     data?.customer_groups,
     filters,
-    sort
+    filters?.sort
   )
 
   const customer_groups = filteredData?.filter((item) => item.customer_group)

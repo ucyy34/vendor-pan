@@ -16,7 +16,7 @@ export const ReviewDetail = () => {
   const { id } = useParams()
   const { review, isLoading, isError, error } = useReview(
     id!,
-    {},
+    { fields: "*customer" },
     { initialData }
   )
 
