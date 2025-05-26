@@ -59,7 +59,7 @@ export const PriceListConfiguration = () => {
       </RouteDrawer.Header>
       {ready && (
         <PriceListConfigurationForm
-          priceList={price_list[0]}
+          priceList={price_list}
           customerGroups={initialCustomerGroups}
         />
       )}
