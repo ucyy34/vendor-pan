@@ -361,6 +361,7 @@ const Item = ({
   const isInventoryManaged = item.variant?.manage_inventory
   const hasUnfulfilledItems = item.quantity - item.detail.fulfilled_quantity > 0
 
+  console.log({ item })
   return (
     <>
       <div
@@ -368,7 +369,7 @@ const Item = ({
         className="text-ui-fg-subtle grid grid-cols-2 items-center gap-x-4 px-6 py-4"
       >
         <div className="flex items-start gap-x-4">
-          <Thumbnail src={item.thumbnail} />
+          <Thumbnail src={item.thumbnail} size="large" />
           <div>
             <Text
               size="small"
@@ -421,7 +422,7 @@ const Item = ({
 
           <div className="flex items-center justify-end">
             <Text size="small" className="pt-[1px]">
-              {getLocaleAmount(item.subtotal || 0, currencyCode)}
+              {getLocaleAmount(item.original_total || 0, currencyCode)}
             </Text>
           </div>
         </div>
