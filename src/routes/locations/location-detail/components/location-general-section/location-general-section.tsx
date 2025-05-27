@@ -58,7 +58,6 @@ type LocationGeneralSectionProps = {
 export const LocationGeneralSection = ({
   location,
 }: LocationGeneralSectionProps) => {
-  console.log({ location })
   return (
     <>
       <Container className="p-0">
