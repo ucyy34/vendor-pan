@@ -60,6 +60,8 @@ export const EditPromotionDetailsForm = ({
     )
   })
 
+  console.log(form.getValues())
+
   return (
     <RouteDrawer.Form form={form}>
       <KeyboundForm
@@ -206,7 +208,7 @@ export const EditPromotionDetailsForm = ({
                   </Form.Item>
                 )
               }}
-            />
+            /> */}
           </div>
         </RouteDrawer.Body>
 

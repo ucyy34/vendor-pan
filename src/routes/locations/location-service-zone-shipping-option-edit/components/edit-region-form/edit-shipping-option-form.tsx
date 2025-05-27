@@ -52,7 +52,7 @@ export const EditShippingOptionForm = ({
           method: "GET",
         }
       )
-      return shipping_profiles
+      return shipping_profiles.shipping_profiles
     },
     queryKey: ["shipping_profiles"],
     getOptions: (data) =>
