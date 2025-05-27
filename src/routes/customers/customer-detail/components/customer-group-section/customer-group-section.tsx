@@ -53,8 +53,11 @@ export const CustomerGroupSection = ({
         fields: "+customers.id",
         customers: { id: customer.id },
       },
+      undefined,
       {
-        placeholderData: keepPreviousData,
+        created_at: searchParams.created_at,
+        updated_at: searchParams.updated_at,
+        sort: searchParams.order,
       }
     )
 

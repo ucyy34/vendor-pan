@@ -78,7 +78,7 @@ export const useInventoryItem = (
         method: "GET",
         query: query as { [key: string]: string | number },
       }),
-    queryKey: inventoryItemsQueryKeys.detail(id),
+    queryKey: inventoryItemsQueryKeys.detail(id, query),
     ...options,
   })
 

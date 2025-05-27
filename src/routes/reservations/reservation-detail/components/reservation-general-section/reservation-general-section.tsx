@@ -19,7 +19,10 @@ export const ReservationGeneralSection = ({
   const { t } = useTranslation()
 
   const { inventory_item: inventoryItem } = useInventoryItem(
-    reservation.inventory_item_id
+    reservation.inventory_item_id,
+    {
+      fields: "*location_levels",
+    }
   )
 
   const { stock_location: location } = useStockLocation(reservation.location_id)

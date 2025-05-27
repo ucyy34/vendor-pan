@@ -29,8 +29,8 @@ export const useCustomerTableFilters = (
       type: "select",
       multiple: true,
       options: customer_groups.map((s) => ({
-        label: s.name,
-        value: s.id,
+        label: s.customer_group.name,
+        value: s.customer_group.id,
       })),
     }
 
@@ -53,16 +53,7 @@ export const useCustomerTableFilters = (
     ],
   }
 
-  const dateFilters: Filter[] = [
-    { label: t("fields.createdAt"), key: "created_at" },
-    { label: t("fields.updatedAt"), key: "updated_at" },
-  ].map((f) => ({
-    key: f.key,
-    label: f.label,
-    type: "date",
-  }))
-
-  filters = [...filters, hasAccountFilter, ...dateFilters]
+  filters = [...filters, hasAccountFilter]
 
   return filters
 }

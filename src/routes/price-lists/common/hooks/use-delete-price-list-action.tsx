@@ -14,7 +14,7 @@ export const useDeletePriceListAction = ({
   const prompt = usePrompt()
   const navigate = useNavigate()
 
-  const { mutateAsync } = useDeletePriceList(priceList.price_list_id)
+  const { mutateAsync } = useDeletePriceList(priceList.id)
 
   const handleDelete = async () => {
     const res = await prompt({

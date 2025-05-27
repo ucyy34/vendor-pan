@@ -105,6 +105,18 @@ export function CreateShippingOptionsForm({
         provider_id: data.provider_id,
         prices: currencyPrices,
         data: fulfillmentOptionData as unknown as Record<string, unknown>,
+        rules: [
+          {
+            value: isReturn ? "true" : "false",
+            attribute: "is_return",
+            operator: "eq",
+          },
+          {
+            value: "true",
+            attribute: "enabled_in_store",
+            operator: "eq",
+          },
+        ],
         type: {
           // TODO: FETCH TYPES
           label: "Type label",

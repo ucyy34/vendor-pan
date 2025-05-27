@@ -30,6 +30,7 @@ const DEFAULT_RELATIONS = [
   "+items.variant.manage_inventory",
   "*items.variant.inventory_items.inventory",
   "+items.variant.inventory_items.required_quantity",
+  "*items.variant.prices",
   "+summary",
   "*shipping_address",
   "*billing_address",
@@ -41,11 +42,9 @@ const DEFAULT_RELATIONS = [
   "*fulfillments.items",
   "*fulfillments.labels",
   "*fulfillments.labels",
-  "*payment_collections",
-  "*payment_collections.payments",
-  "*payment_collections.payments.refunds",
-  "*payment_collections.payments.refunds.refund_reason",
   "region.automatic_taxes",
+  "*split_order_payment",
+  "payment_status",
 ]
 
 export const DEFAULT_FIELDS = `${DEFAULT_PROPERTIES.join(
