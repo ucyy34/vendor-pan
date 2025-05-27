@@ -361,7 +361,9 @@ const Item = ({
   const isInventoryManaged = item.variant?.manage_inventory
   const hasUnfulfilledItems = item.quantity - item.detail.fulfilled_quantity > 0
 
-  console.log({ item })
+  const original_price = item.variant?.prices?.[0].amount || 0
+  const price = item.unit_price
+
   return (
     <>
       <div
@@ -377,7 +379,7 @@ const Item = ({
               weight="plus"
               className="text-ui-fg-base"
             >
-              {item.title}
+              {item.product_title} {item.title}
             </Text>
 
             {item.variant_sku && (
@@ -395,7 +397,12 @@ const Item = ({
         <div className="grid grid-cols-3 items-center gap-x-4">
           <div className="flex items-center justify-end gap-x-4">
             <Text size="small">
-              {getLocaleAmount(item.unit_price, currencyCode)}
+              {original_price !== price && (
+                <span className="line-through text-ui-fg-muted text-xs mr-1">
+                  {getLocaleAmount(original_price, currencyCode)}
+                </span>
+              )}
+              {getLocaleAmount(price, currencyCode)}
             </Text>
           </div>
 
