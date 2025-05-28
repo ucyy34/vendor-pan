@@ -74,7 +74,7 @@ export const usePriceLists = (
     UseQueryOptions<
       HttpTypes.AdminPriceListListResponse,
       FetchError,
-      HttpTypes.AdminPriceListListResponse,
+      any,
       QueryKey
     >,
     "queryKey" | "queryFn"
@@ -90,7 +90,7 @@ export const usePriceLists = (
     ...options,
   })
 
-  const price_lists = data?.price_lists?.filter((item) => item.price_list)
+  const price_lists = data?.price_lists?.filter((item: any) => item.price_list)
   const count = price_lists?.length || 0
   return { ...data, price_lists, count, ...rest }
 }
@@ -227,7 +227,7 @@ export const usePriceListLinkProducts = (
         queryKey: priceListsQueryKeys.lists(),
       })
       queryClient.invalidateQueries({
-        queryKey: productsQueryKeys.lists(),
+        queryKey: [PRICE_LISTS_QUERY_KEY, id, "products"],
       })
 
       options?.onSuccess?.(data, variables, context)
