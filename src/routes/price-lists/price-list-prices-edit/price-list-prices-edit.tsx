@@ -17,7 +17,7 @@ export const PriceListPricesEdit = () => {
     isError: isProductsError,
     error: productError,
   } = usePriceListProducts(id!, {
-    fields: "title,thumbnail,*variants",
+    fields: "title,thumbnail,*variants,+status",
   })
 
   const { isReady, regions, currencies, pricePreferences } =
