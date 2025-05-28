@@ -92,7 +92,7 @@ export const CreatePromotionForm = () => {
         template_id: _templateId,
         application_method,
         rules,
-        status = null,
+        status,
         ...promotionData
       } = data
       const {
@@ -137,6 +137,7 @@ export const CreatePromotionForm = () => {
         {
           ...promotionData,
           rules: buildRulesData(rules),
+          status,
           application_method: {
             ...applicationMethodData,
             ...applicationMethodRuleData,
@@ -189,19 +190,19 @@ export const CreatePromotionForm = () => {
         setTab(tab)
         break
       case Tab.CAMPAIGN: {
-        const valid = await form.trigger()
+        // const valid = await form.trigger()
 
-        if (!valid) {
-          // If the promotion tab is not valid, we want to set the tab state to in-progress
-          // and set the tab to the promotion tab
-          setTabState({
-            [Tab.TYPE]: "completed",
-            [Tab.PROMOTION]: "in-progress",
-            [Tab.CAMPAIGN]: "not-started",
-          })
-          setTab(Tab.PROMOTION)
-          break
-        }
+        // if (!valid) {
+        //   // If the promotion tab is not valid, we want to set the tab state to in-progress
+        //   // and set the tab to the promotion tab
+        //   setTabState({
+        //     [Tab.TYPE]: "completed",
+        //     [Tab.PROMOTION]: "in-progress",
+        //     [Tab.CAMPAIGN]: "not-started",
+        //   })
+        //   setTab(Tab.PROMOTION)
+        //   break
+        // }
 
         setTabState((prev) => ({
           ...prev,
@@ -220,10 +221,24 @@ export const CreatePromotionForm = () => {
         handleTabChange(Tab.PROMOTION)
         break
       case Tab.PROMOTION: {
-        const valid = await form.trigger()
+        const valid =
+          !!form.getValues("code") ||
+          !!form.getValues("application_method.value")
 
         if (valid) {
           handleTabChange(Tab.CAMPAIGN)
+        }
+
+        if (!form.getValues("code")) {
+          form.setError("code", {
+            message: "error",
+          })
+        }
+
+        if (!form.getValues("application_method.value")) {
+          form.setError("application_method.value", {
+            message: "error",
+          })
         }
 
         break
@@ -255,10 +270,13 @@ export const CreatePromotionForm = () => {
     for (const [key, value] of Object.entries(currentTemplate.defaults)) {
       if (typeof value === "object") {
         for (const [subKey, subValue] of Object.entries(value)) {
-          setValue(`application_method.${subKey}`, subValue)
+          setValue(
+            `application_method.${subKey}` as keyof typeof defaultValues,
+            subValue
+          )
         }
       } else {
-        setValue(key, value)
+        setValue(key as keyof typeof defaultValues, value)
       }
     }
 
@@ -771,7 +789,7 @@ export const CreatePromotionForm = () => {
                       <Form.Field
                         control={form.control}
                         name="application_method.max_quantity"
-                        render={({ field }) => {
+                        render={() => {
                           return (
                             <Form.Item className="basis-1/2">
                               <Form.Label>

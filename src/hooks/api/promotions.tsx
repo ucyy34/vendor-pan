@@ -50,6 +50,7 @@ export const usePromotion = (
     queryFn: async () =>
       fetchQuery(`/vendor/promotions/${id}`, {
         method: "GET",
+        query: { fields: "+status" },
       }),
     ...options,
   })
@@ -71,6 +72,13 @@ export const usePromotionRules = (
     "queryFn" | "queryKey"
   >
 ) => {
+  if (!id) {
+    return {
+      rules: [],
+      isLoading: false,
+    }
+  }
+
   const { data, ...rest } = useQuery({
     queryKey: promotionsQueryKeys.listRules(id, ruleType, query),
     queryFn: async () =>
@@ -208,7 +216,7 @@ export const useCreatePromotion = (
   options?: UseMutationOptions<
     HttpTypes.AdminPromotionResponse,
     FetchError,
-    HttpTypes.AdminCreatePromotion
+    HttpTypes.AdminCreatePromotion & { status: "active" | "draft" | "inactive" }
   >
 ) => {
   return useMutation({

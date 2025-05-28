@@ -117,7 +117,10 @@ export const useProductVariant = (
     queryFn: async () => {
       const { product } = await fetchQuery(`/vendor/products/${productId}`, {
         method: "GET",
-        query: { fields: "*variants" },
+        query: {
+          fields:
+            "*variants,*variants.inventory,*variants.inventory.location_levels",
+        },
       })
 
       const variant = product.variants.find(
@@ -359,13 +362,18 @@ export const useProducts = (
     >,
     "queryFn" | "queryKey"
   >,
-  filter?: Record<string, string>
+  filter?: HttpTypes.AdminProductListParams & {
+    tagId?: string
+    categoryId?: string
+    collectionId?: string
+    typeId?: string
+  }
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery("/vendor/products", {
         method: "GET",
-        query: query as { [key: string]: string },
+        query: query as Record<string, string | number>,
       }),
     queryKey: productsQueryKeys.list(query),
     ...options,
@@ -377,18 +385,17 @@ export const useProducts = (
 
   const products = data?.products.filter(
     (item) =>
-      (item?.categories?.find(({ id }) => id === filter.categoryId) && item) ||
-      (item?.tags?.find(({ id }) => id === filter.tagId) && item) ||
-      (item?.collection?.id === filter.collectionId && item) ||
-      (item?.type_id === filter.typeId && item)
+      (filter.categoryId &&
+        item?.categories?.find(({ id }) => id === filter.categoryId)) ||
+      (filter.tagId && item?.tags?.find(({ id }) => id === filter.tagId)) ||
+      (filter.collectionId && item?.collection?.id === filter.collectionId) ||
+      (filter.typeId && item?.type_id === filter.typeId)
   )
-
-  const count = products?.length || 0
 
   return {
     ...data,
-    count,
-    products,
+    products: products?.slice(0, filter.limit) || [],
+    count: products?.length || 0,
     ...rest,
   }
 }

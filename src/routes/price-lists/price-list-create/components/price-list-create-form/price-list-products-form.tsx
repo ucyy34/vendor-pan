@@ -56,7 +56,7 @@ export const PriceListProductsForm = ({ form }: PriceListProductsFormProps) => {
     prefix: PREFIX,
   })
   const { products, count, isLoading, isError, error } = useProducts(
-    searchParams,
+    { ...searchParams, fields: "+thumbnail" },
     {
       placeholderData: keepPreviousData,
     }

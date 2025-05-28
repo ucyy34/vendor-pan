@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AdminCampaign, HttpTypes } from "@medusajs/types"
 import { Button, Checkbox, Hint, Tooltip, toast } from "@medusajs/ui"
-import { keepPreviousData } from "@tanstack/react-query"
 import {
   OnChangeFn,
   RowSelectionState,
@@ -46,6 +45,7 @@ export const AddCampaignPromotionsForm = ({
   const { mutateAsync, isPending } = useAddOrRemoveCampaignPromotions(
     campaign.id
   )
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const updater: OnChangeFn<RowSelectionState> = (fn) => {
@@ -61,11 +61,12 @@ export const AddCampaignPromotionsForm = ({
   }
 
   const { searchParams, raw } = usePromotionTableQuery({ pageSize: PAGE_SIZE })
-  const {
-    promotions,
-    count,
-    isPending: isLoading,
-  } = usePromotions({ ...searchParams }, { placeholderData: keepPreviousData })
+  const { promotions: promotionsRaw, isPending: isLoading } = usePromotions({
+    ...searchParams,
+  })
+
+  const promotions = promotionsRaw?.filter((item) => item !== null)
+  const count = promotions?.length ?? 0
 
   const columns = useColumns()
   const filters = usePromotionTableFilters()

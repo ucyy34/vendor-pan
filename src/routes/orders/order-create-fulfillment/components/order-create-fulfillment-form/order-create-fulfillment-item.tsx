@@ -17,7 +17,7 @@ type OrderEditItemProps = {
   currencyCode: string
   locationId?: string
   onItemRemove: (itemId: string) => void
-  itemReservedQuantitiesMap: Map<string, number>
+  itemReservedQuantitiesMap: Map<string | null, number>
   form: UseFormReturn<zod.infer<typeof CreateFulfillmentSchema>>
   disabled: boolean
 }
@@ -32,8 +32,8 @@ export function OrderCreateFulfillmentItem({
   const { t } = useTranslation()
 
   const { variant } = useProductVariant(
-    item.product_id,
-    item.variant_id,
+    item.product_id!,
+    item.variant_id!,
     {
       fields: "*inventory,*inventory.location_levels",
     },
@@ -47,10 +47,10 @@ export function OrderCreateFulfillmentItem({
       return {}
     }
 
-    const { inventory } = variant
+    const { inventory } = variant as any
 
     const locationInventory = inventory?.[0]?.location_levels?.find(
-      (inv) => inv.location_id === locationId
+      (inv: any) => inv.location_id === locationId
     )
 
     if (!locationInventory) {
@@ -68,7 +68,7 @@ export function OrderCreateFulfillmentItem({
 
   const minValue = 0
   const maxValue = Math.min(
-    getFulfillableQuantity(item),
+    getFulfillableQuantity(item as any),
     availableQuantity || Number.MAX_SAFE_INTEGER
   )
 
@@ -162,7 +162,7 @@ export function OrderCreateFulfillmentItem({
 
                             field.onChange(val)
 
-                            if (!isNaN(val)) {
+                            if (val !== null && !isNaN(val ?? 0)) {
                               if (val < minValue || val > maxValue) {
                                 form.setError(`quantity.${item.id}`, {
                                   type: "manual",

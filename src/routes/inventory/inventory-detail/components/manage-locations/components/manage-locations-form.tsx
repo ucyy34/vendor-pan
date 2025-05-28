@@ -67,6 +67,7 @@ export const ManageLocationsForm = ({
 
   const handleSubmit = form.handleSubmit(async ({ locations }) => {
     // Changes in selected locations
+
     const [selectedLocations, unselectedLocations] = locations.reduce(
       (acc, location) => {
         // If the location is not changed do nothing
@@ -95,7 +96,11 @@ export const ManageLocationsForm = ({
 
     await mutateAsync(
       {
-        location_id: selectedLocations[0],
+        create: selectedLocations.length
+          ? selectedLocations.map((item) => ({ location_id: item }))
+          : undefined,
+        // update: [],
+        delete: unselectedLocations,
       },
       {
         onSuccess: () => {

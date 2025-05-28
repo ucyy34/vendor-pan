@@ -12,27 +12,21 @@ export const PriceListConfiguration = () => {
 
   const { price_list, isPending, isError, error } = usePriceList(id!)
 
-  const customerGroupIds = price_list?.rules?.["customer.groups.id"] as
-    | string[]
-    | undefined
+  const customerGroupIds =
+    price_list.price_list_rules.find(
+      (rule: any) => rule.attribute === "customer.groups.id"
+    ).value || ([] as string[])
 
   const {
     customer_groups,
     isPending: isCustomerGroupsPending,
     isError: isCustomerGroupsError,
     error: customerGroupsError,
-  } = useCustomerGroups(
-    {
-      id: customerGroupIds,
-    },
-    { enabled: !!customerGroupIds?.length }
-  )
+  } = useCustomerGroups(undefined, { enabled: !!customerGroupIds?.length })
 
-  const initialCustomerGroups =
-    customer_groups?.map((group) => ({
-      id: group.id,
-      name: group.name!,
-    })) || []
+  const initialCustomerGroups = (customer_groups || [])
+    .map(({ customer_group }) => customer_group)
+    .filter((group) => customerGroupIds.includes(group.id))
 
   const isCustomerGroupsReady = isPending
     ? false
@@ -59,8 +53,11 @@ export const PriceListConfiguration = () => {
       </RouteDrawer.Header>
       {ready && (
         <PriceListConfigurationForm
-          priceList={price_list[0]}
-          customerGroups={initialCustomerGroups}
+          priceList={price_list}
+          customerGroups={initialCustomerGroups.map((group) => ({
+            id: group.id,
+            name: group.name || "",
+          }))}
         />
       )}
     </RouteDrawer>

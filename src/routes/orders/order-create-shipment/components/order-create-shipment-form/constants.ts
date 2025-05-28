@@ -9,5 +9,4 @@ export const CreateShipmentSchema = z.object({
       label_url: z.string().optional(),
     })
   ),
-  send_notification: z.boolean().optional(),
 })

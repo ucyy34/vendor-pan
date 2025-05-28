@@ -11,6 +11,7 @@ import { fetchQuery, sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { customersQueryKeys } from "./customers"
+import { filterCustomerGroups } from "../../routes/orders/common/customerGroupFiltering"
 
 const CUSTOMER_GROUPS_QUERY_KEY = "customer_groups" as const
 export const customerGroupsQueryKeys = queryKeysFactory(
@@ -55,19 +56,34 @@ export const useCustomerGroups = (
       QueryKey
     >,
     "queryFn" | "queryKey"
-  >
+  >,
+  filters?: any
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery("/vendor/customer-groups", {
         method: "GET",
-        query: query as { [key: string]: string | number },
       }),
     queryKey: customerGroupsQueryKeys.list(query),
     ...options,
   })
 
-  return { ...data, ...rest }
+  const filteredData = filterCustomerGroups(
+    data?.customer_groups,
+    filters,
+    filters?.sort
+  )
+
+  const customer_groups = filteredData?.filter((item) => item.customer_group)
+
+  const count = customer_groups?.length || 0
+
+  return {
+    ...data,
+    count,
+    customer_groups,
+    ...rest,
+  }
 }
 
 export const useCreateCustomerGroup = (
@@ -102,7 +118,11 @@ export const useUpdateCustomerGroup = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.customerGroup.update(id, payload),
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/customer-groups/${id}`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.lists(),
@@ -126,7 +146,10 @@ export const useDeleteCustomerGroup = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.customerGroup.delete(id),
+    mutationFn: () =>
+      fetchQuery(`/vendor/customer-groups/${id}`, {
+        method: "DELETE",
+      }),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: customerGroupsQueryKeys.lists(),

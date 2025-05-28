@@ -25,6 +25,10 @@ import {
   TotalCell,
   TotalHeader,
 } from "../../../components/table/table-cells/order/total-cell"
+import { useTranslation } from "react-i18next"
+import { getOrderStatus } from "../../../lib/order-helpers"
+import { StatusCell } from "../../../components/table/table-cells/common/status-cell"
+import { OrderPaymentStatus } from "../../../types/order"
 
 // We have to use any here, as the type of Order is so complex that it lags the TS server
 const columnHelper = createColumnHelper<HttpTypes.AdminOrder>()
@@ -54,12 +58,27 @@ export const useOrderTableColumns = (props: UseOrderTableColumnsProps) => {
           return <DateCell date={date} />
         },
       }),
+      columnHelper.accessor("status", {
+        header: () => (
+          <div className="flex h-full w-full items-center">
+            <span className="truncate">Status</span>
+          </div>
+        ),
+        cell: ({ getValue }) => {
+          const status = getValue()
+          const { t } = useTranslation()
+
+          const { label, color } = getOrderStatus(t, status)
+
+          return <StatusCell color={color}>{label}</StatusCell>
+        },
+      }),
       columnHelper.accessor("payment_status", {
         header: () => <PaymentStatusHeader />,
         cell: ({ getValue }) => {
-          const status = getValue()
+          const status = getValue() as OrderPaymentStatus
 
-          return <PaymentStatusCell status={status} />
+          return status ? <PaymentStatusCell status={status} /> : "-"
         },
       }),
       columnHelper.accessor("fulfillment_status", {

@@ -3,48 +3,36 @@ import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import {
-  ArrowDownRightMini,
   ArrowLongRight,
   ArrowPath,
   ArrowUturnLeft,
-  DocumentText,
   ExclamationCircle,
   TriangleDownMini,
 } from "@medusajs/icons"
 import {
-  AdminClaim,
-  AdminExchange,
   AdminOrder,
-  AdminOrderLineItem,
   AdminOrderPreview,
   AdminPaymentCollection,
   AdminRegion,
+  AdminReservation,
   AdminReturn,
+  PaymentStatus,
 } from "@medusajs/types"
 import {
-  Badge,
   Button,
   clx,
   Container,
-  Copy,
   Heading,
-  StatusBadge,
   Text,
   toast,
-  Tooltip,
   usePrompt,
 } from "@medusajs/ui"
 
-import { AdminReservation } from "@medusajs/types/src/http"
 import { ActionMenu } from "../../../../../components/common/action-menu"
-import { Thumbnail } from "../../../../../components/common/thumbnail"
-import { useClaims } from "../../../../../hooks/api/claims"
-import { useExchanges } from "../../../../../hooks/api/exchanges"
 import { useOrderPreview } from "../../../../../hooks/api/orders"
 import { useMarkPaymentCollectionAsPaid } from "../../../../../hooks/api/payment-collections"
 import { useReservationItems } from "../../../../../hooks/api/reservations"
 import { useReturns } from "../../../../../hooks/api/returns"
-import { useDate } from "../../../../../hooks/use-date"
 import { formatCurrency } from "../../../../../lib/format-currency"
 import {
   getLocaleAmount,
@@ -54,14 +42,16 @@ import {
 import { getTotalCaptured } from "../../../../../lib/payment"
 import { getReturnableQuantity } from "../../../../../lib/rma"
 import { CopyPaymentLink } from "../copy-payment-link/copy-payment-link"
-import ReturnInfoPopover from "./return-info-popover"
 import ShippingInfoPopover from "./shipping-info-popover"
+import { Thumbnail } from "../../../../../components/common/thumbnail"
 
 type OrderSummarySectionProps = {
   order: AdminOrder
 }
 
-export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
+export const OrderSummarySection = ({
+  order,
+}: OrderSummarySectionProps & { payment_status?: PaymentStatus }) => {
   const { t } = useTranslation()
   const prompt = usePrompt()
 
@@ -115,9 +105,18 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
     return false
   }, [reservations])
 
-  const unpaidPaymentCollection = order.payment_collections.find(
-    (pc) => pc.status === "not_paid"
-  )
+  const unpaidPaymentCollection =
+    order.split_order_payment.status !== "captured"
+      ? {
+          id: order.split_order_payment.payment_collection_id,
+          amount: order.split_order_payment.authorized_amount,
+          currency_code: order.split_order_payment.currency_code,
+          authorized_amount: order.split_order_payment.authorized_amount,
+          captured_amount: order.split_order_payment.captured_amount,
+          refunded_amount: order.split_order_payment.refunded_amount,
+          status: order.split_order_payment.status,
+        }
+      : undefined
 
   const { mutateAsync: markAsPaid } = useMarkPaymentCollectionAsPaid(
     order.id,
@@ -136,7 +135,7 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
     unpaidPaymentCollection && pendingDifference < 0 && isAmountSignificant
 
   const handleMarkAsPaid = async (
-    paymentCollection: AdminPaymentCollection
+    paymentCollection: Partial<AdminPaymentCollection>
   ) => {
     const res = await prompt({
       title: t("orders.payment.markAsPaid"),
@@ -178,10 +177,7 @@ export const OrderSummarySection = ({ order }: OrderSummarySectionProps) => {
   return (
     <Container className="divide-y divide-dashed p-0">
       <Header order={order} orderPreview={orderPreview} />
-      {/* <ItemBreakdown
-        order={order}
-        reservations={reservations!}
-      /> */}
+      <ItemBreakdown order={order} reservations={reservations!} />
       <CostBreakdown order={order} />
       <Total order={order} />
 
@@ -346,196 +342,126 @@ const Header = ({
   )
 }
 
-// const Item = ({
-//   item,
-//   currencyCode,
-//   reservation,
-//   returns,
-//   claims,
-//   exchanges,
-// }: {
-//   item: AdminOrderLineItem;
-//   currencyCode: string;
-//   reservation?: AdminReservation;
-//   returns: AdminReturn[];
-//   claims: AdminClaim[];
-//   exchanges: AdminExchange[];
-// }) => {
-//   const { t } = useTranslation();
+const Item = ({
+  item,
+  currencyCode,
+  reservation,
+}: {
+  item: AdminOrderLineItem
+  currencyCode: string
+  reservation?: AdminReservation
+}) => {
+  const { t } = useTranslation()
 
-//   const isInventoryManaged = item.variant?.manage_inventory;
-//   const hasInventoryKit =
-//     isInventoryManaged &&
-//     (item.variant?.inventory_items?.length || 0) > 1;
-//   const hasUnfulfilledItems =
-//     item.quantity - item.detail.fulfilled_quantity > 0;
+  const isInventoryManaged = item.variant?.manage_inventory
+  const hasUnfulfilledItems = item.quantity - item.detail.fulfilled_quantity > 0
 
-//   return (
-//     <>
-//       <div
-//         key={item.id}
-//         className='text-ui-fg-subtle grid grid-cols-2 items-center gap-x-4 px-6 py-4'
-//       >
-//         <div className='flex items-start gap-x-4'>
-//           <Thumbnail src={item.thumbnail} />
-//           <div>
-//             <Text
-//               size='small'
-//               leading='compact'
-//               weight='plus'
-//               className='text-ui-fg-base'
-//             >
-//               {item.title}
-//             </Text>
+  const original_price = item.variant?.prices?.[0].amount || 0
+  const price = item.unit_price
 
-//             {item.variant_sku && (
-//               <div className='flex items-center gap-x-1'>
-//                 <Text size='small'>{item.variant_sku}</Text>
-//                 <Copy
-//                   content={item.variant_sku}
-//                   className='text-ui-fg-muted'
-//                 />
-//               </div>
-//             )}
-//             <Text size='small'>
-//               {item.variant?.options
-//                 ?.map((o) => o.value)
-//                 .join(' · ')}
-//             </Text>
-//           </div>
-//         </div>
+  return (
+    <>
+      <div
+        key={item.id}
+        className="text-ui-fg-subtle grid grid-cols-2 items-center gap-x-4 px-6 py-4"
+      >
+        <div className="flex items-start gap-x-4">
+          <Thumbnail src={item.thumbnail} size="large" />
+          <div>
+            <Text
+              size="small"
+              leading="compact"
+              weight="plus"
+              className="text-ui-fg-base"
+            >
+              {item.product_title} {item.title}
+            </Text>
 
-//         <div className='grid grid-cols-3 items-center gap-x-4'>
-//           <div className='flex items-center justify-end gap-x-4'>
-//             <Text size='small'>
-//               {getLocaleAmount(
-//                 item.unit_price,
-//                 currencyCode
-//               )}
-//             </Text>
-//           </div>
+            {item.variant_sku && (
+              <div className="flex items-center gap-x-1">
+                <Text size="small">{item.variant_sku}</Text>
+                <Copy content={item.variant_sku} className="text-ui-fg-muted" />
+              </div>
+            )}
+            <Text size="small">
+              {item.variant?.options?.map((o) => o.value).join(" · ")}
+            </Text>
+          </div>
+        </div>
 
-//           <div className='flex items-center gap-x-2'>
-//             <div className='w-fit min-w-[27px]'>
-//               <Text size='small'>
-//                 <span className='tabular-nums'>
-//                   {item.quantity}
-//                 </span>
-//                 x
-//               </Text>
-//             </div>
+        <div className="grid grid-cols-3 items-center gap-x-4">
+          <div className="flex items-center justify-end gap-x-4">
+            <Text size="small">
+              {original_price !== price && (
+                <span className="line-through text-ui-fg-muted text-xs mr-1">
+                  {getLocaleAmount(original_price, currencyCode)}
+                </span>
+              )}
+              {getLocaleAmount(price, currencyCode)}
+            </Text>
+          </div>
 
-//             <div className='overflow-visible'>
-//               {isInventoryManaged &&
-//                 hasUnfulfilledItems && (
-//                   <StatusBadge
-//                     color={reservation ? 'green' : 'orange'}
-//                     className='text-nowrap'
-//                   >
-//                     {reservation
-//                       ? t(
-//                           'orders.reservations.allocatedLabel'
-//                         )
-//                       : t(
-//                           'orders.reservations.notAllocatedLabel'
-//                         )}
-//                   </StatusBadge>
-//                 )}
-//             </div>
-//           </div>
+          <div className="flex items-center gap-x-2">
+            <div className="w-fit min-w-[27px]">
+              <Text size="small">
+                <span className="tabular-nums">{item.quantity}</span>x
+              </Text>
+            </div>
 
-//           <div className='flex items-center justify-end'>
-//             <Text size='small' className='pt-[1px]'>
-//               {getLocaleAmount(
-//                 item.subtotal || 0,
-//                 currencyCode
-//               )}
-//             </Text>
-//           </div>
-//         </div>
-//       </div>
+            <div className="overflow-visible">
+              {isInventoryManaged && hasUnfulfilledItems && (
+                <StatusBadge
+                  color={reservation ? "green" : "orange"}
+                  className="text-nowrap"
+                >
+                  {reservation
+                    ? t("orders.reservations.allocatedLabel")
+                    : t("orders.reservations.notAllocatedLabel")}
+                </StatusBadge>
+              )}
+            </div>
+          </div>
 
-//       {hasInventoryKit && (
-//         <InventoryKitBreakdown item={item} />
-//       )}
+          <div className="flex items-center justify-end">
+            <Text size="small" className="pt-[1px]">
+              {getLocaleAmount(item.original_total || 0, currencyCode)}
+            </Text>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
-//       {returns.map((r) => (
-//         <ReturnBreakdown
-//           key={r.id}
-//           orderReturn={r}
-//           itemId={item.id}
-//         />
-//       ))}
+const ItemBreakdown = ({
+  order,
+  reservations,
+}: {
+  order: AdminOrder
+  reservations?: AdminReservation[]
+}) => {
+  const reservationsMap = useMemo(
+    () => new Map((reservations || []).map((r) => [r.line_item_id, r])),
+    [reservations]
+  )
 
-//       {claims.map((claim) => (
-//         <ClaimBreakdown
-//           key={claim.id}
-//           claim={claim}
-//           itemId={item.id}
-//         />
-//       ))}
+  return (
+    <div>
+      {order.items?.map((item) => {
+        const reservation = reservationsMap.get(item.id)
 
-//       {exchanges.map((exchange) => (
-//         <ExchangeBreakdown
-//           key={exchange.id}
-//           exchange={exchange}
-//           itemId={item.id}
-//         />
-//       ))}
-//     </>
-//   );
-// };
-
-// const ItemBreakdown = ({
-//   order,
-//   reservations,
-// }: {
-//   order: AdminOrder;
-//   reservations?: AdminReservation[];
-// }) => {
-//   const { claims = [] } = useClaims({
-//     order_id: order.id,
-//     fields: '*additional_items',
-//   });
-
-//   const { exchanges = [] } = useExchanges({
-//     order_id: order.id,
-//     fields: '*additional_items',
-//   });
-
-//   const { returns = [] } = useReturns({
-//     order_id: order.id,
-//     fields: '*items,*items.reason',
-//   });
-
-//   const reservationsMap = useMemo(
-//     () =>
-//       new Map(
-//         (reservations || []).map((r) => [r.line_item_id, r])
-//       ),
-//     [reservations]
-//   );
-
-//   return (
-//     <div>
-//       {order.items?.map((item) => {
-//         const reservation = reservationsMap.get(item.id);
-
-//         return (
-//           <Item
-//             key={item.id}
-//             item={item}
-//             currencyCode={order.currency_code}
-//             reservation={reservation}
-//             returns={returns}
-//             exchanges={exchanges}
-//             claims={claims}
-//           />
-//         );
-//       })}
-//     </div>
-//   );
-// };
+        return (
+          <Item
+            key={item.id}
+            item={item}
+            currencyCode={order.currency_code}
+            reservation={reservation}
+          />
+        )
+      })}
+    </div>
+  )
+}
 
 const Cost = ({
   label,
@@ -586,7 +512,7 @@ const CostBreakdown = ({
   }, [order])
 
   const taxCodes = useMemo(() => {
-    const taxCodeMap = {}
+    const taxCodeMap: Record<string, number> = {}
 
     order.items.forEach((item) => {
       item.tax_lines?.forEach((line) => {
@@ -750,332 +676,16 @@ const CostBreakdown = ({
           </div>
         )}
       </>
+      <Cost
+        label={"Commission"}
+        value={getLocaleAmount(
+          order.commission_value.amount,
+          order.commission_value.currency_code
+        )}
+      />
     </div>
   )
 }
-
-// const InventoryKitBreakdown = ({
-//   item,
-// }: {
-//   item: AdminOrderLineItem;
-// }) => {
-//   const { t } = useTranslation();
-
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const inventory = item.variant?.inventory_items || [];
-
-//   return (
-//     <>
-//       <div
-//         onClick={() => setIsOpen((o) => !o)}
-//         className='flex cursor-pointer items-center gap-2 border-t border-dashed px-6 py-4'
-//       >
-//         <TriangleDownMini
-//           style={{
-//             transform: `rotate(${isOpen ? 0 : -90}deg)`,
-//           }}
-//         />
-//         <span className='text-ui-fg-muted txt-small select-none'>
-//           {t('orders.summary.inventoryKit', {
-//             count: inventory.length,
-//           })}
-//         </span>
-//       </div>
-//       {isOpen && (
-//         <div className='flex flex-col gap-1 px-6 pb-4'>
-//           {inventory.map((i) => {
-//             return (
-//               <div
-//                 key={i.inventory.id}
-//                 className='flex items-center justify-between gap-x-2'
-//               >
-//                 <div>
-//                   <span className='txt-small text-ui-fg-subtle font-medium'>
-//                     {i.inventory.title}
-
-//                     {i.inventory.sku && (
-//                       <span className='text-ui-fg-subtle font-normal'>
-//                         {' '}
-//                         ⋅ {i.inventory.sku}
-//                       </span>
-//                     )}
-//                   </span>
-//                 </div>
-//                 <div className='relative flex-1'>
-//                   <div className='bottom-[calc(50% - 2px)] absolute h-[1px] w-full border-b border-dashed' />
-//                 </div>
-//                 <span className='txt-small text-ui-fg-muted'>
-//                   {i.required_quantity}x
-//                 </span>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
-// const ReturnBreakdownWithDamages = ({
-//   orderReturn,
-//   itemId,
-// }: {
-//   orderReturn: AdminReturn;
-//   itemId: string;
-// }) => {
-//   const { t } = useTranslation();
-
-//   const item = orderReturn?.items?.find(
-//     (ri) => ri.item_id === itemId
-//   );
-//   const damagedQuantity = item?.damaged_quantity || 0;
-
-//   return (
-//     item && (
-//       <div
-//         key={orderReturn.id}
-//         className='txt-compact-small-plus text-ui-fg-subtle bg-ui-bg-subtle flex flex-row justify-between gap-y-2 border-t-2 border-dotted px-6 py-4'
-//       >
-//         <div className='flex items-center gap-2'>
-//           <ArrowDownRightMini className='text-ui-fg-muted' />
-//           <Text size='small'>
-//             {t(`orders.returns.damagedItemsReturned`, {
-//               quantity: damagedQuantity,
-//             })}
-//           </Text>
-
-//           {item?.note && (
-//             <Tooltip content={item.note}>
-//               <DocumentText className='text-ui-tag-neutral-icon ml-1 inline' />
-//             </Tooltip>
-//           )}
-
-//           {item?.reason && (
-//             <Badge
-//               size='2xsmall'
-//               className='cursor-default select-none capitalize'
-//               rounded='full'
-//             >
-//               {item?.reason?.label}
-//             </Badge>
-//           )}
-//         </div>
-
-//         <Text
-//           size='small'
-//           leading='compact'
-//           className='text-ui-fg-muted'
-//         >
-//           {t(`orders.returns.damagedItemReceived`)}
-
-//           <span className='ml-2'>
-//             <ReturnInfoPopover orderReturn={orderReturn} />
-//           </span>
-//         </Text>
-//       </div>
-//     )
-//   );
-// };
-
-// const ReturnBreakdown = ({
-//   orderReturn,
-//   itemId,
-// }: {
-//   orderReturn: AdminReturn;
-//   itemId: string;
-// }) => {
-//   const { t } = useTranslation();
-//   const { getRelativeDate } = useDate();
-
-//   if (
-//     ![
-//       'requested',
-//       'received',
-//       'partially_received',
-//     ].includes(orderReturn.status || '')
-//   ) {
-//     return null;
-//   }
-
-//   const isRequested = orderReturn.status === 'requested';
-//   const item = orderReturn?.items?.find(
-//     (ri) => ri.item_id === itemId
-//   );
-//   const damagedQuantity = item?.damaged_quantity || 0;
-
-//   return (
-//     item && (
-//       <>
-//         {damagedQuantity > 0 && (
-//           <ReturnBreakdownWithDamages
-//             orderReturn={orderReturn}
-//             itemId={itemId}
-//           />
-//         )}
-//         <div
-//           key={item.id}
-//           className='txt-compact-small-plus text-ui-fg-subtle bg-ui-bg-subtle flex flex-row justify-between gap-y-2 border-t-2 border-dotted px-6 py-4'
-//         >
-//           <div className='flex items-center gap-2'>
-//             <ArrowDownRightMini className='text-ui-fg-muted' />
-//             <Text size='small'>
-//               {t(
-//                 `orders.returns.${
-//                   isRequested
-//                     ? 'returnRequestedInfo'
-//                     : 'returnReceivedInfo'
-//                 }`,
-//                 {
-//                   requestedItemsCount:
-//                     item?.[
-//                       isRequested
-//                         ? 'quantity'
-//                         : 'received_quantity'
-//                     ],
-//                 }
-//               )}
-//             </Text>
-
-//             {item?.note && (
-//               <Tooltip content={item.note}>
-//                 <DocumentText className='text-ui-tag-neutral-icon ml-1 inline' />
-//               </Tooltip>
-//             )}
-
-//             {item?.reason && (
-//               <Badge
-//                 size='2xsmall'
-//                 className='cursor-default select-none capitalize'
-//                 rounded='full'
-//               >
-//                 {item?.reason?.label}
-//               </Badge>
-//             )}
-//           </div>
-
-//           {orderReturn && isRequested && (
-//             <Text
-//               size='small'
-//               leading='compact'
-//               className='text-ui-fg-muted'
-//             >
-//               {getRelativeDate(orderReturn.created_at)}
-//               <span className='ml-2'>
-//                 <ReturnInfoPopover
-//                   orderReturn={orderReturn}
-//                 />
-//               </span>
-//             </Text>
-//           )}
-
-//           {orderReturn && !isRequested && (
-//             <Text
-//               size='small'
-//               leading='compact'
-//               className='text-ui-fg-muted'
-//             >
-//               {t(`orders.returns.itemReceived`)}
-
-//               <span className='ml-2'>
-//                 <ReturnInfoPopover
-//                   orderReturn={orderReturn}
-//                 />
-//               </span>
-//             </Text>
-//           )}
-//         </div>
-//       </>
-//     )
-//   );
-// };
-
-// const ClaimBreakdown = ({
-//   claim,
-//   itemId,
-// }: {
-//   claim: AdminClaim;
-//   itemId: string;
-// }) => {
-//   const { t } = useTranslation();
-//   const { getRelativeDate } = useDate();
-//   const items = claim.additional_items.filter(
-//     (item) => item.item?.id === itemId
-//   );
-
-//   return (
-//     !!items.length && (
-//       <div
-//         key={claim.id}
-//         className='txt-compact-small-plus text-ui-fg-subtle bg-ui-bg-subtle flex flex-row justify-between gap-y-2 border-b-2 border-t-2 border-dotted px-6 py-4'
-//       >
-//         <div className='flex items-center gap-2'>
-//           <ArrowDownRightMini className='text-ui-fg-muted' />
-
-//           <Text size='small'>
-//             {t(`orders.claims.outboundItemAdded`, {
-//               itemsCount: items.reduce(
-//                 (acc, item) => (acc = acc + item.quantity),
-//                 0
-//               ),
-//             })}
-//           </Text>
-//         </div>
-
-//         <Text
-//           size='small'
-//           leading='compact'
-//           className='text-ui-fg-muted'
-//         >
-//           {getRelativeDate(claim.created_at)}
-//         </Text>
-//       </div>
-//     )
-//   );
-// };
-
-// const ExchangeBreakdown = ({
-//   exchange,
-//   itemId,
-// }: {
-//   exchange: AdminExchange;
-//   itemId: string;
-// }) => {
-//   const { t } = useTranslation();
-//   const { getRelativeDate } = useDate();
-//   const items = exchange.additional_items.filter(
-//     (item) => item?.item?.id === itemId
-//   );
-
-//   return (
-//     !!items.length && (
-//       <div
-//         key={exchange.id}
-//         className='txt-compact-small-plus text-ui-fg-subtle bg-ui-bg-subtle flex flex-row justify-between gap-y-2 border-b-2 border-t-2 border-dotted px-6 py-4'
-//       >
-//         <div className='flex items-center gap-2'>
-//           <ArrowDownRightMini className='text-ui-fg-muted' />
-//           <Text size='small'>
-//             {t(`orders.exchanges.outboundItemAdded`, {
-//               itemsCount: items.reduce(
-//                 (acc, item) => (acc = acc + item.quantity),
-//                 0
-//               ),
-//             })}
-//           </Text>
-//         </div>
-
-//         <Text
-//           size='small'
-//           leading='compact'
-//           className='text-ui-fg-muted'
-//         >
-//           {getRelativeDate(exchange.created_at)}
-//         </Text>
-//       </div>
-//     )
-//   );
-// };
 
 const Total = ({ order }: { order: AdminOrder }) => {
   const { t } = useTranslation()
@@ -1118,28 +728,6 @@ const Total = ({ order }: { order: AdminOrder }) => {
         >
           {getStylizedAmount(
             getTotalCaptured(order.payment_collections || []),
-            order.currency_code
-          )}
-        </Text>
-      </div>
-
-      <div className="text-ui-fg-base flex items-center justify-between">
-        <Text
-          className="text-ui-fg-subtle text-semibold"
-          size="small"
-          leading="compact"
-          weight="plus"
-        >
-          {t("orders.returns.outstandingAmount")}
-        </Text>
-        <Text
-          className="text-ui-fg-subtle text-bold"
-          size="small"
-          leading="compact"
-          weight="plus"
-        >
-          {getStylizedAmount(
-            order.summary.pending_difference || 0,
             order.currency_code
           )}
         </Text>

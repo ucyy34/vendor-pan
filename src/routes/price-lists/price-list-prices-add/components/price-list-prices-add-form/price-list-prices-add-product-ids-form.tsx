@@ -69,7 +69,7 @@ export const PriceListPricesAddProductIdsForm = ({
     prefix: PREFIX,
   })
   const { products, count, isLoading, isError, error } = useProducts(
-    searchParams,
+    { ...searchParams, fields: "+thumbnail" },
     {
       placeholderData: keepPreviousData,
     }

@@ -16,17 +16,34 @@ type CustomerGeneralSectionProps = {
 const PREFIX = "cusord"
 const PAGE_SIZE = 10
 
+const DEFAULT_RELATIONS = "*customer,*items,*sales_channel"
+const DEFAULT_FIELDS =
+  "id,status,display_id,created_at,updated_at,email,fulfillment_status,payment_status,total,currency_code"
+
 export const CustomerOrderSection = ({
   customer,
 }: CustomerGeneralSectionProps) => {
   const { t } = useTranslation()
 
-  const { raw } = useOrderTableQuery({
+  const { searchParams, raw } = useOrderTableQuery({
     pageSize: PAGE_SIZE,
     prefix: PREFIX,
   })
 
-  const { orders, isLoading, isError, error } = useCustomerOrders(customer.id)
+  const { orders, isLoading, isError, error } = useCustomerOrders(
+    customer.id,
+    {
+      fields: DEFAULT_FIELDS + "," + DEFAULT_RELATIONS,
+      limit: searchParams.limit,
+      offset: searchParams.offset,
+    },
+    undefined,
+    {
+      created_at: searchParams.created_at,
+      updated_at: searchParams.updated_at,
+      sort: searchParams.order,
+    }
+  )
 
   const columns = useColumns()
   const filters = useOrderTableFilters()
@@ -74,7 +91,6 @@ export const CustomerOrderSection = ({
             label: t("fields.updatedAt"),
           },
         ]}
-        search={true}
         queryObject={raw}
         prefix={PREFIX}
       />

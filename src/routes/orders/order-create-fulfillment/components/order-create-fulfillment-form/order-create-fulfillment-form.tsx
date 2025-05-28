@@ -39,9 +39,11 @@ export function OrderCreateFulfillmentForm({
   const { mutateAsync: createOrderFulfillment, isPending: isMutating } =
     useCreateOrderFulfillment(order.id)
 
-  const { reservations } = useReservationItems({
-    line_item_id: order.items.map((i) => i.id),
-  })
+  const { reservations: reservationsRaw } = useReservationItems()
+
+  const reservations = reservationsRaw?.filter((r) =>
+    order.items.some((i) => i.id === r.line_item_id)
+  )
 
   const itemReservedQuantitiesMap = useMemo(
     () =>
@@ -53,7 +55,7 @@ export function OrderCreateFulfillmentForm({
     (order.items || []).filter(
       (item) =>
         item.requires_shipping === requiresShipping &&
-        getFulfillableQuantity(item) > 0
+        getFulfillableQuantity(item as any) > 0
     )
   )
 
@@ -61,12 +63,12 @@ export function OrderCreateFulfillmentForm({
     defaultValues: {
       quantity: fulfillableItems.reduce(
         (acc, item) => {
-          acc[item.id] = getFulfillableQuantity(item)
+          acc[item.id] = getFulfillableQuantity(item as any)
           return acc
         },
         {} as Record<string, number>
       ),
-      send_notification: !order.no_notification,
+      send_notification: true,
     },
     resolver: zodResolver(CreateFulfillmentSchema),
   })
@@ -92,7 +94,7 @@ export function OrderCreateFulfillmentForm({
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const selectedShippingOption = shipping_options.find(
-      (o) => o.id === shippingOptionId
+      (o) => o?.id === shippingOptionId
     )
 
     if (!selectedShippingOption) {
@@ -116,13 +118,15 @@ export function OrderCreateFulfillmentForm({
 
     const itemShippingProfileMap = order.items.reduce(
       (acc, item) => {
-        acc[item.id] = item.variant?.product?.shipping_profile?.id
+        acc[item.id] = item.variant?.product?.shipping_profile?.id ?? null
         return acc
       },
       {} as Record<string, string | null>
     )
 
-    const payload: HttpTypes.AdminCreateOrderFulfillment = {
+    const payload: HttpTypes.AdminCreateOrderFulfillment & {
+      requires_shipping: boolean
+    } = {
       location_id: selectedLocationId,
       requires_shipping: true,
       // shipping_option_id: shippingOptionId,
@@ -143,7 +147,7 @@ export function OrderCreateFulfillmentForm({
 
       toast.success(t("orders.fulfillment.toast.created"))
       handleSuccess(`/orders/${order.id}`)
-    } catch (e) {
+    } catch (e: any) {
       toast.error(e.message)
     }
   })
@@ -183,7 +187,7 @@ export function OrderCreateFulfillmentForm({
       order?.items?.filter(
         (item) =>
           item.requires_shipping === requiresShipping &&
-          getFulfillableQuantity(item) > 0
+          getFulfillableQuantity(item as OrderLineItemDTO) > 0
       ) || []
 
     setFulfillableItems(itemsToFulfill)
@@ -352,6 +356,8 @@ export function OrderCreateFulfillmentForm({
                             form={form}
                             item={item}
                             locationId={selectedLocationId}
+                            currencyCode={order.currency_code}
+                            onItemRemove={() => {}}
                             disabled={!isShippingProfileMatching}
                             itemReservedQuantitiesMap={
                               itemReservedQuantitiesMap
@@ -366,7 +372,7 @@ export function OrderCreateFulfillmentForm({
                       variant="error"
                       dismissible={false}
                       className="flex items-center"
-                      classNameInner="flex justify-between flex-1 items-center"
+                      // classNameInner="flex justify-between flex-1 items-center"
                     >
                       {form.formState.errors.root.message}
                     </Alert>

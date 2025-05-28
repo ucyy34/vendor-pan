@@ -9,14 +9,13 @@ import { Link } from "react-router-dom"
 import { ActionMenu } from "../../../../../components/common/action-menu"
 import { _DataTable } from "../../../../../components/table/data-table"
 import { useAddOrRemoveCampaignPromotions } from "../../../../../hooks/api/campaigns"
-import { usePromotions } from "../../../../../hooks/api/promotions"
 import { usePromotionTableColumns } from "../../../../../hooks/table/columns/use-promotion-table-columns"
 import { usePromotionTableFilters } from "../../../../../hooks/table/filters/use-promotion-table-filters"
 import { usePromotionTableQuery } from "../../../../../hooks/table/query/use-promotion-table-query"
 import { useDataTable } from "../../../../../hooks/use-data-table"
 
 type CampaignPromotionSectionProps = {
-  campaign: AdminCampaign
+  campaign: AdminCampaign & { promotions?: AdminPromotion[] }
 }
 
 const PAGE_SIZE = 10
@@ -29,12 +28,12 @@ export const CampaignPromotionSection = ({
   const prompt = usePrompt()
   const columns = useColumns()
   const filters = usePromotionTableFilters()
-  const { searchParams, raw } = usePromotionTableQuery({
+  const { raw } = usePromotionTableQuery({
     pageSize: PAGE_SIZE,
   })
-  const { promotions, count, isLoading, isError, error } = usePromotions({
-    ...searchParams,
-  })
+
+  const promotions = campaign.promotions
+  const count = promotions?.length ?? 0
 
   const { table } = useDataTable({
     data: promotions ?? [],
@@ -50,10 +49,6 @@ export const CampaignPromotionSection = ({
     },
     meta: { campaignId: campaign.id },
   })
-
-  if (isError) {
-    throw error
-  }
 
   const { mutateAsync } = useAddOrRemoveCampaignPromotions(campaign.id)
 
@@ -96,7 +91,7 @@ export const CampaignPromotionSection = ({
         table={table}
         columns={columns}
         pageSize={PAGE_SIZE}
-        isLoading={isLoading}
+        isLoading={false}
         count={count}
         navigateTo={(row) => `/promotions/${row.id}`}
         filters={filters}

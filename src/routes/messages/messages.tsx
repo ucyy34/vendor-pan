@@ -15,9 +15,8 @@ export const Messages = () => {
     return new Talk.User({
       id: seller?.id || "",
       name: seller?.name || "",
-      email: seller?.email || "",
-      photoUrl: seller?.photo || "",
-      welcomeMessage: "Hi, how can I help?",
+      email: seller?.email || null,
+      photoUrl: seller?.photo || "/talkjs-placeholder.jpg",
     })
   }, [seller])
 

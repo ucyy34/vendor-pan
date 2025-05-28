@@ -12,6 +12,7 @@ import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory, TQueryKey } from "../../lib/query-key-factory"
 import { inventoryItemsQueryKeys } from "./inventory"
 import { reservationItemsQueryKeys } from "./reservations"
+import { filterOrders } from "../../routes/orders/common/orderFiltering"
 
 const ORDERS_QUERY_KEY = "orders" as const
 const _orderKeys = queryKeysFactory(ORDERS_QUERY_KEY) as TQueryKey<"orders"> & {
@@ -123,7 +124,7 @@ export const useOrders = (
     >,
     "queryFn" | "queryKey"
   >,
-  filters?: Record<string, string | number>
+  filters?: any
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
@@ -135,14 +136,14 @@ export const useOrders = (
     ...options,
   })
 
-  if (!filters?.order_status) {
-    return { ...data, ...rest }
-  }
+  const filteredOrders =
+    filterOrders(data?.orders, filters, filters?.sort) || []
 
-  const filtered =
-    data?.orders.filter(
-      (order) => order.fulfillment_status === filters.order_status
-    ) || []
+  const filtered = filters?.order_status
+    ? filteredOrders.filter(
+        (order) => order.fulfillment_status === filters.order_status
+      )
+    : filteredOrders
 
   const count = filtered.length || 0
 
@@ -209,7 +210,7 @@ export const useCreateOrderFulfillment = (
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminCreateOrderFulfillment) =>
-      fetchQuery(`/vendor/orders/${orderId}/fulfillment`, {
+      fetchQuery(`/vendor/orders/${orderId}/fulfillments`, {
         method: "POST",
         body: payload,
       }),
@@ -270,7 +271,13 @@ export const useCreateOrderShipment = (
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminCreateOrderShipment) =>
-      sdk.admin.order.createShipment(orderId, fulfillmentId, payload),
+      fetchQuery(
+        `/vendor/orders/${orderId}/fulfillments/${fulfillmentId}/shipments`,
+        {
+          method: "POST",
+          body: payload,
+        }
+      ),
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: ordersQueryKeys.all,
@@ -296,7 +303,13 @@ export const useMarkOrderFulfillmentAsDelivered = (
   >
 ) => {
   return useMutation({
-    mutationFn: () => sdk.admin.order.markAsDelivered(orderId, fulfillmentId),
+    mutationFn: () =>
+      fetchQuery(
+        `/vendor/orders/${orderId}/fulfillments/${fulfillmentId}/mark-as-delivered`,
+        {
+          method: "POST",
+        }
+      ),
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: ordersQueryKeys.all,

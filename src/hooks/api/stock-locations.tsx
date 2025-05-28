@@ -121,7 +121,11 @@ export const useUpdateStockLocation = (
   >
 ) => {
   return useMutation({
-    mutationFn: (payload) => sdk.admin.stockLocation.update(id, payload),
+    mutationFn: (payload) =>
+      fetchQuery(`/vendor/stock-locations/${id}`, {
+        method: "POST",
+        body: payload,
+      }),
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: stockLocationsQueryKeys.details(),

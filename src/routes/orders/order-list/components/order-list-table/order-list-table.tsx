@@ -4,10 +4,10 @@ import { useTranslation } from "react-i18next"
 import { _DataTable } from "../../../../../components/table/data-table/data-table"
 import { useOrders } from "../../../../../hooks/api/orders"
 import { useOrderTableColumns } from "../../../../../hooks/table/columns/use-order-table-columns"
-import { useOrderTableFilters } from "../../../../../hooks/table/filters/use-order-table-filters"
 import { useOrderTableQuery } from "../../../../../hooks/table/query/use-order-table-query"
 import { useDataTable } from "../../../../../hooks/use-data-table"
 import { useSearchParams } from "react-router-dom"
+import { useOrderTableFilters } from "../../../../../hooks/table/filters"
 
 const PAGE_SIZE = 20
 
@@ -22,19 +22,21 @@ export const OrderListTable = () => {
 
   const { orders, count, isError, error, isLoading } = useOrders(
     {
-      limit: 1000,
-      offset: 0,
-      fields: "*customer",
-      ...searchParams,
+      limit: searchParams.limit,
+      offset: searchParams.offset,
+      fields: "*customer,+payment_status,*split_order_payment",
     },
     undefined,
     {
       order_status,
+      created_at: searchParams.created_at,
+      updated_at: searchParams.updated_at,
+      sort: searchParams.order,
     }
   )
 
-  const filters = useOrderTableFilters()
   const columns = useOrderTableColumns({})
+  const filters = useOrderTableFilters()
 
   const { table } = useDataTable({
     data: orders ?? [],
@@ -57,10 +59,9 @@ export const OrderListTable = () => {
         columns={columns}
         table={table}
         pagination
-        navigateTo={(row) => `/orders/${row.original.id}`}
         filters={filters}
+        navigateTo={(row) => `/orders/${row.original.id}`}
         count={count}
-        search
         isLoading={isLoading}
         pageSize={PAGE_SIZE}
         orderBy={[

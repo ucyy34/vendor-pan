@@ -4,16 +4,17 @@ import { HttpTypes } from "@medusajs/types"
 import { productsQueryKeys } from "../../../hooks/api/products"
 import { fetchQuery } from "../../../lib/client"
 import { queryClient } from "../../../lib/query-client"
+import { PAGE_SIZE } from "./components/product-list-table"
 
 const productsListQuery = () => ({
   queryKey: productsQueryKeys.list({
-    limit: 20,
+    limit: PAGE_SIZE,
     offset: 0,
   }),
   queryFn: async () =>
     fetchQuery("/vendor/products", {
       method: "GET",
-      query: { limit: 20, offset: 0 },
+      query: { limit: PAGE_SIZE, offset: 0 },
     }),
 })
 
