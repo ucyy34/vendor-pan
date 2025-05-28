@@ -57,7 +57,7 @@ const CustomerGroupDisplay = ({
   const customerGroupIds =
     priceList.price_list_rules.find(
       (rule) => rule.attribute === "customer.groups.id"
-    ).value || ([] as string[])
+    )?.value || ([] as string[])
 
   const { customer_groups, isPending, isError, error } = useCustomerGroups(
     undefined,

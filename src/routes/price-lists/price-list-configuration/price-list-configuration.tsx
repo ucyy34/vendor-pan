@@ -15,7 +15,7 @@ export const PriceListConfiguration = () => {
   const customerGroupIds =
     price_list.price_list_rules.find(
       (rule: any) => rule.attribute === "customer.groups.id"
-    ).value || ([] as string[])
+    )?.value || ([] as string[])
 
   const {
     customer_groups,
