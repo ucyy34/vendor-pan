@@ -143,13 +143,20 @@ export const RulesFormField = ({
                     const existingAttributes =
                       fields?.map((field: any) => field.attribute) || []
                     const attributeOptions =
-                      attributes?.filter((attr) => {
-                        if (attr.value === fieldRule.attribute) {
-                          return true
-                        }
+                      attributes
+                        ?.filter(
+                          ({ id }) =>
+                            id === "customer_group" ||
+                            id === "country" ||
+                            id === "product"
+                        )
+                        ?.filter((attr) => {
+                          if (attr.value === fieldRule.attribute) {
+                            return true
+                          }
 
-                        return !existingAttributes.includes(attr.value)
-                      }) || []
+                          return !existingAttributes.includes(attr.value)
+                        }) || []
 
                     const disabled = !!fieldRule.required
                     const onValueChange = (e: string) => {
