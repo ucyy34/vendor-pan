@@ -24,7 +24,7 @@ export const useProductTableQuery = ({
       "category_id",
       "collection_id",
       "is_giftcard",
-      "tag_id",
+      "tagId",
       "type_id",
       "status",
       "id",
@@ -39,7 +39,7 @@ export const useProductTableQuery = ({
     updated_at,
     category_id,
     collection_id,
-    tag_id,
+    tagId,
     type_id,
     is_giftcard,
     status,
@@ -47,7 +47,13 @@ export const useProductTableQuery = ({
     q,
   } = queryObject
 
-  const searchParams: HttpTypes.AdminProductListParams = {
+  const searchParams: HttpTypes.AdminProductListParams & {
+    tagId?: string | string[]
+    categoryId?: string | string[]
+    collectionId?: string | string[]
+    typeId?: string | string[]
+    status?: string | string[]
+  } = {
     limit: pageSize,
     offset: offset ? Number(offset) : 0,
     sales_channel_id: sales_channel_id?.split(","),
@@ -57,7 +63,7 @@ export const useProductTableQuery = ({
     collection_id: collection_id?.split(","),
     is_giftcard: is_giftcard ? is_giftcard === "true" : undefined,
     order: order,
-    tag_id: tag_id ? tag_id.split(",") : undefined,
+    tagId: tagId ? tagId.split(",") : undefined,
     type_id: type_id?.split(","),
     status: status?.split(",") as HttpTypes.AdminProductStatus[],
     q,

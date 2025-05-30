@@ -38,12 +38,22 @@ export const ProductListTable = () => {
   })
   const { products, count, isLoading, isError, error } = useProducts(
     {
-      ...searchParams,
-      fields: "+thumbnail",
+      limit: searchParams.limit,
+      offset: searchParams.offset,
+      fields: "+thumbnail,*categories",
     },
     {
       initialData,
       placeholderData: keepPreviousData,
+    },
+    {
+      collectionId: searchParams.collection_id,
+      categoryId: searchParams.category_id,
+      typeId: searchParams.type_id,
+      tagId: searchParams.tagId,
+      status: searchParams.status,
+      q: searchParams.q,
+      sort: searchParams.order,
     }
   )
 
