@@ -39,7 +39,7 @@ export const PriceListPricesAddPricesForm = ({
     isError,
     error,
   } = useProducts({
-    fields: "title,thumbnail,*variants",
+    fields: "title,thumbnail,*variants,+status",
   })
 
   const products = productsRaw?.filter((product) =>
