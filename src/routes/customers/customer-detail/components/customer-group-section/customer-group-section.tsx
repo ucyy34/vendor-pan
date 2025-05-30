@@ -12,7 +12,6 @@ import { t } from "i18next"
 import { useMemo, useState } from "react"
 
 import { PencilSquare, Trash } from "@medusajs/icons"
-import { keepPreviousData } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
@@ -55,6 +54,7 @@ export const CustomerGroupSection = ({
       },
       undefined,
       {
+        customer: customer.id,
         created_at: searchParams.created_at,
         updated_at: searchParams.updated_at,
         sort: searchParams.order,
