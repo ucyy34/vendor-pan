@@ -157,7 +157,10 @@ export const useProductVariants = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: () => sdk.admin.product.listVariants(productId, query),
+    queryFn: () => sdk.client.fetch(`/vendor/products/${productId}/variants`, {
+      method: "GET",
+      query: query
+    }) as Promise<HttpTypes.AdminProductVariantListResponse>,
     queryKey: variantsQueryKeys.list({
       productId,
       ...query,
@@ -227,9 +230,12 @@ export const useUpdateProductVariantsBatch = (
     mutationFn: (
       payload: HttpTypes.AdminBatchProductVariantRequest["update"]
     ) =>
-      sdk.admin.product.batchVariants(productId, {
-        update: payload,
-      }),
+      sdk.client.fetch(`/vendor/products/${productId}/variants/batch`, {
+        method: "POST",
+        body: {
+          update: payload,
+        },
+      }) as Promise<HttpTypes.AdminBatchProductVariantResponse>,
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: variantsQueryKeys.lists(),
@@ -408,13 +414,21 @@ export const useProducts = (
     sort?: string
   }
 ) => {
+  // Ensure barcode and metadata are included in the query
+  const queryWithFields = {
+    ...query,
+    fields: query?.fields 
+      ? `${query.fields},*variants.barcode,*variants.metadata` 
+      : "*variants.barcode,*variants.metadata",
+  }
+
   const { data, ...rest } = useQuery({
     queryFn: () =>
       fetchQuery("/vendor/products", {
         method: "GET",
-        query: query as Record<string, string | number>,
+        query: queryWithFields as Record<string, string | number>,
       }),
-    queryKey: productsQueryKeys.list(query),
+    queryKey: productsQueryKeys.list(queryWithFields),
     ...options,
   })
 
