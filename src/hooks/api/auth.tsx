@@ -7,8 +7,8 @@ export const useSignInWithEmailPass = (
   options?: UseMutationOptions<
     | string
     | {
-        location: string
-      },
+      location: string
+    },
     FetchError,
     HttpTypes.AdminSignUpWithEmailPassword
   >
@@ -29,14 +29,19 @@ export const useSignUpWithEmailPass = (
     HttpTypes.AdminSignInWithEmailPassword & {
       confirmPassword: string
       name: string
+      phone: string
+      type: "manufacturer" | "reseller"
     }
   >
 ) => {
   return useMutation({
     mutationFn: (payload) => sdk.auth.register("seller", "emailpass", payload),
     onSuccess: async (_, variables) => {
-      const seller = {
+      const sellerPayload = {
         name: variables.name,
+        phone: variables.phone,
+        type: variables.type,
+        email: variables.email,
         member: {
           name: variables.name,
           email: variables.email,
@@ -44,7 +49,7 @@ export const useSignUpWithEmailPass = (
       }
       await fetchQuery("/vendor/sellers", {
         method: "POST",
-        body: seller,
+        body: sellerPayload,
       })
     },
     ...options,

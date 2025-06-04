@@ -33,6 +33,7 @@ export const useProductCategory = (
     queryFn: () =>
       fetchQuery(`/vendor/product-categories/${id}`, {
         method: "GET",
+        query: query as Record<string, string | number>,
       }),
     ...options,
   })
@@ -57,6 +58,7 @@ export const useProductCategories = (
     queryFn: () =>
       fetchQuery("/vendor/product-categories", {
         method: "GET",
+        query: query as Record<string, string | number>,
       }),
     ...options,
   })
