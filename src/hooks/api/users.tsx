@@ -137,9 +137,12 @@ export const useUserMe = (
 export const useStatistics = ({ from, to }: { from: string; to: string }) => {
   const { data, ...rest } = useQuery({
     queryFn: () =>
-      fetchQuery(`/vendor/statistics?time_from=${from}&time_to=${to}`, {
-        method: "GET",
-      }),
+      fetchQuery(
+        `/vendor/statistics?time_from=${from}T00:00:00Z&time_to=${to}T23:59:59Z`,
+        {
+          method: "GET",
+        }
+      ),
     queryKey: [USERS_QUERY_KEY, "statistics"],
   })
 
