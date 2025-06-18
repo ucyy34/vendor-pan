@@ -145,6 +145,15 @@ export const RouteMap: RouteObject[] = [
                     Component: RequestOrdersList,
                   }
                 },
+                children: [
+                  {
+                    path: ":id/review",
+                    lazy: async () =>
+                      await import(
+                        "../../routes/requests/request-order-return"
+                      ),
+                  },
+                ],
               },
               {
                 path: ":id",
