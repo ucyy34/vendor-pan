@@ -10,10 +10,7 @@ import {
   TriangleDownMini,
 } from "@medusajs/icons"
 import {
-  AdminClaim,
-  AdminExchange,
   AdminOrder,
-  AdminOrderLineItem,
   AdminOrderPreview,
   AdminPaymentCollection,
   AdminRegion,
@@ -25,9 +22,7 @@ import {
   Button,
   clx,
   Container,
-  Copy,
   Heading,
-  StatusBadge,
   Text,
   toast,
   usePrompt,
