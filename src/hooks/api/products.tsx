@@ -332,7 +332,17 @@ export const useDeleteVariantLazy = (
   })
 }
 
-const useProductAttributes = () => {}
+export const useProductAttributes = (id: string) => {
+  const { data, ...rest } = useQuery({
+    queryFn: () =>
+      fetchQuery(`/vendor/products/${id}/applicable-attributes`, {
+        method: "GET",
+      }),
+    queryKey: ["product", id, "product-attributes"],
+  })
+
+  return { ...data, ...rest }
+}
 
 export const useProduct = (
   id: string,
