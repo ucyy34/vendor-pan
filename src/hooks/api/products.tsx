@@ -332,6 +332,8 @@ export const useDeleteVariantLazy = (
   })
 }
 
+const useProductAttributes = () => {}
+
 export const useProduct = (
   id: string,
   query?: Record<string, any>,
@@ -351,7 +353,7 @@ export const useProduct = (
         method: "GET",
         query: query as { [key: string]: string | number },
       }),
-    queryKey: productsQueryKeys.detail(id, query),
+    queryKey: productsQueryKeys.detail(id),
     ...options,
   })
 
@@ -414,7 +416,7 @@ export const useProducts = (
         method: "GET",
         query: query as Record<string, string | number>,
       }),
-    queryKey: productsQueryKeys.list(query),
+    queryKey: productsQueryKeys.list(),
     ...options,
   })
 
