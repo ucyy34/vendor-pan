@@ -55,7 +55,7 @@ export const ProductDetail = () => {
         {/* <ProductShippingProfileSection product={product} /> */}
         <ProductOrganizationSection product={product} />
         <ProductAttributeSection product={product} />
-        <ProductAdditionalAttributesSection product={product as any} />
+        {/* <ProductAdditionalAttributesSection product={product as any} /> */}
       </TwoColumnPage.Sidebar>
     </TwoColumnPage>
   )
