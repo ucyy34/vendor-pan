@@ -527,7 +527,8 @@ export const useUpdateProduct = (
       const { product } = await fetchQuery(`/vendor/products/${id}`, {
         method: "GET",
         query: {
-          fields: "-status,-options,-variants,-type,-collection",
+          fields:
+            "-status,-options,-variants,-type,-collection,-attribute_values",
         },
       })
 

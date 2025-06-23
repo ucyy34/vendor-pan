@@ -7,9 +7,12 @@ export const AttributeSelect = ({
   values: any[]
   field: any
 }) => {
-  //   console.log({ values })
+  const handleChange = (value: string) => {
+    field.onChange(value)
+  }
+
   return (
-    <Select onValueChange={field.onChange} value={field.value}>
+    <Select onValueChange={(value) => handleChange(value)} value={field.value}>
       <Select.Trigger className="bg-ui-bg-base">
         <Select.Value placeholder="Select value" />
       </Select.Trigger>
@@ -17,7 +20,7 @@ export const AttributeSelect = ({
         {values.map(({ id, attribute_id, value }) => (
           <Select.Item
             key={`select-option-${attribute_id}-${id}`}
-            value={attribute_id}
+            value={value}
           >
             {value}
           </Select.Item>
