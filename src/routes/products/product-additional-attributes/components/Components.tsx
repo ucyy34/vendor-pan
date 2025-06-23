@@ -14,9 +14,19 @@ export const Components = ({
     return <AttributeSelect values={possible_values} field={field} />
 
   if (ui_component === "toggle")
-    return <Switch {...field} onCheckedChange={field.onChange} />
+    return (
+      <Switch
+        {...field}
+        onCheckedChange={field.onChange}
+        checked={field.value === "true" || field.value === true}
+      />
+    )
 
   if (ui_component === "text_area") return <Textarea {...field} rows={4} />
 
-  return <Input placeholder="Enter value" {...field} />
+  if (ui_component === "unit") return <Input type="number" {...field} />
+
+  if (ui_component === "text") return <Input {...field} />
+
+  return <Input {...field} />
 }

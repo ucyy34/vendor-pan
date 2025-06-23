@@ -37,6 +37,7 @@ export const ProductAdditionalAttributesSection = ({
           key={attribute.id}
           title={attribute.attribute.name}
           value={attribute.value}
+          tooltip={attribute.attribute.description}
         />
       ))}
     </Container>

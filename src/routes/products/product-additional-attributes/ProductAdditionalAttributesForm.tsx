@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Heading, toast } from "@medusajs/ui"
+import { Button, Heading, toast, Tooltip } from "@medusajs/ui"
 import { RouteDrawer } from "../../../components/modals"
 import {
   useProduct,
@@ -12,6 +12,7 @@ import { Components } from "./components/Components"
 import { useForm } from "react-hook-form"
 import { Form } from "../../../components/common/form"
 import { useNavigate } from "react-router-dom"
+import { InformationCircleSolid } from "@medusajs/icons"
 
 export const ProductAdditionalAttributesForm = () => {
   const { id } = useParams()
@@ -57,12 +58,13 @@ export const ProductAdditionalAttributesForm = () => {
       ...Object.assign({}, ...formattedData.filter(Boolean)),
     }
 
-    const values = Object.keys(payload)
-      .reduce((acc: Array<Record<string, string>>, key) => {
+    const values = Object.keys(payload).reduce(
+      (acc: Array<Record<string, string>>, key) => {
         acc.push({ attribute_id: key, value: payload[key] })
         return acc
-      }, [])
-      .filter((item) => Boolean(item.value))
+      },
+      []
+    )
 
     await updateProduct(
       {
@@ -95,7 +97,15 @@ export const ProductAdditionalAttributesForm = () => {
                   return (
                     <Form.Item key={a.id} className="w-full mb-4">
                       <Form.Label className="flex flex-col gap-y-2 w-full">
-                        {a.name}
+                        <span className="flex items-center gap-x-2">
+                          {a.name}
+                          {a.description && (
+                            <Tooltip content={a.description}>
+                              <InformationCircleSolid />
+                            </Tooltip>
+                          )}
+                        </span>
+
                         <Form.Control>
                           <Components attribute={a} field={field} />
                         </Form.Control>
