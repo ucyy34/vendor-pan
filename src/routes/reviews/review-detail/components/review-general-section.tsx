@@ -6,7 +6,13 @@ import { ActionMenu } from "../../../../components/common/action-menu"
 import { ExclamationCircle } from "@medusajs/icons"
 import { Link } from "react-router-dom"
 
-export const ReviewGeneralSection = ({ review }: { review: any }) => {
+export const ReviewGeneralSection = ({
+  review,
+  isRequested = false,
+}: {
+  review: any
+  isRequested?: boolean
+}) => {
   return (
     <Container className="divide-y p-0">
       <div className="flex items-center justify-between px-6 py-4">
@@ -15,19 +21,27 @@ export const ReviewGeneralSection = ({ review }: { review: any }) => {
           <Badge>
             <StatusCell status={review.seller_note} />
           </Badge>
-          <ActionMenu
-            groups={[
-              {
-                actions: [
-                  {
-                    label: "Report review",
-                    to: `/reviews/${review.id}/report`,
-                    icon: <ExclamationCircle />,
-                  },
-                ],
-              },
-            ]}
-          />
+          {isRequested ? (
+            <Badge className="flex items-center gap-2">
+              <ExclamationCircle />
+              Requested to remove
+            </Badge>
+          ) : (
+            <ActionMenu
+              groups={[
+                {
+                  actions: [
+                    {
+                      label: "Report review",
+                      to: `/reviews/${review.id}/report`,
+                      icon: <ExclamationCircle />,
+                      disabled: isRequested,
+                    },
+                  ],
+                },
+              ]}
+            />
+          )}
         </div>
       </div>
       <div className="px-6 py-4 grid grid-cols-2">
