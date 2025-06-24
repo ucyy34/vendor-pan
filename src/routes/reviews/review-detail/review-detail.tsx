@@ -7,6 +7,7 @@ import { reviewLoader } from "./loader"
 import { TwoColumnPageSkeleton } from "../../../components/common/skeleton"
 import { ReviewCustomerSection } from "./components/review-customer-section"
 import { ReviewProductSection } from "./components/review-product-section"
+import { useRequests } from "../../../hooks/api"
 
 export const ReviewDetail = () => {
   const initialData = useLoaderData() as Awaited<
@@ -20,8 +21,15 @@ export const ReviewDetail = () => {
     { initialData }
   )
 
+  const { requests, isLoading: isRequestsLoading } = useRequests()
+
+  const isRequested = requests?.some(
+    (request: any) =>
+      request.type === "review_remove" && request.data.review_id === id
+  )
+
   const { getWidgets } = useDashboardExtension()
-  if (isLoading || !review) {
+  if (isLoading || !review || isRequestsLoading) {
     return (
       <TwoColumnPageSkeleton
         mainSections={2}
@@ -47,7 +55,7 @@ export const ReviewDetail = () => {
       data={review}
     >
       <TwoColumnPage.Main>
-        <ReviewGeneralSection review={review} />
+        <ReviewGeneralSection review={review} isRequested={isRequested} />
       </TwoColumnPage.Main>
       <TwoColumnPage.Sidebar>
         <ReviewCustomerSection customer={review.customer} />
