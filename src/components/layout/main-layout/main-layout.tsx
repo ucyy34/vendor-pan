@@ -28,6 +28,7 @@ import { useMe } from "../../../hooks/api"
 import { useSearch } from "../../../providers/search-provider"
 import { UserMenu } from "../user-menu"
 import { StripeIcon } from "../../../assets/icons/Stripe"
+import { ImageAvatar } from "../../common/image-avatar"
 
 export const MainLayout = () => {
   return (
@@ -71,13 +72,8 @@ const Header = () => {
   return (
     <div className="w-full p-3 p-0.5 pr-2 bg-ui-bg-subtle grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3">
       {fallback ? (
-        <div className="w-6 h-6">
-          <Avatar
-            size="small"
-            variant="rounded"
-            src={seller?.photo || "/logo.svg"}
-            fallback={"/logo.svg"}
-          />
+        <div className="w-7 h-7">
+          <ImageAvatar src={seller?.photo || "/logo.svg"} size={7} rounded />
         </div>
       ) : (
         <Skeleton className="h-6 w-6 rounded-md" />
