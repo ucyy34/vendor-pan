@@ -5,8 +5,21 @@ import { Session } from "@talkjs/react"
 import { useMe } from "../../hooks/api"
 
 export const TalkjsProvider = ({ children }: { children: React.ReactNode }) => {
-  const { seller, error } = useMe()
+  const { seller, isPending } = useMe()
 
+  if (isPending)
+    return <div className="flex justify-center items-center h-screen" />
+
+  return <ProviderContent seller={seller}>{children}</ProviderContent>
+}
+
+const ProviderContent = ({
+  children,
+  seller,
+}: {
+  children: React.ReactNode
+  seller: any
+}) => {
   const syncUser = useCallback(() => {
     return new Talk.User({
       id: seller?.id || "",
@@ -16,7 +29,7 @@ export const TalkjsProvider = ({ children }: { children: React.ReactNode }) => {
     })
   }, [seller])
 
-  if (!__TALK_JS_APP_ID__ || error) return <>{children}</>
+  if (!__TALK_JS_APP_ID__ || !seller) return <>{children}</>
 
   return (
     <Session appId={__TALK_JS_APP_ID__} syncUser={syncUser}>
