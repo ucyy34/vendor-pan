@@ -93,7 +93,7 @@ export const EditProductForm = ({ product }: EditProductFormProps) => {
         <RouteDrawer.Body className="flex flex-1 flex-col gap-y-8 overflow-y-auto">
           <div className="flex flex-col gap-y-8">
             <div className="flex flex-col gap-y-4">
-              <Form.Field
+              {/* <Form.Field
                 control={form.control}
                 name="status"
                 render={({ field: { onChange, ref, ...field } }) => {
@@ -127,7 +127,7 @@ export const EditProductForm = ({ product }: EditProductFormProps) => {
                     </Form.Item>
                   )
                 }}
-              />
+              /> */}
               <Form.Field
                 control={form.control}
                 name="title"
