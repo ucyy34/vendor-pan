@@ -21,7 +21,7 @@ export const Dashboard = () => {
     orders?.filter((order) => order.fulfillment_status === "fulfilled")
       .length || 0
   const reviewsToReply =
-    reviews?.filter((review: any) => !review.seller_note).length || 0
+    reviews?.filter((review: any) => !review?.seller_note).length || 0
 
   if (!isClient) return null
 
