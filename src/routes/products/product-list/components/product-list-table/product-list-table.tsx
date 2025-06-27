@@ -24,7 +24,7 @@ import { useProductTableQuery } from "../../../../../hooks/table/query/use-produ
 import { useDataTable } from "../../../../../hooks/use-data-table"
 import { productsLoader } from "../../loader"
 
-export const PAGE_SIZE = 20
+export const PAGE_SIZE = 5
 
 export const ProductListTable = () => {
   const { t } = useTranslation()
@@ -38,8 +38,6 @@ export const ProductListTable = () => {
   })
   const { products, count, isLoading, isError, error } = useProducts(
     {
-      limit: searchParams.limit,
-      offset: searchParams.offset,
       fields: "+thumbnail,*categories,+status",
     },
     {
@@ -57,13 +55,22 @@ export const ProductListTable = () => {
     }
   )
 
+  const offset = searchParams.offset || 0
+
+  const processedProducts = (products as HttpTypes.AdminProduct[])?.slice(
+    offset,
+    offset + PAGE_SIZE
+  )
+  const processedCount =
+    count < (products?.length || 0) ? count : products?.length || 0
+
   const filters = useProductTableFilters()
   const columns = useColumns()
 
   const { table } = useDataTable({
-    data: (products ?? []) as HttpTypes.AdminProduct[],
+    data: processedProducts,
     columns,
-    count,
+    count: processedCount,
     enablePagination: true,
     pageSize: PAGE_SIZE,
     getRowId: (row) => row?.id || "",
@@ -92,7 +99,7 @@ export const ProductListTable = () => {
       <_DataTable
         table={table}
         columns={columns}
-        count={count}
+        count={processedCount}
         pageSize={PAGE_SIZE}
         filters={filters}
         search
