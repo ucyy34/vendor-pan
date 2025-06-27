@@ -145,7 +145,7 @@ export const useOrders = (
       )
     : filteredOrders
 
-  const count = filtered.length || 0
+  const count = data?.count || 0
 
   return { count, orders: filtered, ...rest }
 }
