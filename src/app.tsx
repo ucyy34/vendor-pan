@@ -8,7 +8,6 @@ import menuItemModule from "virtual:medusa/menu-items"
 import widgetModule from "virtual:medusa/widgets"
 
 import "./index.css"
-import { TalkjsProvider } from "./providers/talkjs-provider"
 
 function App() {
   const manager = new DashboardExtensionManager({
@@ -19,9 +18,7 @@ function App() {
   })
   return (
     <Providers api={manager.api}>
-      <TalkjsProvider>
-        <RouterProvider />
-      </TalkjsProvider>
+      <RouterProvider />
     </Providers>
   )
 }
