@@ -9,7 +9,7 @@ import { useDataTable } from "../../../../../hooks/use-data-table"
 import { useSearchParams } from "react-router-dom"
 import { useOrderTableFilters } from "../../../../../hooks/table/filters"
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 
 export const OrderListTable = () => {
   const { t } = useTranslation()
