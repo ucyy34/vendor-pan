@@ -555,8 +555,8 @@
         "hint": "Lorsque la case n'est pas cochée, les remises ne seront pas appliquées à ce produit"
       },
       "shipping_profile": {
-        "label": "Shipping profile",
-        "hint": "Connect the product to a shipping profile"
+        "label": "Profil de livraison",
+        "hint": "Connectez le produit à un profil de livraison"
       },
       "type": {
         "label": "Type"
@@ -686,16 +686,16 @@
       }
     },
     "shippingProfile": {
-      "header": "Shipping configuration",
+      "header": "Configuration de la livraison",
       "edit": {
-        "header": "Shipping Configuration",
+        "header": "Configuration de la livraison",
         "toasts": {
-          "success": "Successfully updated the shipping profile for {{title}}."
+          "success": "Profil de livraison de {{title}} mis à jour avec succès."
         }
       },
       "create": {
         "errors": {
-          "required": "Shipping profile is required"
+          "required": "Le profil de livraison est requis"
         }
       }
     },
@@ -1772,7 +1772,7 @@
       }
     },
     "emirate": {
-      "header": "Emirats",
+      "header": "Émirats",
       "create": {
         "header": "Créer une taxe pour les émirats",
         "hint": "Créer une nouvelle taxe pour définir les taux de taxe pour un émirat spécifique."
@@ -1883,7 +1883,7 @@
           "sublevel": "Code de niveau subordonné"
         },
         "placeholders": {
-          "province": "Selectionner la province",
+          "province": "Sélectionner la province",
           "state": "Sélectionner l'état",
           "region": "Sélectionner la région",
           "stateOrTerritory": "Sélectionner l'état/territoire",
@@ -2337,8 +2337,8 @@
     "editStore": "Modifier la boutique",
     "defaultCurrency": "Devise par défaut",
     "defaultRegion": "Région par défaut",
-    "defaultSalesChannel": "Default sales channel",
-    "defaultLocation": "Default location",
+    "defaultSalesChannel": "Canal de vente par défaut",
+    "defaultLocation": "Emplacement par défaut",
     "swapLinkTemplate": "Lien de remplacement",
     "paymentLinkTemplate": "Lien de paiement",
     "inviteLinkTemplate": "Lien d'invitation",
