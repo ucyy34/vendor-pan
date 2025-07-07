@@ -255,7 +255,7 @@
       },
       "settings": {
         "header": "Paramètres",
-        "general": "General",
+        "general": "Général",
         "developer": "Développeur",
         "myAccount": "Mon compte"
       }
@@ -310,7 +310,7 @@
       "custom": "Personnalisé",
       "from": "De",
       "to": "À",
-      "starting": "Starting",
+      "starting": "Début",
       "ending": "Fin"
     },
     "compare": {
@@ -406,7 +406,7 @@
     "create": {
       "title": "Créer un produit",
       "description": "Créer un nouveau produit.",
-      "header": "General",
+      "header": "Général",
       "tabs": {
         "details": "Détails",
         "organize": "Organiser",
@@ -626,7 +626,7 @@
       "tableItem_one": "{{availableCount}} disponible à {{locationCount}} emplacement",
       "tableItem_other": "{{availableCount}} disponible à {{locationCount}} emplacements",
       "inventory": {
-        "notManaged": "Not managed",
+        "notManaged": "Non géré",
         "manageItems": "Gérer les articles d'inventaire",
         "notManagedDesc": "L'inventaire n'est pas géré pour cette variante. Activez ‘Gérer l'inventaire’ pour suivre l'inventaire de la variante.",
         "manageKit": "Gérer l'inventaire du kit",
@@ -738,7 +738,7 @@
     }
   },
   "categories": {
-    "domain": "Categories",
+    "domain": "Catégories",
     "subtitle": "Organisez vos produits en catégories, et gérez l'ordre et la hiérarchie de ces catégories.",
     "create": {
       "header": "Créer une catégorie",
@@ -813,7 +813,7 @@
     "editItemDetails": "Modifier les détails de l'article",
     "create": {
       "title": "Créer un article d'inventaire",
-      "details": "Details",
+      "details": "Détails",
       "availability": "Disponibilité",
       "locations": "Emplacements",
       "attributes": "Attributs",
@@ -938,12 +938,12 @@
     "subtitle": "Organisez les clients en groupes. Les groupes peuvent avoir des promotions et des prix différents.",
     "list": {
       "empty": {
-        "heading": "No customer groups",
-        "description": "There are no customer groups to display."
+        "heading": "Aucun groupe de clients",
+        "description": "Il n'y a aucun groupe de clients à afficher."
       },
       "filtered": {
-        "heading": "No results",
-        "description": "No customer groups match the current filter criteria."
+        "heading": "Aucun résultat",
+        "description": "Aucun groupe de clients ne correspond aux critères de filtre actuels."
       }
     },
     "create": {
@@ -2008,7 +2008,7 @@
         }
       },
       "status": {
-        "label": "Status",
+        "label": "Statut",
         "draft": {
           "title": "Brouillon",
           "description": "Les clients ne pourront pas encore utiliser le code"
@@ -2238,7 +2238,7 @@
         "header": "Prix de remplacement"
       },
       "status": {
-        "label": "Status",
+        "label": "Statut",
         "options": {
           "active": "Active",
           "draft": "Brouillon",
