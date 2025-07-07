@@ -1524,7 +1524,7 @@
     },
     "pickupOptions": {
       "edit": {
-        "header": "Edit Pickup Option"
+        "header": "Modifier l'option de retrait"
       }
     },
     "shippingOptions": {
@@ -1604,8 +1604,8 @@
         "count": {
           "shipping_one": "{{count}} option de livraison",
           "shipping_other": "{{count}} options de livraison",
-          "pickup_one": "{{count}} pickup option",
-          "pickup_other": "{{count}} pickup options",
+          "pickup_one": "{{count}} option de retrait",
+          "pickup_other": "{{count}} options de retrait",
           "returns_one": "{{count}} option de retour",
           "returns_other": "{{count}} options de retour"
         },
@@ -1786,7 +1786,7 @@
       }
     },
     "taxOverrides": {
-      "header": "surcharge",
+      "header": "Surcharge",
       "create": {
         "header": "Créer une surcharge",
         "hint": "Créer une taxe qui surcharge les taux de taxe par défaut pour les conditions sélectionnées."
