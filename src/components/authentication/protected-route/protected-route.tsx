@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { useMe } from "../../../hooks/api/users"
 import { SearchProvider } from "../../../providers/search-provider"
 import { SidebarProvider } from "../../../providers/sidebar-provider"
+import { TalkjsProvider } from "../../../providers/talkjs-provider"
 
 export const ProtectedRoute = () => {
   const { seller, isPending, error } = useMe()
@@ -28,15 +29,17 @@ export const ProtectedRoute = () => {
   }
 
   return (
-    <SidebarProvider>
-      <SearchProvider>
-        {isSuspended && (
-          <div className="w-full bg-red-600 text-white p-1 text-center text-sm">
-            Your store is <b>suspended</b>. Please contact support.
-          </div>
-        )}
-        <Outlet />
-      </SearchProvider>
-    </SidebarProvider>
+    <TalkjsProvider>
+      <SidebarProvider>
+        <SearchProvider>
+          {isSuspended && (
+            <div className="w-full bg-red-600 text-white p-1 text-center text-sm">
+              Your store is <b>suspended</b>. Please contact support.
+            </div>
+          )}
+          <Outlet />
+        </SearchProvider>
+      </SidebarProvider>
+    </TalkjsProvider>
   )
 }

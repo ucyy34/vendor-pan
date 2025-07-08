@@ -57,13 +57,22 @@ export const ProductListTable = () => {
     }
   )
 
+  const offset = searchParams.offset || 0
+
+  const processedProducts = (products as HttpTypes.AdminProduct[])?.slice(
+    offset,
+    offset + PAGE_SIZE
+  )
+  const processedCount =
+    count < (products?.length || 0) ? count : products?.length || 0
+
   const filters = useProductTableFilters()
   const columns = useColumns()
 
   const { table } = useDataTable({
-    data: (products ?? []) as HttpTypes.AdminProduct[],
+    data: processedProducts,
     columns,
-    count,
+    count: processedCount,
     enablePagination: true,
     pageSize: PAGE_SIZE,
     getRowId: (row) => row?.id || "",
@@ -92,7 +101,7 @@ export const ProductListTable = () => {
       <_DataTable
         table={table}
         columns={columns}
-        count={count}
+        count={processedCount}
         pageSize={PAGE_SIZE}
         filters={filters}
         search

@@ -22,8 +22,6 @@ export const OrderListTable = () => {
 
   const { orders, count, isError, error, isLoading } = useOrders(
     {
-      limit: searchParams.limit,
-      offset: searchParams.offset,
       fields: "*customer,+payment_status,*split_order_payment",
     },
     undefined,
@@ -35,14 +33,19 @@ export const OrderListTable = () => {
     }
   )
 
+  const offset = searchParams.offset || 0
+
+  const processedOrders = orders?.slice(offset, offset + PAGE_SIZE)
+  const processedCount = count < orders?.length ? count : orders?.length || 0
+
   const columns = useOrderTableColumns({})
   const filters = useOrderTableFilters()
 
   const { table } = useDataTable({
-    data: orders ?? [],
+    data: processedOrders ?? [],
     columns,
     enablePagination: true,
-    count,
+    count: processedCount,
     pageSize: PAGE_SIZE,
   })
 
@@ -61,7 +64,7 @@ export const OrderListTable = () => {
         pagination
         filters={filters}
         navigateTo={(row) => `/orders/${row.original.id}`}
-        count={count}
+        count={processedCount}
         isLoading={isLoading}
         pageSize={PAGE_SIZE}
         orderBy={[
