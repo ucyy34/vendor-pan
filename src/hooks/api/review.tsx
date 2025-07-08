@@ -62,7 +62,7 @@ export const useReviews = (
     ...options,
   })
 
-  return { ...data, ...rest }
+  return { ...data, reviews: data?.reviews.filter(Boolean) || [], ...rest }
 }
 
 export const useUpdateReview = (

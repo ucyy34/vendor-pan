@@ -402,7 +402,7 @@ export const useProducts = (
         method: "GET",
         query: query as Record<string, string | number>,
       }),
-    queryKey: productsQueryKeys.list(),
+    queryKey: productsQueryKeys.list(query),
     ...options,
   })
 
