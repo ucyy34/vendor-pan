@@ -38,6 +38,8 @@ export const ProductListTable = () => {
   })
   const { products, count, isLoading, isError, error } = useProducts(
     {
+      limit: searchParams.limit,
+      offset: searchParams.offset,
       fields: "+thumbnail,*categories,+status",
     },
     {

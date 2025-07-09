@@ -129,7 +129,7 @@ function initRecord(
   const record: PriceListUpdateProductsSchema = {}
 
   const variantPrices = priceList.prices?.reduce((variants, price) => {
-    const variantObject = variants[price.variant_id] || {}
+    const variantObject = variants[price.price_set.variant.id] || {}
 
     const isRegionPrice = !!price.price_rules.find(
       (item) => item.attribute === "region_id"
