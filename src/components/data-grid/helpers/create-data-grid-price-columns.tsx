@@ -40,47 +40,47 @@ export const createDataGridPriceColumns = <
   const columnHelper = createDataGridHelper<TData, TFieldValues>()
 
   return [
-    ...(currencies?.map((currency) => {
-      const preference = pricePreferences?.find(
-        (p) => p.attribute === "currency_code" && p.value === currency
-      )
+    // ...(currencies?.map((currency) => {
+    //   const preference = pricePreferences?.find(
+    //     (p) => p.attribute === "currency_code" && p.value === currency
+    //   )
 
-      const translatedCurrencyName = t("fields.priceTemplate", {
-        regionOrCurrency: currency.toUpperCase(),
-      })
+    //   const translatedCurrencyName = t("fields.priceTemplate", {
+    //     regionOrCurrency: currency.toUpperCase(),
+    //   })
 
-      return columnHelper.column({
-        id: `currency_prices.${currency}`,
-        name: t("fields.priceTemplate", {
-          regionOrCurrency: currency.toUpperCase(),
-        }),
-        field: (context) => {
-          const isReadyOnlyValue = isReadyOnly?.(context)
+    //   return columnHelper.column({
+    //     id: `currency_prices.${currency}`,
+    //     name: t("fields.priceTemplate", {
+    //       regionOrCurrency: currency.toUpperCase(),
+    //     }),
+    //     field: (context) => {
+    //       const isReadyOnlyValue = isReadyOnly?.(context)
 
-          if (isReadyOnlyValue) {
-            return null
-          }
+    //       if (isReadyOnlyValue) {
+    //         return null
+    //       }
 
-          return getFieldName(context, currency)
-        },
-        type: "number",
-        header: () => (
-          <div className="flex w-full items-center justify-between gap-3">
-            <span className="truncate" title={translatedCurrencyName}>
-              {translatedCurrencyName}
-            </span>
-            <IncludesTaxTooltip includesTax={preference?.is_tax_inclusive} />
-          </div>
-        ),
-        cell: (context) => {
-          if (isReadyOnly?.(context)) {
-            return <DataGridReadonlyCell context={context} />
-          }
+    //       return getFieldName(context, currency)
+    //     },
+    //     type: "number",
+    //     header: () => (
+    //       <div className="flex w-full items-center justify-between gap-3">
+    //         <span className="truncate" title={translatedCurrencyName}>
+    //           {translatedCurrencyName}
+    //         </span>
+    //         <IncludesTaxTooltip includesTax={preference?.is_tax_inclusive} />
+    //       </div>
+    //     ),
+    //     cell: (context) => {
+    //       if (isReadyOnly?.(context)) {
+    //         return <DataGridReadonlyCell context={context} />
+    //       }
 
-          return <DataGridCurrencyCell code={currency} context={context} />
-        },
-      })
-    }) ?? []),
+    //       return <DataGridCurrencyCell code={currency} context={context} />
+    //     },
+    //   })
+    // }) ?? []),
     ...(regions?.map((region) => {
       const preference = pricePreferences?.find(
         (p) => p.attribute === "region_id" && p.value === region.id
