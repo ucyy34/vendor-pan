@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { HttpTypes } from "@medusajs/types"
 import { Button, toast } from "@medusajs/ui"
 import { useRef } from "react"
@@ -49,7 +48,7 @@ export const PriceListPricesEditForm = ({
     defaultValues: {
       products: initialValue.current,
     },
-    resolver: zodResolver(PricingProductPricesSchema),
+    // resolver: zodResolver(PricingProductPricesSchema),
   })
 
   const { mutateAsync, isPending } = usePriceListLinkProducts(priceList.id)
