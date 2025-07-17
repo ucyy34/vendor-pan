@@ -16,9 +16,9 @@ export const RequestOrdersList = () => {
       <Container className="divided-y p-0">
         <div className="flex items-center justify-between px-6 py-4">
           <div>
-            <Heading>Orders Cancellation Requests</Heading>
+            <Heading>Orders Return Requests</Heading>
             <Text className="text-ui-fg-subtle" size="small">
-              Your requests to cancel an order
+              Your requests to return an order
             </Text>
           </div>
         </div>
