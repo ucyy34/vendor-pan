@@ -126,6 +126,7 @@ export const PricingEdit = ({
     delete data["created_at"]
     delete data["updated_at"]
     delete data["deleted_at"]
+    delete data["inventory_items"]
 
     await mutateAsync(data, {
       onSuccess: () => {

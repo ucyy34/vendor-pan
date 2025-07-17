@@ -51,6 +51,7 @@ export const useInvites = (
     queryFn: () =>
       fetchQuery("/vendor/invites", {
         method: "GET",
+        query: query,
       }),
     queryKey: invitesQueryKeys.list(query),
     ...options,

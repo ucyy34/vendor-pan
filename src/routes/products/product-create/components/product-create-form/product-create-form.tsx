@@ -22,6 +22,8 @@ import { ProductCreateDetailsForm } from "../product-create-details-form"
 import { ProductCreateInventoryKitForm } from "../product-create-inventory-kit-form"
 import { ProductCreateOrganizeForm } from "../product-create-organize-form"
 import { ProductCreateVariantsForm } from "../product-create-variants-form"
+import { usePricePreferences } from "../../../../../hooks/api/price-preferences"
+import { useRegions } from "../../../../../hooks/api"
 
 enum Tab {
   DETAILS = "details",
@@ -56,6 +58,11 @@ export const ProductCreateForm = ({
   const { handleSuccess } = useRouteModal()
   const { getFormConfigs } = useDashboardExtension()
   const configs = getFormConfigs("product", "create")
+
+  const { regions } = useRegions({ limit: 9999 })
+  const { price_preferences: pricePreferences } = usePricePreferences({
+    limit: 9999,
+  })
 
   const form = useExtendableForm({
     defaultValues: {
@@ -337,8 +344,8 @@ export const ProductCreateForm = ({
               <ProductCreateVariantsForm
                 form={form}
                 store={store}
-                // regions={regions}
-                // pricePreferences={pricePreferences}
+                regions={regions}
+                pricePreferences={pricePreferences}
               />
             </ProgressTabs.Content>
             {showInventoryTab && (
