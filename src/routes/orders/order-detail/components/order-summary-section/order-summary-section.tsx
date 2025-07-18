@@ -16,7 +16,6 @@ import {
   AdminPaymentCollection,
   AdminRegion,
   AdminReservation,
-  AdminReturn,
   PaymentStatus,
 } from "@medusajs/types"
 import {
@@ -35,7 +34,6 @@ import { ActionMenu } from "../../../../../components/common/action-menu"
 import { useOrderPreview } from "../../../../../hooks/api/orders"
 import { useMarkPaymentCollectionAsPaid } from "../../../../../hooks/api/payment-collections"
 import { useReservationItems } from "../../../../../hooks/api/reservations"
-import { useReturns } from "../../../../../hooks/api/returns"
 import { formatCurrency } from "../../../../../lib/format-currency"
 import {
   getLocaleAmount,
@@ -49,7 +47,7 @@ import ShippingInfoPopover from "./shipping-info-popover"
 import { Thumbnail } from "../../../../../components/common/thumbnail"
 
 type OrderSummarySectionProps = {
-  order: AdminOrder
+  order: AdminOrder & { returns: any[] }
 }
 
 export const OrderSummarySection = ({
@@ -67,15 +65,9 @@ export const OrderSummarySection = ({
 
   const { order: orderPreview } = useOrderPreview(order.id!)
 
-  const { returns = [] } = useReturns({
-    status: "requested",
-    order_id: order.id,
-    fields: "+received_at",
-  })
-
   const receivableReturns = useMemo(
-    () => returns.filter((r) => !r.canceled_at),
-    [returns]
+    () => order.returns.filter((r) => !r.canceled_at),
+    [order]
   )
 
   const showReturns = !!receivableReturns.length
@@ -215,7 +207,7 @@ export const OrderSummarySection = ({
 
                       return {
                         label: t("orders.returns.receive.receiveItems", {
-                          id: `#${id.slice(-7)}`,
+                          id: `#${id?.slice(-7)}`,
                           returnType,
                         }),
                         icon: <ArrowLongRight />,

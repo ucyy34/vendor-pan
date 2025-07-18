@@ -206,7 +206,7 @@ const useCoreRoutes = (): Omit<INavItem, "pathname">[] => {
           to: "/requests/reviews",
         },
         {
-          label: "Orders",
+          label: "Orders returns",
           to: "/requests/orders",
         },
       ],
