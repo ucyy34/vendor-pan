@@ -1,0 +1,15 @@
+[phases.setup]
+cmds = [
+    "npm install -g corepack@latest",
+    "corepack enable",
+    "corepack prepare pnpm@9.10.0 --activate"
+]
+
+[phases.install]
+cmds = ["pnpm install --no-frozen-lockfile"]
+
+[phases.build]
+cmds = ["pnpm run build"]
+
+[start]
+cmd = "pnpm start"
