@@ -1,15 +1,17 @@
+providers = ["node"]
+
 [phases.setup]
 cmds = [
     "npm install -g corepack@latest",
     "corepack enable",
-    "corepack prepare pnpm@9.10.0 --activate"
+    "corepack prepare pnpm@9.10.0 --activate" # Lokalinizdeki pnpm sürümünüzü yazın
 ]
 
 [phases.install]
-cmds = ["pnpm install --no-frozen-lockfile"]
+cmds = ["pnpm install --no-frozen-lockfile"] # Frozen lockfile hatasını önlemek için
 
 [phases.build]
-cmds = ["pnpm run build"]
+cmds = ["pnpm run build"] # package.json'daki build script'inize uygun olmalı
 
 [start]
-cmd = "pnpm start"
+cmd = "pnpm start" # package.json'daki start script'inize uygun olmalı
